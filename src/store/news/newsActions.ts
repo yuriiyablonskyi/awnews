@@ -22,7 +22,7 @@ interface FetchNewsResponse {
 }
 
 const url: string = 'https://newsapi.org/v2';
-const apiKey: string = 'apiKey=72310decc144431baadd3552440e662f';
+const apiKey: string = 'apiKey=72310decc144431baadd3552440e662f1';
 const request: string = url + '/everything?q=d&' + apiKey;
 
 export const fetchNews = createAsyncThunk(
