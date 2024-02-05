@@ -16,13 +16,9 @@ const App = () => {
   console.log(data);
 
   return (
-    <>
+    <div className="max-w-screen-xl mt-0 mb-0 mx-auto">
       <Header />
       <div style={{ display: 'flex', flexWrap: 'wrap', margin: '0 auto', maxWidth: '1500px', fontFamily: 'sans-serif' }}>
-
-        <h1 className="text-white px-4 sm:px-8 py-2 sm:py-3 bg-sky-700 hover:bg-sky-800">
-          Hello world!
-        </h1>
         {data.map((item, id: number) => (
           <div style={{ border: '3px solid #eee', borderRadius: '10px', width: '400px', height: 'auto', padding: '10px', cursor: 'pointer', margin: '0 10px 10px' }}>
 
@@ -36,7 +32,7 @@ const App = () => {
           </div>
         ))}
       </div>
-    </>
+    </div>
   )
 }
 

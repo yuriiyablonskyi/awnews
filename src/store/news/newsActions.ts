@@ -4,6 +4,7 @@ interface SourceArticle {
   id: string | null;
   name: string;
 }
+
 export interface Article {
   author: string;
   content: string;
@@ -21,15 +22,17 @@ interface FetchNewsResponse {
   articles: Article[];
 }
 
-const url: string = 'https://newsapi.org/v2';
-const apiKey: string = 'apiKey=72310decc144431baadd3552440e662f1';
-const request: string = url + '/everything?q=d&' + apiKey;
-
-export const fetchNews = createAsyncThunk(
-  'tasks/fetchTasks',
-  async () => {
+export const fetchNews = createAsyncThunk<Article[], string>(
+  'news/fetchNews',
+  async (searchQuery: string) => {
+    const request: string = `${import.meta.env.VITE_API_URL}/everything?q=${searchQuery}&apiKey=${import.meta.env.VITE_API_KEY}`;
     const response = await fetch(request);
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch news');
+    }
+
     const data: FetchNewsResponse = await response.json();
-    return data.articles
+    return data.articles;
   }
 );
