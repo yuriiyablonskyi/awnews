@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
-import newsReducer from './news/newsSlice'
+import articlesReducer from './articles/articlesSlice'
 export default configureStore({
   reducer: {
-    news: newsReducer
+    articles: articlesReducer
   }
 })
