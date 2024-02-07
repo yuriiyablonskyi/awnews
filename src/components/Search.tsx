@@ -9,7 +9,7 @@ const Search: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('')
 
   const handleSearch = () => {
-    dispatch(fetchArticles({ searchQuery: searchTerm }))
+    dispatch(fetchArticles(searchTerm))
     dispatch(setSearchQuery(searchTerm))
   }
 

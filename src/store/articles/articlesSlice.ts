@@ -1,22 +1,35 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { fetchArticles } from './articlesActions'
 
-interface RootState {
-  status: string;
+interface Source {
+  id?: string
+  name: string
+}
+export interface Article {
+  source: Source
+  author: string
+  title: string
+  description: string
+  url: string
+  urlToImage?: string
+  publishedAt: string
+  content: string
+}
+
+export interface RootState {
   totalResults: number;
-  articles: string[];
-  searchQuery: string;
-  searchHistory: string[]
+  articles: Article[];
+  searchQuery?: string;
 }
 
 interface ArticlesState {
   articlesData: RootState
   loading: boolean
-  error: boolean
+  error?: null | string
 }
 
 const initialState: ArticlesState = {
-  articlesData: { status: '', totalResults: 0, articles: [], searchQuery: '' },
+  articlesData: { totalResults: 0, articles: [], searchQuery: '' },
   loading: false,
   error: null,
 }
