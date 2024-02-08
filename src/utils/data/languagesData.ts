@@ -16,7 +16,6 @@ const languagesData: Language[] = [
   { short: 'pt', full: 'Português' },
   { short: 'ru', full: 'Русский' },
   { short: 'sv', full: 'Svenska' },
-  { short: 'ud', full: 'Undefined' },
   { short: 'zh', full: '文' }
 ]
 
