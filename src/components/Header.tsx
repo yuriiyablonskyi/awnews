@@ -4,36 +4,40 @@ import PlusSvg from '../assets/plus.svg'
 import UserSvg from '../assets/user.svg'
 import SearchSvg from '../assets/search.svg'
 
+
+// const HeaderWithoutContainer: React.FC = () => {
 const Header: React.FC = () => {
   const categoriesArr = ['business', 'entertainment', 'general', 'health', 'science', 'sports', 'technology']
   const languageArr = ['ar', 'de', 'en', 'es', 'fr', 'he', 'it', 'nl', 'no', 'pt', 'ru', 'sv', 'ud', 'zh']
 
   return (
-    <div className='flex justify-between items-center relative mb-4'>
-      <a href='/'>
-        <img src={Logo} className='logo' alt='Vite logo' />
-      </a>
+    <div className='border-solid border-y-platinum border-b-2 py-2.5'>
+      <div className='mx-auto max-w-custom3 px-3.5 flex justify-between items-center'>
+        <a href='/'>
+          <img src={Logo} className='max-w-custom0 h-7' alt='Vite logo' />
+        </a>
 
-      <div className='flex flex-row justify-between items-center gap-x-8'>
-        <a href='/' className='flex mr-2'>
-          <img src={PlusSvg} alt="" />
-          <span>Offer my News</span>
-        </a>
-        <Dropdown title='Categories' options={categoriesArr} />
-        <Dropdown title='English' options={languageArr} />
-        <a href='/' className='flex'>
-          <img src={UserSvg} className='mr-2' alt="" />
-          <span>Profile</span>
-        </a>
-        <a href='/' className='flex'>
-          <img src={SearchSvg} className='mr-2' alt="" />
-          <span>Searching</span>
-        </a>
+        <div className='flex flex-row justify-between items-center gap-x-8'>
+          <a href='/' className='flex mr-2'>
+            <img src={PlusSvg} alt='' />
+            <span className='font-serif font-semibold text-xl'>Offer my News</span>
+          </a>
+          <Dropdown title='Categories' options={categoriesArr} />
+          <Dropdown title='English' options={languageArr} />
+          <a href='/' className='flex'>
+            <img src={UserSvg} className='mr-2' alt='' />
+            <span className='font-serif font-semibold text-xl'>Profile</span>
+          </a>
+          <a href='/' className='flex' >
+            <img src={SearchSvg} className='mr-2' alt='' />
+            <span className='font-serif font-semibold text-xl'>Searching</span>
+          </a>
+        </div>
       </div>
-
-      <div className='absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 bottom-[-10px] w-screen bg-gray-300 h-px'></div>
     </div>
   )
 }
 
 export default Header
+// const Header = withContainer(HeaderWithoutContainer)
+// export default Header

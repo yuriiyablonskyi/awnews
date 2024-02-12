@@ -1,4 +1,6 @@
-const areFilterOptionsEmpty = (options: { [key: string]: string }): boolean => {
+import { FilterOptions } from '../../store/articles/articlesActions'
+
+const areFilterOptionsEmpty = (options: FilterOptions): boolean => {
   return Object.values(options).every(value => value === '')
 }
 

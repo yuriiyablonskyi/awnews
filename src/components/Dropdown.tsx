@@ -16,7 +16,7 @@ const Dropdown: React.FC<DropdownProps> = ({ title, options }) => {
         className={'flex items-center text-white py-2 px-4 rounded transition-opacity'}
       >
         <img src={Arrow} className={`${isOpen && 'rotate-180'} mr-2`} alt='arrow select' />
-        <span className='text-slate-800'>{title}</span>
+        <span className='text-slate-800 font-serif font-semibold text-xl'>{title}</span>
       </button>
       {isOpen && (
         <div className='absolute z-10 top-full left-0 bg-white shadow-md border border-gray-300 mt-2 rounded'>
