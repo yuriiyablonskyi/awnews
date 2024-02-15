@@ -1,9 +1,10 @@
+import { FC } from 'react'
 import Header from './components/Header'
 import MainPage from './components/MainPage'
 
-const App: React.FC = () => {
+const App: FC = () => {
   return (
-    <div>
+    <div >
       <Header />
       <MainPage />
     </div>

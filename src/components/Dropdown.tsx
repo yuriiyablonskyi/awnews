@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { FC, useState } from 'react'
 import Arrow from '../assets/arrow.svg'
 
 type DropdownProps = {
@@ -6,7 +6,7 @@ type DropdownProps = {
   options: string[]
 }
 
-const Dropdown: React.FC<DropdownProps> = ({ title, options }) => {
+const Dropdown: FC<DropdownProps> = ({ title, options }) => {
   const [isOpen, setIsOpen] = useState(false)
 
   return (

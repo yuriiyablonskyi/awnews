@@ -3,18 +3,19 @@ import Dropdown from './Dropdown'
 import PlusSvg from '../assets/plus.svg'
 import UserSvg from '../assets/user.svg'
 import SearchSvg from '../assets/search.svg'
+import Container from './Container'
+import { FC } from 'react'
 
 
-// const HeaderWithoutContainer: React.FC = () => {
-const Header: React.FC = () => {
+const Header: FC = () => {
   const categoriesArr = ['business', 'entertainment', 'general', 'health', 'science', 'sports', 'technology']
   const languageArr = ['ar', 'de', 'en', 'es', 'fr', 'he', 'it', 'nl', 'no', 'pt', 'ru', 'sv', 'ud', 'zh']
 
   return (
     <div className='border-solid border-y-platinum border-b-2 py-2.5'>
-      <div className='mx-auto max-w-custom3 px-3.5 flex justify-between items-center'>
+      <Container styles='flex justify-between items-center'>
         <a href='/'>
-          <img src={Logo} className='max-w-custom0 h-7' alt='Vite logo' />
+          <img src={Logo} className='max-w-24 h-7' alt='Vite logo' />
         </a>
 
         <div className='flex flex-row justify-between items-center gap-x-8'>
@@ -33,11 +34,9 @@ const Header: React.FC = () => {
             <span className='font-serif font-semibold text-xl'>Searching</span>
           </a>
         </div>
-      </div>
+      </Container>
     </div>
   )
 }
 
 export default Header
-// const Header = withContainer(HeaderWithoutContainer)
-// export default Header

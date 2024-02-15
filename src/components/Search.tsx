@@ -1,10 +1,10 @@
-import { useState } from 'react'
+import { FC, KeyboardEvent, useState } from 'react'
 import { fetchArticles } from '../store/articles/articlesActions'
 import { useDispatch } from 'react-redux'
 import { setSearchQuery } from '../store/articles/articlesSlice'
 import SearchSvg from '../assets/search.svg'
 
-const Search: React.FC = () => {
+const Search: FC = () => {
   const dispatch = useDispatch()
   const [searchTerm, setSearchTerm] = useState('')
 
@@ -13,7 +13,7 @@ const Search: React.FC = () => {
     dispatch(setSearchQuery(searchTerm))
   }
 
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       handleSearch()
     }
@@ -31,7 +31,6 @@ const Search: React.FC = () => {
         placeholder='Searching by keyword...'
       />
       <button onClick={handleSearch}>search</button>
-      {/* <div className='absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 inset-y-0 w-screen bg-gray-300 h-full z-0'></div> */}
     </div>
   )
 }
