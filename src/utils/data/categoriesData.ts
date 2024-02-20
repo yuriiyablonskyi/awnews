@@ -1,14 +1,13 @@
-import { SelectableItem } from '../../components/Select'
+import { SelectableItem } from '../../components/Select';
 
 const categoriesData: SelectableItem[] = [
-  { id: 0, name: '' },
-  { id: 1, name: 'business' },
-  { id: 2, name: 'entertainment' },
-  { id: 3, name: 'general' },
-  { id: 4, name: 'health' },
-  { id: 5, name: 'science' },
-  { id: 6, name: 'sports' },
-  { id: 7, name: 'technology' }
-]
+  { id: 0, name: 'business' },
+  { id: 1, name: 'entertainment' },
+  { id: 2, name: 'general' },
+  { id: 3, name: 'health' },
+  { id: 4, name: 'science' },
+  { id: 5, name: 'sports' },
+  { id: 6, name: 'technology' }
+];
 
 export default categoriesData;

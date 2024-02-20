@@ -12,37 +12,33 @@ import Select from './Select'
 const MainPage: FC = () => {
   const dispatch = useDispatch()
   const { articles } = useSelector(articlesData)
-  const [category, setCategory] = useState(categoriesData[0])
-  const [country, setCountry] = useState(countriesData[52])
+  const [category, setCategory] = useState({ name: 'Select a category' })
+  const [country, setCountry] = useState(countriesData[51])
+
+  const containsSelect = /Select/i.test(category.name)
+  const categoryToSendOrEmpty = containsSelect ? '' : category.name
 
   useEffect(() => {
-    if (country.short || category.name) {
-      dispatch(fetchArticles({ country: country.short, category: category.name }))
+    if (country.short || categoryToSendOrEmpty) {
+      dispatch(fetchArticles({ country: country.short, category: categoryToSendOrEmpty }))
     }
-  }, [country, category, dispatch])
+  }, [country, categoryToSendOrEmpty, dispatch])
 
   return (
     <Container>
+      <div className="mx-auto max-w-2xl lg:mx-0">
+        <h2 className="text-4xl font-bold tracking-tight sm:text-6xl">Headline Highlights: Filtered News by Country and Category</h2>
+        <p className="mt-6 text-lg leading-8 text-gray-300">
+          Explore the latest headline highlights filtered by country and category. Customize your news feed to stay up-to-date with the top headlines that matter to you.
+        </p>
+      </div>
       <div className='flex max-w-md'>
-        <Select dataSelect={category} options={categoriesData} onSelect={setCategory} />
-        <Select dataSelect={country} options={countriesData} onSelect={setCountry} />
+        <Select dataSelect={category} options={categoriesData} onSelect={setCategory} optionName='category' />
+        <Select dataSelect={country} options={countriesData} onSelect={setCountry} optionName='country' />
       </div>
-      {/* <div>
-        <label htmlFor='country'>Country:</label>
-        <select id='country' value={country} onChange={e => setCountry(e.target.value)}>
-          <option value=''>Select a country</option>
-          {countriesData.map(({ short, full }: Country) => <option key={short} value={short}>{full}</option>)}
-        </select>
-      </div>
-      <div>
-        <label htmlFor='category'>Category:</label>
-        <select id='category' value={category} onChange={e => setCategory(e.target.value)}>
-          <option value=''>Select a category</option>
-          {categoriesData.map((category) => <option key={category} value={category}>{category}</option>)}
-        </select>
-      </div> */}
+
       <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 lg:mx-0 lg:max-w-none lg:grid-cols-3">
-        {country.short || category.name ?
+        {country.short || categoryToSendOrEmpty ?
           articles.map((item: ArticleInterface) => <Article {...item} />)
           :
           <p className='text-gunmetal'>Select one or two options. At least one filter must be selected.</p>
