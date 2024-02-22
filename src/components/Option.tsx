@@ -6,34 +6,34 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
-const Option: FC = ({ select, optionName }) => (
-  <Listbox.Option
-    className={({ active }) =>
-      classNames(
-        active ? 'bg-indigo-600 text-white' : 'text-gray-900',
-        'relative cursor-default select-none py-2 pl-3 pr-9'
-      )
-    }
-    value={{ name: `Select a ${optionName}` }}
-  >
-    {({ selected, active }) => (
-      <>
-        {console.log(optionName)
-        }
-        <span>{select.name || `Select a ${optionName}`}</span>
-        {selected ? (
-          <span
-            className={classNames(
-              active ? 'text-white' : 'text-indigo-600',
-              'absolute inset-y-0 right-0 flex items-center pr-4'
-            )}
-          >
-            <CheckIcon className="h-5 w-5" aria-hidden="true" />
+const Option: FC = ({ select, optionName }) => {
+  return (
+    <Listbox.Option
+      className={({active}) =>
+        classNames(
+          active ? 'bg-indigo-600 text-white' : 'text-gray-900',
+          'relative cursor-default select-none py-2 pl-3 pr-9'
+        )
+      }
+      value={select || {name: `Select a ${optionName}`}}
+    >
+      {({selected, active}) => (
+        <>
+          <span>{select?.name || `Select a ${optionName}`}</span>
+          {selected ? (
+            <span
+              className={classNames(
+                active ? 'text-white' : 'text-indigo-600',
+                'absolute inset-y-0 right-0 flex items-center pr-4'
+              )}
+            >
+            <CheckIcon className="h-5 w-5" aria-hidden="true"/>
           </span>
-        ) : null}
-      </>
-    )}
-  </Listbox.Option>
-)
+          ) : null}
+        </>
+      )}
+    </Listbox.Option>
+  )
+}
 
 export default Option
