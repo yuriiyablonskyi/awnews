@@ -6,11 +6,11 @@ import { SelectableItem } from '../types';
 
 const Select: FC = ({ dataSelect, options, onSelect, optionName }) => {
   return (
-    <div className="flex justify-center bg-gray-100 p-8">
+    <div className="flex justify-center mb-3 sm:mr-4 sm:mb-7">
       <div className="mx-auto w-full max-w-xs">
         <Listbox value={dataSelect.name || dataSelect} onChange={(item) => onSelect(item)}>
           {({ open }) => (
-            <div className="relative mt-2">
+            <div className="relative sm:mt-2">
               <Listbox.Button
                 className="relative w-full max-w-52 cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left
                 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2
