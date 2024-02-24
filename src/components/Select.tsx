@@ -2,12 +2,7 @@ import { FC, Fragment } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
 import { ChevronUpDownIcon } from '@heroicons/react/20/solid'
 import Option from "./Option";
-
-export interface SelectableItem {
-  id: number
-  name: string
-  short?: string
-}
+import { SelectableItem } from '../types';
 
 const Select: FC = ({ dataSelect, options, onSelect, optionName }) => {
   return (

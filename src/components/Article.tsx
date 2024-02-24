@@ -1,11 +1,9 @@
-import { ArticleInterface } from '../store/articles/articlesSlice'
-import formatDate from '../utils/functions/formatDate'
+import { ArticleInterface } from '../types'
 import DefaultImg from '../assets/al.png'
 import { FC } from 'react'
 
 const Article: FC<ArticleInterface> = ({ author, title, description, url, urlToImage, publishedAt }) => {
-  const date: string = formatDate(publishedAt)
-
+  const date = new Date(publishedAt).toLocaleString().replace(/,/g, '')
   return (
     <>
       <a className='flex max-w-xl flex-col items-start justify-between border-b border-light pb-1' href={url} target='_blank'>

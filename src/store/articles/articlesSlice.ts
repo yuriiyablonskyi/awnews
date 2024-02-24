@@ -1,26 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { fetchArticles } from './articlesActions'
-
-export interface ArticleInterface {
-  author: string
-  title: string
-  description: string
-  url: string
-  urlToImage?: string
-  publishedAt: string
-}
-
-export interface RootState {
-  totalResults: number
-  articles: ArticleInterface[]
-  searchQuery?: string
-}
-
-interface ArticlesState {
-  articlesData: RootState
-  loading: boolean
-  error?: null | string
-}
+import { ArticlesState } from '../../types'
 
 const initialState: ArticlesState = {
   articlesData: { totalResults: 0, articles: [], searchQuery: '' },

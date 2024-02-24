@@ -5,7 +5,7 @@ import Container from './Container'
 import { fetchArticles } from '../store/articles/articlesActions'
 import { useDispatch, useSelector } from 'react-redux'
 import { articlesData } from '../store/articlesSelectors'
-import { ArticleInterface } from '../store/articles/articlesSlice'
+import { ArticleInterface } from '../types'
 import Article from './Article'
 import Select, { SelectableItem } from './Select'
 
@@ -29,11 +29,9 @@ const MainPage: FC = () => {
   return (
     <Container>
       <div className="mx-auto max-w-2xl lg:mx-0">
-        <h2 className="text-4xl font-bold tracking-tight sm:text-6xl">Headline Highlights: Filtered News by Country and
-          Category</h2>
+        <h2 className="text-4xl font-bold tracking-tight sm:text-6xl">Headline Highlights: Stay Updated with Top News</h2>
         <p className="mt-6 text-lg leading-8 text-gray-300">
-          Explore the latest headline highlights filtered by country and category. Customize your news feed to stay
-          up-to-date with the top headlines that matter to you.
+        Explore the latest top and breaking headlines from around the world on our Headline Highlights page. With our user-friendly interface, you can filter news by category or country, or both, to tailor your newsfeed to your interests.  
         </p>
       </div>
       <div className='flex max-w-md'>

@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { RootState } from './articlesSlice'
+import { RootState } from '../../types'
 
 export interface FilterOptions {
   country: string
