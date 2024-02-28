@@ -15,9 +15,6 @@ const MainPage: FC = () => {
   const [category, setCategory] = useState('Select a category')
   const [country, setCountry] = useState(countriesData[50])
 
-
-  console.log({ country, category });
-
   const containsSelect = /Select/i.test(category)
   const categoryToSendOrEmpty = containsSelect ? '' : category
   useEffect(() => {
@@ -28,11 +25,10 @@ const MainPage: FC = () => {
 
   return (
     <Container>
-      <div className="mb-4 sm:mb-4">
-        <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Headline Highlights: Stay Updated with Top News</h2>
-        <p className="mt-6 text-base leading-8 text-gray-300">
-          Explore the latest top and breaking headlines from around the world on our Headline Highlights page. With our user-friendly interface, you can filter news by category or country, or both, to tailor your newsfeed to your interests.
-        </p>
+      <div className='mb-4 sm:mb-4'>
+        <h2 className='text-3xl font-bold font-serif tracking-tight sm:text-4xl'>Stay update with AWNews</h2>
+        <p className='text-base leading-8 font-sans bg-cyan-900'>Select Category and/or Country</p>
+        <p className='text-base leading-8 font-sans' style={{ backgroundColor: '#253238' }}>Select Category and/or Country</p>
       </div>
       <div className='flex flex-col sm:flex-row'>
         <Select dataSelect={category} options={categoriesData}
@@ -41,9 +37,9 @@ const MainPage: FC = () => {
           onSelect={(newCountry: SelectableItem) => setCountry(newCountry)} optionName='country' />
       </div>
 
-      <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 lg:mx-0 lg:max-w-none lg:grid-cols-3 mb-12">
+      <div className='mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 lg:mx-0 lg:max-w-none lg:grid-cols-3 mb-12'>
         {country.short || categoryToSendOrEmpty ?
-          articles.map((item: ArticleInterface) => <Article {...item} />)
+          articles.map((item: ArticleInterface, id: number) => <Article key={id} {...item} />)
           :
           <p className='text-gunmetal'>Select one or two options. At least one filter must be selected.</p>
         }

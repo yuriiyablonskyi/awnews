@@ -3,7 +3,7 @@ import { fetchArticles } from './articlesActions'
 import { ArticlesState } from '../../types'
 
 const initialState: ArticlesState = {
-  articlesData: { totalResults: 0, articles: [], searchQuery: '' },
+  articlesData: { articles: [] },
   loading: false,
   error: null,
 }
@@ -12,9 +12,6 @@ const articlesSlice = createSlice({
   name: 'articlesData',
   initialState,
   reducers: {
-    setSearchQuery: (state, action) => {
-      state.articlesData.searchQuery = action.payload
-    }
   },
   extraReducers: (builder) => {
     builder
@@ -33,5 +30,4 @@ const articlesSlice = createSlice({
   },
 })
 
-export const { setSearchQuery } = articlesSlice.actions
-export default articlesSlice.reducer
+export default articlesSlice.reducer  

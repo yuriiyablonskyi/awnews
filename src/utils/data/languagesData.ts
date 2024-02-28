@@ -1,4 +1,4 @@
-import { SelectableItem } from '../../components/Select'
+import { SelectableItem } from '../../types'
 
 const languagesData: SelectableItem[] = [
   { id: 0, short: 'ar', name: 'العربية' },
@@ -16,4 +16,4 @@ const languagesData: SelectableItem[] = [
   { id: 12, short: 'zh', name: '文' }
 ]
 
-export default languagesData;
+export default languagesData

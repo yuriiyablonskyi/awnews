@@ -8,9 +8,7 @@ export interface ArticleInterface {
 }
 
 export interface RootState {
-  totalResults: number
   articles: ArticleInterface[]
-  searchQuery?: string
 }
 
 export interface ArticlesState {

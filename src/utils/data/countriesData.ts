@@ -1,4 +1,4 @@
-import { SelectableItem } from '../../components/Select';
+import { SelectableItem } from "../../types"
 
 const countriesData: SelectableItem[] = [
   { id: 0, short: 'ae', name: 'United Arab Emirates' },
@@ -57,4 +57,4 @@ const countriesData: SelectableItem[] = [
   { id: 53, short: 'za', name: 'South Africa' }
 ]
 
-export default countriesData;
+export default countriesData

@@ -1,24 +1,26 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
+import { RootState } from '../../types'
 
 export interface FilterOptions {
-  country: string
-  category: string
+  keyword: string
+  language?: string
+  sortBy?: string
 }
 
-export const fetchArticles = createAsyncThunk(
+export const fetchSearchedArticles = createAsyncThunk(
   'articles/fetchArticles',
-  async ({ country, category }: FilterOptions) => {
+  async ({ keyword, language, sortBy }: FilterOptions) => {
     try {
       const baseURL: string = import.meta.env.VITE_API_URL
       const apiKey: string = import.meta.env.VITE_API_KEY
 
-      let request: string = `${baseURL}/top-headlines?`
+      let request: string = `${baseURL}/everything?q=${keyword}&`
 
-      if (country) {
-        request += `country=${country}&`
+      if (language) {
+        request += `language=${language}&`
       }
-      if (category) {
-        request += `category=${category}&`
+      if (sortBy) {
+        request += `sortBy=${sortBy}&`
       }
       request += `page=1&pageSize=9&apiKey=${apiKey}`
 
@@ -28,7 +30,7 @@ export const fetchArticles = createAsyncThunk(
         throw new Error('Failed to fetch articles')
       }
 
-      const data = await response.json()
+      const data: RootState = await response.json()
       return data
     } catch (error) {
       // Handle errors here

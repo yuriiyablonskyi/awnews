@@ -1,4 +1,4 @@
-import { SelectableItem } from '../../components/Select';
+import { SelectableItem } from '../../types'
 
 const categoriesData: SelectableItem[] = [
   { id: 0, name: 'business' },
@@ -8,6 +8,6 @@ const categoriesData: SelectableItem[] = [
   { id: 4, name: 'science' },
   { id: 5, name: 'sports' },
   { id: 6, name: 'technology' }
-];
+]
 
-export default categoriesData;
+export default categoriesData
