@@ -6,9 +6,10 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
-const Option: FC = ({ select, optionName }) => {
+const Option: FC = ({ select, optionName, onChange }) => {
   return (
     <Listbox.Option
+      onClick={onChange}
       className={({active}) =>
         classNames(
           active ? 'bg-indigo-600 text-white' : 'text-gray-900',

@@ -12,7 +12,7 @@ import Select, {SelectableItem} from './Select'
 const MainPage: FC = () => {
   const dispatch = useDispatch()
   const {articles} = useSelector(articlesData)
-  const [category, setCategory] = useState('Select a category')
+  const [category, setCategory] = useState('')
   const [country, setCountry] = useState(countriesData[51])
 
   useEffect(() => {
