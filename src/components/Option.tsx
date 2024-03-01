@@ -6,8 +6,9 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
-const Option: FC = ({ select, optionName }) => (
+const Option: FC = ({ select, optionName, onChange }) => (
   <Listbox.Option
+    onClick={onChange}
     className={({ active }) =>
       classNames(
         active ? 'bg-stone-300 text-silver cursor-pointer' : 'text-gray-900',
@@ -26,7 +27,7 @@ const Option: FC = ({ select, optionName }) => (
               'absolute inset-y-0 right-0 flex items-center pr-4'
             )}
           >
-            <CheckIcon className='h-5 w-5' aria-hidden='true' />
+            <CheckIcon className="h-5 w-5" aria-hidden="true" />
           </span>
         ) : null}
       </>

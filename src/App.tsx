@@ -7,8 +7,8 @@ const App: FC = () => {
   return (
     <div >
       <Header />
-      {/* <MainPage /> */}
-      <Search />
+      <MainPage />
+      {/* <Search /> */}
     </div>
   )
 }
