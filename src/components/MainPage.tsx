@@ -14,6 +14,7 @@ const MainPage: FC = () => {
   const { articles } = useSelector(articlesData)
   const [category, setCategory] = useState('')
   const [country, setCountry] = useState(countriesData[50])
+console.log({ country, category });
 
   useEffect(() => {
     if (country.short || category) {

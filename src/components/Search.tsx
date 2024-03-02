@@ -1,34 +1,35 @@
-import { FC, KeyboardEvent, useState } from 'react'
+import { FC, KeyboardEvent, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import Container from './Container'
 import Select from './Select'
 import languagesData from '../utils/data/languagesData'
 import sortByData from '../utils/data/sortByData'
-import { fetchSearchedArticles } from '../store/search/searchActions'
-import { searchedArticlesData } from '../store/articlesSelectors'
+import { fetchSearchedArticles } from '../store/articles/articlesActions'
+import { articlesData } from '../store/articlesSelectors'
 import { ArticleInterface } from '../types'
 import Article from './Article'
 
 const Search: FC = () => {
   const dispatch = useDispatch()
-  const { articles } = useSelector(searchedArticlesData)
-  console.log(articles)
-
+  const { articles } = useSelector(articlesData)
   const [keyword, setKeyword] = useState('')
-  const [language, setLanguage] = useState('Select a language')
-  const [sortBy, setSortBy] = useState('publishedAt')
+  const [language, setLanguage] = useState('')
+  const [sortBy, setSortBy] = useState('')
+  
 
 
-  const containsSelect = /Select/i.test(language)
-  const languageToSendOrEmpty = containsSelect ? '' : language.short
-  console.log(languageToSendOrEmpty);
+  console.log({ keyword, language:language.short, sortBy });
+  
+const handleSearch = () => {
+  dispatch(fetchSearchedArticles({ keyword, language:language.short, sortBy }))
+}
 
-  const handleSearch = () => {
-    console.log('cc')
-
-    dispatch(fetchSearchedArticles({ keyword, language: languageToSendOrEmpty, sortBy }))
-  }
+  useEffect(() => {
+    if (!keyword) return
+      dispatch(fetchSearchedArticles({ keyword, language:language.short, sortBy }))
+  }, [language, sortBy,  dispatch])
+  
 
   const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -60,16 +61,10 @@ const Search: FC = () => {
         </div>
       </div>
       <div className='flex flex-col sm:flex-row'>
-        <Select dataSelect={language} options={languagesData}
-          onSelect={(newLanguage) => {
-            setLanguage(newLanguage)
-            dispatch(fetchSearchedArticles({ keyword, language: languageToSendOrEmpty, sortBy }))
-          }} optionName='language' />
+        <Select dataSelect={language.short} options={languagesData}  
+        onSelect={(newLanguage) => setLanguage(newLanguage)}  optionName='language' />
         <Select dataSelect={sortBy} options={sortByData}
-          onSelect={(newLanguage) => {
-            setSortBy(newLanguage)
-            dispatch(fetchSearchedArticles({ keyword, language: languageToSendOrEmpty, sortBy: sortBy.name }))
-          }} optionName={'sort by'} />
+        onSelect={(newSortByData) => setSortBy(newSortByData.name)} optionName={'sort by'} />
       </div>
       <div className='mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 lg:mx-0 lg:max-w-none lg:grid-cols-3 mb-12'>
         {articles.map((item: ArticleInterface, id: number) => <Article key={id} {...item} />)}
