@@ -1,1 +1,1 @@
-export const articlesData = state => state.articles.articlesData
+export const articlesData = state => state.articles.articles

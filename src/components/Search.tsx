@@ -9,20 +9,25 @@ import { fetchSearchedArticles } from '../store/articles/articlesActions'
 import { articlesData } from '../store/articlesSelectors'
 import { ArticleInterface } from '../types'
 import Article from './Article'
+import { clearArticles } from '../store/articles/articlesSlice'
 
 const Search: FC = () => {
   const dispatch = useDispatch()
-  const { articles } = useSelector(articlesData)
+  const {articles} = useSelector(articlesData)
+  
   const [keyword, setKeyword] = useState('')
   const [language, setLanguage] = useState('')
   const [sortBy, setSortBy] = useState('')
   
-
-
-  console.log({ keyword, language:language.short, sortBy });
-  
 const handleSearch = () => {
   dispatch(fetchSearchedArticles({ keyword, language:language.short, sortBy }))
+}
+
+const handleClearFilter = () => {
+  setKeyword('')
+  setLanguage('')
+  setSortBy('')
+  dispatch(clearArticles())
 }
 
   useEffect(() => {
@@ -49,12 +54,12 @@ const handleSearch = () => {
           placeholder='Searching by keyword...'
         />
         <div className='flex justify-between items-center min-w-20'>
-          <button className=' text-gray-400 hover:text-gray-500'>
-            <span className='sr-only'>Clear text</span>
+          <button  onClick={handleClearFilter} className=' text-gray-400 hover:text-gray-500'>
+            <span className='sr-only'>Clear filter</span>
             <XMarkIcon className='h-6 w-6' aria-hidden='true' />
           </button>
           <span className='h-6 w-px bg-gray-200' aria-hidden='true' />
-          <button onClick={handleSearch} className='text-gray-400 hover:text-gray-500'>
+          <button onClick={ handleSearch} className='text-gray-400 hover:text-gray-500'>
             <span className='sr-only'>Search</span>
             <MagnifyingGlassIcon className='h-6 w-6' aria-hidden='true' />
           </button>
@@ -67,7 +72,10 @@ const handleSearch = () => {
         onSelect={(newSortByData) => setSortBy(newSortByData.name)} optionName={'sort by'} />
       </div>
       <div className='mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 lg:mx-0 lg:max-w-none lg:grid-cols-3 mb-12'>
-        {articles.map((item: ArticleInterface, id: number) => <Article key={id} {...item} />)}
+        {articles 
+        ? articles.map((item: ArticleInterface, id: number) => <Article key={id} {...item} />)
+        :<p>There are no articles</p>
+        }
       </div>
     </Container>
   )

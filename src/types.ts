@@ -7,12 +7,8 @@ export interface ArticleInterface {
   publishedAt: string
 }
 
-export interface RootState {
-  articles: ArticleInterface[]
-}
-
 export interface ArticlesState {
-  articlesData: RootState
+  articles: ArticleInterface[]
   loading: boolean
   error?: null | string
 }
