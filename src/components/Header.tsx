@@ -3,6 +3,9 @@ import { Dialog, Popover, Transition } from '@headlessui/react'
 import { Bars3Icon, MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import Logo from '../assets/logo.svg'
 import Container from './Container'
+import { Link, NavLink } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { clearArticles } from '../store/articles/articlesSlice'
 
 const navigation = {
   pages: [
@@ -12,6 +15,7 @@ const navigation = {
 }
 
 const Header: FC = () => {
+  const dispatch = useDispatch()
   const [open, setOpen] = useState(false)
 
   return (
@@ -57,9 +61,9 @@ const Header: FC = () => {
                 <div className='space-y-6 border-t border-gray-200 px-4 py-6'>
                   {navigation.pages.map((page) => (
                     <div key={page.name} className='flow-root'>
-                      <a href={page.href} className='-m-2 block p-2 font-medium text-gray-900'>
+                      <Link to={page.href} className='-m-2 block p-2 font-medium text-gray-900'>
                         {page.name}
-                      </a>
+                      </Link>
                     </div>
                   ))}
                 </div>
@@ -98,14 +102,14 @@ const Header: FC = () => {
 
               {/* Logo */}
               <div className='ml-4 flex lg:ml-0'>
-                <a href='#'>
+                <Link to='/'>
                   <span className='sr-only'>Your Company</span>
                   <img
                     className='max-w-24 h-7'
                     src={Logo}
                     alt=''
                   />
-                </a>
+                </Link>
               </div>
 
               {/* Flyout menus */}
@@ -136,10 +140,12 @@ const Header: FC = () => {
 
                 {/* Search */}
                 <div className='flex lg:ml-6'>
-                  <a href='/' className='p-2 text-gray-400 hover:text-gray-500'>
+                  <NavLink to='/search'
+                    className={({ isActive }) => isActive ? 'p-2 text-gray-400 hover:text-gray-500 bg-red-500' : 'p-2 text-gray-400 hover:text-gray-500'}
+                    onClick={() => dispatch(clearArticles())}>
                     <span className='sr-only'>Search</span>
                     <MagnifyingGlassIcon className='h-6 w-6' aria-hidden='true' />
-                  </a>
+                  </NavLink>
                 </div>
               </div>
             </div>

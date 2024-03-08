@@ -35,8 +35,8 @@ export const fetchArticles = createAsyncThunk(
         throw new Error('Failed to fetch articles')
       }
 
-      const data = await response.json()
-      return dispatch(addArticles(data))
+      const { articles } = await response.json()
+      return dispatch(addArticles(articles))
     } catch (error) {
       // Handle errors here
       console.error('Error fetching articles:', error)
@@ -47,7 +47,7 @@ export const fetchArticles = createAsyncThunk(
 
 export const fetchSearchedArticles = createAsyncThunk(
   'articles/fetchSearchedArticles',
-  async ({ keyword, language, sortBy }: FilterOptionsSearched,  { dispatch }) => {
+  async ({ keyword, language, sortBy }: FilterOptionsSearched, { dispatch }) => {
     try {
       const baseURL: string = import.meta.env.VITE_API_URL
       const apiKey: string = import.meta.env.VITE_API_KEY
@@ -68,8 +68,8 @@ export const fetchSearchedArticles = createAsyncThunk(
         throw new Error('Failed to fetch articles')
       }
 
-      const data = await response.json()
-      return dispatch(addArticles(data))
+      const { articles } = await response.json()
+      return dispatch(addArticles(articles))
     } catch (error) {
       // Handle errors here
       console.error('Error fetching articles:', error)

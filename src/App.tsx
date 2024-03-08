@@ -1,14 +1,12 @@
 import { FC } from 'react'
 import Header from './components/Header'
-import MainPage from './components/MainPage'
-import Search from './components/Search'
+import { Outlet } from 'react-router-dom'
 
 const App: FC = () => {
   return (
     <div >
       <Header />
-      {/* <MainPage /> */}
-      <Search />
+      <Outlet />
     </div>
   )
 }

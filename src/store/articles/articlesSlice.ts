@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import { ArticlesState } from '../../types'
 
 const initialState: ArticlesState = {
-  articles:   [] ,
+  articles: [],
   loading: false,
   error: null,
 }
@@ -13,12 +13,12 @@ const articlesSlice = createSlice({
   reducers: {
     //* не получаеться сделать немутируемой
     addArticles: (state, action) => {
-        state.articles = action.payload
-      },
+      state.articles = action.payload
+    },
     clearArticles: (state) => {
       return {
         ...state,
-        articles: [] 
+        articles: []
       }
     },
   }

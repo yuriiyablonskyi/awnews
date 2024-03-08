@@ -1,4 +1,4 @@
-import { SelectableItem } from "../../types"
+import { SelectableItem } from '../../types'
 
 const countriesData: SelectableItem[] = [
   { id: 0, short: 'ae', name: 'United Arab Emirates' },

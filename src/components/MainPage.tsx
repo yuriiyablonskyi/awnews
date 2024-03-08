@@ -11,10 +11,9 @@ import Select, { SelectableItem } from './Select'
 
 const MainPage: FC = () => {
   const dispatch = useDispatch()
-  const { articles } = useSelector(articlesData)
+  const articles = useSelector(articlesData)
   const [category, setCategory] = useState('')
   const [country, setCountry] = useState(countriesData[50])
-console.log({ country, category });
 
   useEffect(() => {
     if (country.short || category) {
