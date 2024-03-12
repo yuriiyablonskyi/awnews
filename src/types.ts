@@ -7,14 +7,21 @@ export interface ArticleInterface {
   publishedAt: string
 }
 
-export interface ArticlesState {
+export interface RootState {
   articles: ArticleInterface[]
+  totalResults: number
+  error: Error | null
   loading: boolean
-  error?: null | string
 }
 
 export interface SelectableItem {
-  id: number
+  id?: number
   name: string
   short?: string
+}
+
+export interface RouteType {
+  path: string
+  element: JSX.Element
+  children?: RouteType[]
 }

@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { addArticles } from './articlesSlice'
+import { addArticlesFailure, addArticlesSuccess } from './articlesSlice'
 
 interface FilterOptionsMain {
   country: string
@@ -35,19 +35,22 @@ export const fetchArticles = createAsyncThunk(
         throw new Error('Failed to fetch articles')
       }
 
-      const { articles } = await response.json()
-      return dispatch(addArticles(articles))
+      const data = await response.json()
+      return dispatch(addArticlesSuccess(data))
     } catch (error) {
-      // Handle errors here
       console.error('Error fetching articles:', error)
+      dispatch(addArticlesFailure(error.message || 'Failed to fetch articles'))
       throw error
     }
-  }
+  },
 )
 
 export const fetchSearchedArticles = createAsyncThunk(
   'articles/fetchSearchedArticles',
-  async ({ keyword, language, sortBy }: FilterOptionsSearched, { dispatch }) => {
+  async (
+    { keyword, language, sortBy }: FilterOptionsSearched,
+    { dispatch },
+  ) => {
     try {
       const baseURL: string = import.meta.env.VITE_API_URL
       const apiKey: string = import.meta.env.VITE_API_KEY
@@ -68,12 +71,12 @@ export const fetchSearchedArticles = createAsyncThunk(
         throw new Error('Failed to fetch articles')
       }
 
-      const { articles } = await response.json()
-      return dispatch(addArticles(articles))
+      const data = await response.json()
+      return dispatch(addArticlesSuccess(data))
     } catch (error) {
-      // Handle errors here
       console.error('Error fetching articles:', error)
+      dispatch(addArticlesFailure(error.message || 'Failed to fetch articles'))
       throw error
     }
-  }
+  },
 )

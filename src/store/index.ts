@@ -3,5 +3,5 @@ import articlesReducer from './articles/articlesSlice'
 export default configureStore({
   reducer: {
     articles: articlesReducer,
-  }
+  },
 })
