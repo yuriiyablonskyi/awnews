@@ -9,9 +9,10 @@ import { fetchSearchedArticles } from '../store/articles/articlesActions'
 import { articlesData } from '../store/articlesSelectors'
 import { ArticleInterface } from '../types'
 import Article from '../components/Article'
-import { clearArticles, setLoading } from '../store/articles/articlesSlice'
+import { clearArticles } from '../store/articles/articlesSlice'
 import SkeletonArticle from '../components/SkeletonArticle'
 import Pagination from '../components/Pagination'
+import { useSearchParams } from 'react-router-dom'
 
 const Search: FC = () => {
   const dispatch = useDispatch()
@@ -19,14 +20,13 @@ const Search: FC = () => {
   const [keyword, setKeyword] = useState('')
   const [language, setLanguage] = useState<{ short: string }>({ short: '' })
   const [sortBy, setSortBy] = useState('')
+  const [searchParams, setSearchParams] = useSearchParams({})
   const languageName = language.short
   const hasArticles = !!articles.length
   const isKeywordEmpty = keyword === ''
 
   const handleSearch = () => {
     if (isKeywordEmpty) return alert('No keywords')
-    dispatch(clearArticles())
-    dispatch(setLoading(true))
     dispatch(fetchSearchedArticles({ keyword, language: languageName, sortBy }))
   }
 
@@ -38,6 +38,36 @@ const Search: FC = () => {
   }
 
   useEffect(() => {
+    const params = Object.fromEntries(searchParams.entries())
+
+    if (params.q) {
+      setKeyword(params.q)
+    }
+    if (params.language) {
+      setLanguage(
+        languagesData.find(language => language.short === params.language),
+      )
+    }
+    if (params.sortBy) {
+      setSortBy(params.sortBy)
+    }
+  }, [])
+
+  useEffect(() => {
+    const paramsToUpdate = {}
+
+    if (!isKeywordEmpty) {
+      paramsToUpdate.q = keyword
+    }
+    if (languageName) {
+      paramsToUpdate.language = languageName
+    }
+    if (sortBy) {
+      paramsToUpdate.sortBy = sortBy
+    }
+
+    setSearchParams(paramsToUpdate)
+
     if (isKeywordEmpty) return
     handleSearch()
   }, [keyword, language, sortBy, dispatch])
@@ -108,7 +138,7 @@ const Search: FC = () => {
       )}
       <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 lg:mx-0 lg:max-w-none lg:grid-cols-3 mb-12">
         {loading &&
-          [...Array(6)].map((_, index) => <SkeletonArticle key={index} />)}
+          [...Array(3)].map((_, index) => <SkeletonArticle key={index} />)}
         {!loading &&
           !error &&
           hasArticles &&

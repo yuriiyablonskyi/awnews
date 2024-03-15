@@ -1,5 +1,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { addArticlesFailure, addArticlesSuccess } from './articlesSlice'
+import {
+  addArticlesFailure,
+  addArticlesSuccess,
+  setLoading,
+} from './articlesSlice'
 
 interface FilterOptionsMain {
   country: string
@@ -16,23 +20,27 @@ export const fetchArticles = createAsyncThunk(
   'articles/fetchArticles',
   async ({ country, category }: FilterOptionsMain, { dispatch }) => {
     try {
+      dispatch(setLoading(true))
       const baseURL: string = import.meta.env.VITE_API_URL
       const apiKey: string = import.meta.env.VITE_API_KEY
-
-      let request: string = `${baseURL}/top-headlines?`
-
+      const params = new URLSearchParams()
       if (country) {
-        request += `country=${country}&`
+        params.append('country', country)
       }
       if (category) {
-        request += `category=${category}&`
+        params.append('category', category)
       }
-      request += `page=1&pageSize=9&apiKey=${apiKey}`
+      params.append('page', '1')
+      params.append('pageSize', '9')
+      params.append('apiKey', apiKey)
 
+      const request = `${baseURL}/top-headlines?${params.toString()}`
       const response = await fetch(request)
 
       if (!response.ok) {
-        throw new Error('Failed to fetch articles')
+        const text = await response.text()
+        const parsedText = JSON.parse(text).message
+        throw new Error(parsedText)
       }
 
       const data = await response.json()
@@ -41,6 +49,8 @@ export const fetchArticles = createAsyncThunk(
       console.error('Error fetching articles:', error)
       dispatch(addArticlesFailure(error.message || 'Failed to fetch articles'))
       throw error
+    } finally {
+      dispatch(setLoading(false))
     }
   },
 )
@@ -52,23 +62,29 @@ export const fetchSearchedArticles = createAsyncThunk(
     { dispatch },
   ) => {
     try {
+      dispatch(setLoading(true))
       const baseURL: string = import.meta.env.VITE_API_URL
       const apiKey: string = import.meta.env.VITE_API_KEY
+      const params = new URLSearchParams()
 
-      let request: string = `${baseURL}/everything?q=${keyword}&`
-
+      params.append('q', keyword)
       if (language) {
-        request += `language=${language}&`
+        params.append('language', language)
       }
       if (sortBy) {
-        request += `sortBy=${sortBy}&`
+        params.append('sortBy', sortBy)
       }
-      request += `page=1&pageSize=9&apiKey=${apiKey}`
+      params.append('page', '1')
+      params.append('pageSize', '9')
+      params.append('apiKey', apiKey)
 
+      const request = `${baseURL}/everything?${params.toString()}`
       const response = await fetch(request)
 
       if (!response.ok) {
-        throw new Error('Failed to fetch articles')
+        const text = await response.text()
+        const parsedText = JSON.parse(text).message
+        throw new Error(parsedText)
       }
 
       const data = await response.json()
@@ -77,6 +93,8 @@ export const fetchSearchedArticles = createAsyncThunk(
       console.error('Error fetching articles:', error)
       dispatch(addArticlesFailure(error.message || 'Failed to fetch articles'))
       throw error
+    } finally {
+      dispatch(setLoading(false))
     }
   },
 )

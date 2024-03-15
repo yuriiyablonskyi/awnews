@@ -3,6 +3,7 @@ import countriesData from '../utils/data/countriesData'
 import categoriesData from '../utils/data/categoriesData'
 import Container from '../components/Container'
 import { fetchArticles } from '../store/articles/articlesActions'
+import { useSearchParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { articlesData } from '../store/articlesSelectors'
 import { ArticleInterface } from '../types'
@@ -11,24 +12,49 @@ import Select from '../components/Select'
 import { SelectableItem } from '../types'
 import Pagination from '../components/Pagination'
 import SkeletonArticle from '../components/SkeletonArticle'
-import { clearArticles, setLoading } from '../store/articles/articlesSlice'
+import { clearArticles } from '../store/articles/articlesSlice'
 
 const Home: FC = () => {
   const dispatch = useDispatch()
   const { articles, totalResults, loading, error } = useSelector(articlesData)
   const [category, setCategory] = useState('')
   const [country, setCountry] = useState(countriesData[50])
+  const [searchParams, setSearchParams] = useSearchParams({})
   const countryName = country.short
   const isBothSelected = countryName || category
   const hasArticles = !!articles.length
 
   useEffect(() => {
-    dispatch(clearArticles())
-    if (isBothSelected) {
-      dispatch(setLoading(true))
-      dispatch(fetchArticles({ country: countryName, category }))
+    const params = Object.fromEntries(searchParams.entries())
+
+    if (params.country) {
+      setCountry(
+        countriesData.find(country => country.short === params.country),
+      )
     }
-  }, [country, category, dispatch])
+    if (params.category) {
+      setCategory(params.category)
+    }
+  }, [])
+
+  useEffect(() => {
+    const paramsToUpdate = {}
+
+    if (countryName) {
+      paramsToUpdate.country = countryName
+    }
+    if (category) {
+      paramsToUpdate.category = category
+    }
+
+    setSearchParams(paramsToUpdate)
+
+    if (isBothSelected) {
+      dispatch(fetchArticles({ country: countryName, category }))
+    } else {
+      dispatch(clearArticles())
+    }
+  }, [countryName, category, isBothSelected, dispatch, setSearchParams])
 
   return (
     <Container>
@@ -56,6 +82,7 @@ const Home: FC = () => {
           optionName="country"
         />
       </div>
+      {/* стоит ли создать компонент ArticlesContent в котором будут отображаться сообщение об ошибке либо сам контент */}
       {error && <p>Error: {error}</p>}
       {!isBothSelected && (
         <p className="text-gunmetal">
@@ -67,7 +94,7 @@ const Home: FC = () => {
       )}
       <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 lg:mx-0 lg:max-w-none lg:grid-cols-3 mb-12">
         {loading &&
-          [...Array(6)].map((_, index) => <SkeletonArticle key={index} />)}
+          [...Array(3)].map((_, index) => <SkeletonArticle key={index} />)}
         {!loading &&
           !error &&
           hasArticles &&
@@ -75,7 +102,6 @@ const Home: FC = () => {
             <Article key={id} {...item} />
           ))}
       </div>
-      {/* // <p className="text-gunmetal">Start your search to see results.</p> */}
       {hasArticles && <Pagination totalResults={totalResults} />}
     </Container>
   )
