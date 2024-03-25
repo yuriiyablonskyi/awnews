@@ -17,6 +17,6 @@ module.exports = {
     ],
     'no-console': 'warn',
     'prefer-const': 'warn',
-    'max-len': ['warn', {"code": 120}]
+    'max-len': ['warn', {"code": 140}]
   },
 }

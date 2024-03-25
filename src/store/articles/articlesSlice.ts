@@ -15,13 +15,7 @@ const articlesSlice = createSlice({
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload
     },
-    addArticlesSuccess: (
-      state,
-      action: PayloadAction<{
-        articles: ArticleInterface[]
-        totalResults: number
-      }>,
-    ) => {
+    addArticlesSuccess: (state, action: PayloadAction<RootState>) => {
       state.articles = action.payload.articles
       state.totalResults = action.payload.totalResults
       state.error = null

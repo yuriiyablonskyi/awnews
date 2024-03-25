@@ -5,7 +5,7 @@ import Container from '../components/Container'
 import Select from '../components/Select'
 import languagesData from '../utils/data/languagesData'
 import sortByData from '../utils/data/sortByData'
-import { fetchSearchedArticles } from '../store/articles/articlesActions'
+import { fetchArticles } from '../store/articles/articlesActions'
 import { articlesData } from '../store/articlesSelectors'
 import { ArticleInterface } from '../types'
 import Article from '../components/Article'
@@ -20,15 +20,9 @@ const Search: FC = () => {
   const [keyword, setKeyword] = useState('')
   const [language, setLanguage] = useState<{ short: string }>({ short: '' })
   const [sortBy, setSortBy] = useState('')
-  const [searchParams, setSearchParams] = useSearchParams({})
-  const languageName = language.short
-  const hasArticles = !!articles.length
+  const [searchParams, setSearchParams] = useSearchParams()
   const isKeywordEmpty = keyword === ''
-
-  const handleSearch = () => {
-    if (isKeywordEmpty) return alert('No keywords')
-    dispatch(fetchSearchedArticles({ keyword, language: languageName, sortBy }))
-  }
+  console.log({ component: 'Search* updated', url: searchParams.toString() });
 
   const handleClearFilter = () => {
     setKeyword('')
@@ -38,43 +32,59 @@ const Search: FC = () => {
   }
 
   useEffect(() => {
+    console.log('Search* first useEffect');
+
+    if (isKeywordEmpty) return console.log('Search* No keywords (setSearchParams(paramsToUpdate))')
+    interface ParamsToUpdate {
+      q?: string;
+      language?: string;
+      sortBy?: string;
+    }
+    const paramsToUpdate: ParamsToUpdate = {}
+
+    if (!isKeywordEmpty) {
+      paramsToUpdate.q = keyword
+    }
+    if (language.short) {
+      paramsToUpdate.language = language.short
+    }
+    if (sortBy) {
+      paramsToUpdate.sortBy = sortBy
+    }
+    setSearchParams(paramsToUpdate)
+  }, [keyword, language, sortBy])
+
+  useEffect(() => {
+    console.log('Search* second useEffect');
+    console.log({ component: 'Search*', data: searchParams.toString() });
+    if (isKeywordEmpty) return console.log('Search* No keywords (dispatch)')
+    dispatch(
+      fetchArticles({
+        endpoint: 'everything',
+        searchParams: searchParams.toString()
+      }),
+    )
+  }, [searchParams])
+
+  useEffect(() => {
+    console.log('Search* third useEffect');
     const params = Object.fromEntries(searchParams.entries())
 
     if (params.q) {
       setKeyword(params.q)
     }
     if (params.language) {
-      setLanguage(
-        languagesData.find(language => language.short === params.language),
-      )
+      setLanguage({ short: params.language })
     }
     if (params.sortBy) {
       setSortBy(params.sortBy)
     }
   }, [])
 
-  useEffect(() => {
-    const paramsToUpdate = {}
-
-    if (!isKeywordEmpty) {
-      paramsToUpdate.q = keyword
-    }
-    if (languageName) {
-      paramsToUpdate.language = languageName
-    }
-    if (sortBy) {
-      paramsToUpdate.sortBy = sortBy
-    }
-
-    setSearchParams(paramsToUpdate)
-
-    if (isKeywordEmpty) return
-    handleSearch()
-  }, [keyword, language, sortBy, dispatch])
 
   const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      handleSearch()
+      console.log('Search* EnterEnterEnterEnterEnterEnterEnter');
     }
   }
 
@@ -88,25 +98,20 @@ const Search: FC = () => {
         filters
       </p>
       <div className="flex border-b border-b-stone-300 mb-4">
-        <input
-          type="text"
+        <input type="text"
           value={keyword}
           onChange={e => setKeyword(e.target.value)}
           onKeyDown={handleKeyPress}
           className="w-full py-4 outline-none"
-          placeholder="Searching by keyword..."
-        />
+          placeholder="Searching by keyword..." />
         <div className="flex justify-between items-center min-w-20">
-          <button
-            onClick={handleClearFilter}
-            className=" text-gray-400 hover:text-gray-500"
-          >
+          <button onClick={handleClearFilter}
+            className=" text-gray-400 hover:text-gray-500" >
             <span className="sr-only">Clear filter</span>
             <XMarkIcon className="h-6 w-6" aria-hidden="true" />
           </button>
           <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
           <button
-            onClick={handleSearch}
             className="text-gray-400 hover:text-gray-500"
           >
             <span className="sr-only">Search</span>
@@ -116,7 +121,7 @@ const Search: FC = () => {
       </div>
       <div className="flex flex-col sm:flex-row">
         <Select
-          dataSelect={languageName}
+          dataSelect={language.short}
           options={languagesData}
           onSelect={newLanguage => setLanguage(newLanguage)}
           optionName="language"
@@ -129,24 +134,14 @@ const Search: FC = () => {
         />
       </div>
 
-      {error && <p>Error: {error}</p>}
-      {isKeywordEmpty && !loading && !error && !hasArticles && (
-        <p className="text-gunmetal">Start your search to see results.</p>
-      )}
-      {!loading && !error && !hasArticles && !isKeywordEmpty && (
-        <p className="text-gunmetal">No articles found.</p>
-      )}
       <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 lg:mx-0 lg:max-w-none lg:grid-cols-3 mb-12">
-        {loading &&
-          [...Array(3)].map((_, index) => <SkeletonArticle key={index} />)}
-        {!loading &&
-          !error &&
-          hasArticles &&
-          articles.map((item: ArticleInterface, id: number) => (
-            <Article key={id} {...item} />
-          ))}
+        {loading ? [...Array(3)].map((_, index) => <SkeletonArticle key={index} />)
+          : error ? <p>Error: {error}</p>
+            : isKeywordEmpty ? <p className="text-gunmetal">Start your search to see results.</p>
+              : !!articles.length ? articles.map((item: ArticleInterface, id: number) => <Article key={id} {...item} />)
+                : <p className="text-gunmetal">No articles found.</p>}
       </div>
-      {hasArticles && <Pagination totalResults={totalResults} />}
+      {!!articles.length && !loading && <Pagination totalResults={totalResults} />}
     </Container>
   )
 }

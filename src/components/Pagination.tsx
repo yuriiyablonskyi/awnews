@@ -1,10 +1,52 @@
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
-import { FC, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { FC, useEffect, useState } from 'react'
+import { Link, useSearchParams, } from 'react-router-dom'
 
-const Pagination: FC = ({ totalResults }) => {
+const Pagination: FC<{ totalResults: number }> = ({ totalResults }) => {
   const [currentPage, setCurrentPage] = useState(1)
+  const [searchParams, setSearchParams] = useSearchParams()
 
+  const totalPages = Math.ceil(totalResults / 9)
+
+
+  const updateParams = (newPage) => {
+    console.log({ component: 'Pagination* ', func: 'updateParams', currentPage });
+    const params = Object.fromEntries(searchParams.entries())
+    const newParams = {}
+    for (const [key, value] of Object.entries(params)) {
+      newParams[key] = value
+    }
+    newParams['page'] = String(newPage)
+    setSearchParams(newParams)
+  }
+
+  // useEffect(() => {
+  //   console.log({ component: 'Pagination* first useEffect', currentPage });
+  //   updateParams()
+  // }, [currentPage])
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+      // updateParams()
+    }
+  }
+
+  const handleNextPage = (e) => {
+    e.preventDefault()
+    console.log({ component: 'Pagination* ', func: 'handleNextPage', currentPage });
+    const newPage = currentPage + 1;
+    setCurrentPage(newPage)
+    updateParams(newPage)
+    console.log({ component: 'Pagination* ', func: 'handleNextPage', currentPage });
+    // if (currentPage < totalPages) {
+    // }
+  }
+
+  const buttonClasses = `
+  relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0
+  ${currentPage === 1 ? 'cursor-not-allowed' : ''}
+`
   return (
     <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
       <div className="flex flex-1 justify-between sm:hidden">
@@ -34,13 +76,14 @@ const Pagination: FC = ({ totalResults }) => {
             className="isolate inline-flex -space-x-px rounded-md shadow-sm"
             aria-label="Pagination"
           >
-            <a
-              href="#"
-              className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
+            <button
+              onClick={handlePrevPage}
+              disabled={currentPage === 1}
+              className={buttonClasses}
             >
               <span className="sr-only">Previous</span>
               <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
-            </a>
+            </button>
             <Link
               to="/1"
               aria-current="page"
@@ -81,13 +124,15 @@ const Pagination: FC = ({ totalResults }) => {
             >
               {Math.ceil(totalResults / 9)}
             </Link>
-            <a
-              href="#"
-              className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
+            <button
+              onClick={handleNextPage
+              }
+              disabled={currentPage === totalPages}
+              className='relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0'
             >
               <span className="sr-only">Next</span>
               <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
-            </a>
+            </button>
           </nav>
         </div>
       </div>
