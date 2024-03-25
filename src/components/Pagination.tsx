@@ -1,46 +1,36 @@
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
-import { FC, useEffect, useState } from 'react'
-import { Link, useSearchParams, } from 'react-router-dom'
+import {ChevronLeftIcon, ChevronRightIcon} from '@heroicons/react/20/solid'
+import {FC, useState} from 'react'
+import {Link, useSearchParams,} from 'react-router-dom'
 
-const Pagination: FC<{ totalResults: number }> = ({ totalResults }) => {
-  const [currentPage, setCurrentPage] = useState(1)
+const Pagination: FC<{ totalResults: number }> = ({totalResults}) => {
   const [searchParams, setSearchParams] = useSearchParams()
-
+  const [currentPage, setCurrentPage] = useState(searchParams.get('page') || 1)
   const totalPages = Math.ceil(totalResults / 9)
 
-
   const updateParams = (newPage) => {
-    console.log({ component: 'Pagination* ', func: 'updateParams', currentPage });
-    const params = Object.fromEntries(searchParams.entries())
-    const newParams = {}
-    for (const [key, value] of Object.entries(params)) {
-      newParams[key] = value
-    }
-    newParams['page'] = String(newPage)
-    setSearchParams(newParams)
+    //TODO: add delete param
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    newSearchParams.set('page', newPage);
+    setSearchParams(newSearchParams);
   }
-
-  // useEffect(() => {
-  //   console.log({ component: 'Pagination* first useEffect', currentPage });
-  //   updateParams()
-  // }, [currentPage])
 
   const handlePrevPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
-      // updateParams()
+      updateParams(currentPage - 1)
     }
   }
 
-  const handleNextPage = (e) => {
-    e.preventDefault()
-    console.log({ component: 'Pagination* ', func: 'handleNextPage', currentPage });
-    const newPage = currentPage + 1;
-    setCurrentPage(newPage)
-    updateParams(newPage)
-    console.log({ component: 'Pagination* ', func: 'handleNextPage', currentPage });
-    // if (currentPage < totalPages) {
-    // }
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1)
+      updateParams(currentPage + 1)
+    }
+  }
+
+  const handleCurrentPage = (page: number) => {
+    setCurrentPage(page)
+    updateParams(page)
   }
 
   const buttonClasses = `
@@ -82,7 +72,7 @@ const Pagination: FC<{ totalResults: number }> = ({ totalResults }) => {
               className={buttonClasses}
             >
               <span className="sr-only">Previous</span>
-              <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
+              <ChevronLeftIcon className="h-5 w-5" aria-hidden="true"/>
             </button>
             <Link
               to="/1"
@@ -91,19 +81,20 @@ const Pagination: FC<{ totalResults: number }> = ({ totalResults }) => {
             >
               {currentPage}
             </Link>
-            <Link
-              to="/2"
+            <div
+              onClick={() => handleCurrentPage(2)}
               className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
             >
               {currentPage + 1}
-            </Link>
+            </div>
             <Link
               to="/3"
               className="relative hidden items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 md:inline-flex"
             >
               {currentPage + 2}
             </Link>
-            <span className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0">
+            <span
+              className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0">
               ...
             </span>
             <Link
@@ -131,7 +122,7 @@ const Pagination: FC<{ totalResults: number }> = ({ totalResults }) => {
               className='relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0'
             >
               <span className="sr-only">Next</span>
-              <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
+              <ChevronRightIcon className="h-5 w-5" aria-hidden="true"/>
             </button>
           </nav>
         </div>

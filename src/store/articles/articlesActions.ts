@@ -23,7 +23,7 @@ export const fetchArticles = createAsyncThunk(
       params.append('apiKey', apiKey)
 
       const request = `${baseURL}/${endpoint}?${searchParams}&${params.toString()}`
-      // const response = await fetch(request)
+      const response = await fetch(request)
 
       if (!response.ok) {
         const text = await response.text()
