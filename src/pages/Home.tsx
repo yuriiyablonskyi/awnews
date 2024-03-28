@@ -16,54 +16,90 @@ import { clearArticles } from '../store/articles/articlesSlice'
 import Calendar from '../components/Calendar'
 import { CalendarIcon } from '@heroicons/react/24/outline'
 
+interface ArticlesState {
+  articles: ArticleInterface[]
+  totalResults: number
+  loading: boolean
+  error: string | null
+}
+
 const Home: FC = () => {
-  console.log('Home* updated');
   const dispatch = useDispatch()
-  const { articles, totalResults, loading, error } = useSelector(articlesData)
-  const [category, setCategory] = useState('')
-  const [country, setCountry] = useState(countriesData[50])
   const [searchParams, setSearchParams] = useSearchParams()
+  const { articles, totalResults, loading, error }: ArticlesState = useSelector(articlesData)
+  const [category, setCategory] = useState<string>(searchParams.get('category') || '')
+  const [country, setCountry] = useState<{ short: string }>({ short: 'ua' })
   const isBothSelected = country.short || category
 
-  useEffect(() => {
-    const params = Object.fromEntries(searchParams.entries())
+  const updateURLParams = (key: string, value: string) => {
+    const newSearchParams = new URLSearchParams(searchParams.toString())
+    if (value) {
+      newSearchParams.set(key, value)
+    } else {
+      newSearchParams.delete(key)
+    }
+    setSearchParams(newSearchParams)
+  }
 
-    if (params.country) {
-      setCountry({ short: params.country })
-    }
-    if (params.category) {
-      setCategory(params.category)
-    }
+  const handleClearFilter = () => {
+    setCategory('')
+    setCountry({ short: '' })
+    dispatch(clearArticles())
+    const newSearchParams = new URLSearchParams(searchParams.toString())
+    newSearchParams.delete('page')
+    setSearchParams(newSearchParams)
+  }
+
+  const handleCountry = (value: string) => {
+    updateURLParams('country', value)
+    setCountry({ short: value })
+  }
+
+  const handleCategory = (value: string) => {
+    updateURLParams('category', value)
+    setCategory(value)
+  }
+
+  useEffect(() => {
+    // тут плохой код - задача стояла чтоб по дефолту был параметр при первом заходе на страницу
+    const newSearchParams = new URLSearchParams(searchParams.toString())
+    newSearchParams.set('country', 'ua')
+    newSearchParams.set('page', '1')
+    setSearchParams(newSearchParams)
   }, [])
 
   useEffect(() => {
-    const paramsToUpdate = {}
-
-    if (country.short) {
-      paramsToUpdate.country = country.short
-    }
-    if (category) {
-      paramsToUpdate.category = category
-    }
-
-    setSearchParams(paramsToUpdate)
-
-    if (isBothSelected) {
-      // dispatch виконується з старими даними, треба шоб спочатку обновилось searchParams а тоді вже dispatch
+    // тут проверка что если нету хотяб одного параметра то не отправлять запрос
+    if (searchParams.get('country') || searchParams.get('category')) {
       dispatch(
         fetchArticles({
           endpoint: 'top-headlines',
-          searchParams: searchParams.toString(),
+          searchParams: searchParams.toString()
         }),
       )
-    } else {
-      dispatch(clearArticles())
     }
-  }, [country.short, category, searchParams, dispatch])
+  }, [searchParams])
+
+  const renderContent = () => {
+    if (loading) {
+      return [...Array(9)].map((_, index) => <SkeletonArticle key={index} />)
+    }
+    if (error) {
+      handleClearFilter()
+      return <p>Error: {error}</p>
+    }
+    if (!isBothSelected) {
+      handleClearFilter()
+      return <p className="text-gunmetal">Select one or two options. At least one filter must be selected.</p>
+    }
+    if (articles.length) {
+      return articles.map((item: ArticleInterface, id: number) => <Article key={id} {...item} />)
+    }
+  }
 
   return (
     <Container>
-      <Calendar />
+      {/* <Calendar /> */}
       <div className="mb-4 sm:mb-4">
         <h2 className="text-2xl font-bold font-serif tracking-tight sm:text-3xl">
           Stay update with AWNews
@@ -76,27 +112,21 @@ const Home: FC = () => {
         <Select
           dataSelect={category}
           options={categoriesData}
-          onSelect={(newCategory: SelectableItem) =>
-            setCategory(newCategory.name)
-          }
+          onSelect={(newCategory: SelectableItem) => handleCategory(newCategory.name)}
           optionName="category"
         />
         <Select
           dataSelect={country.short}
           options={countriesData}
-          onSelect={(newCountry: SelectableItem) => setCountry(newCountry)}
+          onSelect={(newCountry: SelectableItem) => handleCountry(newCountry.short)}
           optionName="country"
         />
         {/* <CalendarIcon /> */}
       </div>
       <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 lg:mx-0 lg:max-w-none lg:grid-cols-3 mb-12">
-        {loading ? [...Array(3)].map((_, index) => <SkeletonArticle key={index} />)
-          : error ? <p>Error: {error}</p>
-            : !isBothSelected ? <p className="text-gunmetal">Select one or two options. At least one filter must be selected.</p>
-              : articles.map((item: ArticleInterface, id: number) => <Article key={id} {...item} />)
-        }
+        {renderContent()}
       </div>
-      {/* {!!articles.length && !loading && <Pagination totalResults={totalResults} />} */}
+      {!!articles.length && !loading && !error && <Pagination totalResults={totalResults} />}
     </Container>
   )
 }
