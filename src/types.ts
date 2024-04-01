@@ -25,3 +25,10 @@ export interface RouteType {
   element: JSX.Element
   children?: RouteType[]
 }
+
+export interface ArticlesState {
+  articles: ArticleInterface[]
+  totalResults: number
+  loading: boolean
+  error: string | null
+}

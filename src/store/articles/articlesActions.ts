@@ -18,7 +18,6 @@ export const fetchArticles = createAsyncThunk(
       const baseURL: string = import.meta.env.VITE_API_URL
       const apiKey: string = import.meta.env.VITE_API_KEY
       const params = new URLSearchParams()
-      // params.append('page', page)
       params.append('pageSize', '9')
       params.append('apiKey', apiKey)
 
@@ -34,8 +33,6 @@ export const fetchArticles = createAsyncThunk(
       const data = await response.json()
       return dispatch(addArticlesSuccess(data))
     } catch (error) {
-      // забрати console.error
-      console.error('Error fetching articles:', error)
       dispatch(addArticlesFailure(error.message || 'Failed to fetch articles'))
       throw error
     } finally {

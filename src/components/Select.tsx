@@ -5,7 +5,7 @@ import Option from './Option'
 import { SelectableItem } from '../types'
 
 interface SelectProps {
-  dataSelect: string | undefined
+  dataSelect: string | null
   options: SelectableItem[]
   onSelect: (newCategory: SelectableItem) => void
   optionName: string
@@ -17,7 +17,7 @@ const Select: FC<SelectProps> = ({
   onSelect,
   optionName,
 }) => (
-  <div className="flex justify-center mb-3 sm:mr-4 sm:mb-7">
+  <div className="flex justify-center mb-3 mr-4 sm:mb-7">
     <div className="mx-auto w-full max-w-xs">
       <Listbox value={dataSelect || ''}>
         {({ open }) => (
@@ -27,7 +27,7 @@ const Select: FC<SelectProps> = ({
             </Listbox.Label>
             <div className="relative mt-2">
               <Listbox.Button
-                className="relative w-full max-w-52 cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left
+                className="relative w-full max-w-52 min-w-44  cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left
                 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2
                 focus:ring-neutral-500 sm:text-sm sm:leading-6"
               >
