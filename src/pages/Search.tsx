@@ -18,10 +18,9 @@ const Search: FC = () => {
   const dispatch = useDispatch()
   const [searchParams, setSearchParams] = useSearchParams()
   const { articles, totalResults, loading, error }: ArticlesState = useSelector(articlesData)
-  const keyword: string | undefined = (searchParams.get('q') || '')
-  const language: { short: string | null } = ({ short: searchParams.get('language') } || '')
-  const sortBy: string | undefined = (searchParams.get('sortBy') || '')
-  // не пойму почему иногда надо надо указать null а иногда undefined 
+  const keyword: string = searchParams.get('q') ?? ''
+  const language: SelectableItem = { name: '', short: searchParams.get('language') ?? '' }
+  const sortBy: string = searchParams.get('sortBy') ?? ''
 
   useEffect(() => sendRequest(searchParams.toString()), [])
 
@@ -48,13 +47,6 @@ const Search: FC = () => {
     setSearchParams(newSearchParams)
   }
 
-  const handleSorting = (value: string) => {
-    getDataByParams('sortBy', value)
-  }
-
-  const handleLanguage = (value: string | undefined) => {
-    getDataByParams('language', value)
-  }
 
   const sendRequest = (urlParams: string) => {
     if (keyword) {
@@ -67,15 +59,15 @@ const Search: FC = () => {
     }
   }
 
-  // есть 3 функции для обработки input, кажеться многовато
-  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      handleKeyword()
-    }
+  const handleSelectChange = (key: string, value: string | undefined) => {
+    getDataByParams(key, value || '')
   }
 
-  const handleKeyword = () => {
-    getDataByParams('q', keyword)
+  // есть 2 функции для обработки input, кажеться многовато
+  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSelectChange('q', keyword)
+    }
   }
 
   //эта функция создана для того чтоб избавиться от useState в пользу параметров как источника данных
@@ -94,16 +86,26 @@ const Search: FC = () => {
       console.log({ error: Boolean(error), loading: Boolean(loading), articles: Boolean(articles.length), keyword: Boolean(searchParams.get('q')), totalResults });
     }
     // консоль чтоб проверять как сделать отображение "Start your search...", пока единственное решение это useState (для отображения пагинации тоже б пригодилось)
+    const errorMessageStyles = 'text-base mt-8 text-center'
+    const skeletonCount = !articles.length ? 3 : 9
+    const renderGrid = (children: React.ReactNode) => (
+      <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 lg:mx-0 lg:max-w-none lg:grid-cols-3 mb-12">
+        {children}
+      </div>)
+
     if (loading) {
-      return [...Array(9)].map((_, index) => <SkeletonArticle key={index} />)
+      return renderGrid([...Array(skeletonCount)].map((_, index) => <SkeletonArticle key={index} />))
     }
     if (error) {
-      return <p>Error: {error}</p>
+      return <p className={errorMessageStyles}>Error: {error}</p>
     }
     if (articles.length) {
-      return articles.map((item: ArticleInterface, id: number) => <Article key={id} {...item} />)
+      return renderGrid(articles.map((item: ArticleInterface, id: number) => <Article key={id} {...item} />))
     }
-    return <p className="text-gunmetal">No articles found.</p>
+    if (!searchParams.get('q')) {
+      return <p className={errorMessageStyles}>Start your search to see results.</p>
+    }
+    return <p className={errorMessageStyles}>No articles found.</p>
   }
 
   return (
@@ -128,7 +130,7 @@ const Search: FC = () => {
             <XMarkIcon className="h-6 w-6" aria-hidden="true" />
           </button>
           <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
-          <button onClick={handleKeyword} className="text-gray-400 hover:text-gray-500" title='Start search'>
+          <button onClick={() => handleSelectChange('q', keyword)} className="text-gray-400 hover:text-gray-500" title='Start search'>
             <span className="sr-only">Search</span>
             <MagnifyingGlassIcon className="h-6 w-6" aria-hidden="true" />
           </button>
@@ -138,20 +140,17 @@ const Search: FC = () => {
         <Select
           dataSelect={language.short}
           options={languagesData}
-          onSelect={(newLanguage: SelectableItem) => handleLanguage(newLanguage.short)}
+          onSelect={(newLanguage: SelectableItem) => handleSelectChange('language', newLanguage.short)}
           optionName="language"
         />
         <Select
           dataSelect={sortBy}
           options={sortByData}
-          onSelect={(newSortByData: SelectableItem) => handleSorting(newSortByData.name)}
+          onSelect={(newSortByData: SelectableItem) => handleSelectChange('sortBy', newSortByData.name)}
           optionName='sort by'
         />
       </div>
-      <p className="text-gunmetal text-center mt-3.5">Start your search to see results.</p>
-      <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 lg:mx-0 lg:max-w-none lg:grid-cols-3 mb-12">
-        {renderContent()}
-      </div>
+      {renderContent()}
       {!!articles.length && !loading && !error && <Pagination totalResults={totalResults} endpoint='everything' />}
     </Container>
   )

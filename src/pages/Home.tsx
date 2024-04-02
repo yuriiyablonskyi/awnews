@@ -20,80 +20,69 @@ const Home: FC = () => {
   const dispatch = useDispatch()
   const [searchParams, setSearchParams] = useSearchParams()
   const { articles, totalResults, loading, error }: ArticlesState = useSelector(articlesData)
-  const category: string | undefined = (searchParams.get('category') || '')
-  const country: { short: string | null } = ({ short: searchParams.get('country') } || { short: '' })
+  const category: string = searchParams.get('category') ?? ''
+  const country: SelectableItem = { name: '', short: searchParams.get('country') ?? '' }
 
   const getDataByParams = (key: string, value: string) => {
+    // кажеться можно как то оптимизировать данную функцию, многовато if-else
     const newSearchParams = new URLSearchParams(searchParams)
     if (value) {
       newSearchParams.set(key, value)
     } else {
       newSearchParams.delete(key)
     }
-    sendRequest(newSearchParams.toString())
+    if (!newSearchParams.get('page')) {
+      newSearchParams.set('page', '1')
+    }
+    if (newSearchParams.has('category') || newSearchParams.has('country')) {
+      // если применен хотяб один фильтр то делать запрос
+      sendRequest(newSearchParams.toString())
+    } else {
+      newSearchParams.delete('page')
+      dispatch(clearArticles()) // если оба фильтра пустые то очищаю стор
+    }
     setSearchParams(newSearchParams)
   }
 
-  const handleClearFilter = () => {
-    dispatch(clearArticles())
-    const paramsToDelete = ['category', 'country', 'page']
-    const newSearchParams = new URLSearchParams(searchParams)
-    paramsToDelete.forEach(param => {
-      newSearchParams.delete(param)
-    })
-    setSearchParams(newSearchParams)
-    // здесь почему-то не удаляет параметр "page", не пойму почему
-  }
-
-  const handleCountry = (value: string | undefined) => {
-    getDataByParams('country', value)
-
-  }
-
-  const handleCategory = (value: string) => {
-    getDataByParams('category', value)
+  const handleSelectChange = (key: string, value: string | undefined) => {
+    getDataByParams(key, value || '')
   }
 
   useEffect(() => {
     const newSearchParams = new URLSearchParams(searchParams)
-    newSearchParams.set('country', 'ua')
-    if (!newSearchParams.get('page')) {
+    if (!newSearchParams.toString()) { // если параметров нету (значит первый вход на страницу) то добавляю дефолтные
+      newSearchParams.set('country', 'ua')
       newSearchParams.set('page', '1')
     }
     sendRequest(newSearchParams.toString())
     setSearchParams(newSearchParams)
   }, [])
 
-
   const sendRequest = (urlParams: string) => {
-    // задача стояла проверить применен ли хотяб один фильтр - если да то делать запрос, иначе очистка фильтров
-    // там встречаеться английская литера c (си) (вначале проверял все слово, но уникаль даже одна буква в конкретном случае)
-    if (/c/.test(urlParams)) {
-      dispatch(
-        fetchArticles({
-          endpoint: 'top-headlines',
-          searchParams: urlParams
-        }),
-      )
-    } else {
-      handleClearFilter() // если оба фильтра пустые то очищаю все (стор и параметры)
-    }
+    dispatch(
+      fetchArticles({
+        endpoint: 'top-headlines',
+        searchParams: urlParams
+      }),
+    )
   }
-
   const renderContent = () => {
-    const isAnyFilterTrue = Boolean(country.short) || Boolean(category) // тут опять проверка что применен ли хотяб один фильтр
+    const errorMessageStyles = 'text-base mt-8 text-center'
+    const renderGrid = (children: React.ReactNode) => (
+      <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 lg:mx-0 lg:max-w-none lg:grid-cols-3 mb-12">
+        {children}
+      </div>)
+
     if (loading) {
-      return [...Array(9)].map((_, index) => <SkeletonArticle key={index} />)
+      return renderGrid([...Array(9)].map((_, index) => <SkeletonArticle key={index} />))
     }
     if (error) {
-      return <p>Error: {error}</p>
-    }
-    if (!isAnyFilterTrue) {
-      return <p className="text-gunmetal">Select one or two options. At least one filter must be selected.</p>
+      return <p className={errorMessageStyles}>Error: {error}</p>
     }
     if (articles.length) {
-      return articles.map((item: ArticleInterface, id: number) => <Article key={id} {...item} />)
+      return renderGrid(articles.map((item: ArticleInterface, id: number) => <Article key={id} {...item} />))
     }
+    return <p className={errorMessageStyles}>Select one or two options. At least one filter must be selected.</p>
   }
 
   return (
@@ -107,26 +96,23 @@ const Home: FC = () => {
           Select Category and/or Country
         </p>
       </div>
-      {/* <div className="flex flex-wrap sm:flex-wrap flex-col sm:flex-row"> */}
       <div className="flex flex-wrap sm:flex-wrap">
         <Select
           dataSelect={category}
           options={categoriesData}
-          onSelect={(newCategory: SelectableItem) => handleCategory(newCategory.name)}
+          onSelect={(newCategory: SelectableItem) => handleSelectChange('category', newCategory.name)}
           optionName="category"
         />
         <Select
           dataSelect={country.short}
           options={countriesData}
-          onSelect={(newCountry: SelectableItem) => handleCountry(newCountry.short)}
+          onSelect={(newCountry: SelectableItem) => handleSelectChange('country', newCountry.short)}
           optionName="country"
         />
         {/* <CalendarIcon /> */}
       </div>
-      <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 lg:mx-0 lg:max-w-none lg:grid-cols-3 mb-12">
-        {renderContent()}
-      </div>
-      {!!articles.length && !loading && !error && <Pagination totalResults={totalResults} endpoint='top-headlines' />}
+      {renderContent()}
+      {!!articles.length && !loading && !error && < Pagination totalResults={totalResults} endpoint='top-headlines' />}
     </Container>
   )
 }
