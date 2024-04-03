@@ -15,6 +15,7 @@ import SkeletonArticle from '../components/SkeletonArticle'
 import { clearArticles } from '../store/articles/articlesSlice'
 import Calendar from '../components/Calendar'
 import { CalendarIcon } from '@heroicons/react/24/outline'
+import updateSearchParams from '../utils/functions/updateSearchParams'
 
 const Home: FC = () => {
   const dispatch = useDispatch()
@@ -23,29 +24,16 @@ const Home: FC = () => {
   const category: string = searchParams.get('category') ?? ''
   const country: SelectableItem = { name: '', short: searchParams.get('country') ?? '' }
 
-  const getDataByParams = (key: string, value: string) => {
-    // кажеться можно как то оптимизировать данную функцию, многовато if-else
+  const handleSelectChange = (key: string, value: string | undefined) => {
     const newSearchParams = new URLSearchParams(searchParams)
-    if (value) {
-      newSearchParams.set(key, value)
-    } else {
-      newSearchParams.delete(key)
-    }
-    if (!newSearchParams.get('page')) {
-      newSearchParams.set('page', '1')
-    }
-    if (newSearchParams.has('category') || newSearchParams.has('country')) {
-      // если применен хотяб один фильтр то делать запрос
+    const updatedSearchParams = updateSearchParams(newSearchParams, key, value)
+    if (updatedSearchParams.has('category') || updatedSearchParams.has('country')) {
       sendRequest(newSearchParams.toString())
     } else {
-      newSearchParams.delete('page')
+      updatedSearchParams.delete('page')
       dispatch(clearArticles()) // если оба фильтра пустые то очищаю стор
     }
-    setSearchParams(newSearchParams)
-  }
-
-  const handleSelectChange = (key: string, value: string | undefined) => {
-    getDataByParams(key, value || '')
+    setSearchParams(updatedSearchParams)
   }
 
   useEffect(() => {
@@ -68,19 +56,15 @@ const Home: FC = () => {
   }
   const renderContent = () => {
     const errorMessageStyles = 'text-base mt-8 text-center'
-    const renderGrid = (children: React.ReactNode) => (
-      <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 lg:mx-0 lg:max-w-none lg:grid-cols-3 mb-12">
-        {children}
-      </div>)
-
+    const skeletonCount = !articles.length ? 3 : 9
     if (loading) {
-      return renderGrid([...Array(9)].map((_, index) => <SkeletonArticle key={index} />))
+      return [...Array(skeletonCount)].map((_, index) => <SkeletonArticle key={index} />)
     }
     if (error) {
       return <p className={errorMessageStyles}>Error: {error}</p>
     }
     if (articles.length) {
-      return renderGrid(articles.map((item: ArticleInterface, id: number) => <Article key={id} {...item} />))
+      return articles.map((item: ArticleInterface, id: number) => <Article key={id} {...item} />)
     }
     return <p className={errorMessageStyles}>Select one or two options. At least one filter must be selected.</p>
   }
@@ -111,7 +95,9 @@ const Home: FC = () => {
         />
         {/* <CalendarIcon /> */}
       </div>
+      <div className={`mx-auto ${loading || !!articles.length ? 'grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 lg:mx-0 lg:max-w-none lg:grid-cols-3 mb-12' : 'text-center'}`}>
       {renderContent()}
+      </div>
       {!!articles.length && !loading && !error && < Pagination totalResults={totalResults} endpoint='top-headlines' />}
     </Container>
   )
