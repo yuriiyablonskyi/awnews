@@ -4,9 +4,6 @@ const updateSearchParams = (searchParams: URLSearchParams, key: string, value: s
   } else {
     searchParams.delete(key)
   }
-  if (!searchParams.get('page')) {
-    searchParams.set('page', '1')
-  }
   return searchParams
 }
 

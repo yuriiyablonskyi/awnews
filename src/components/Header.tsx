@@ -1,15 +1,11 @@
-import { FC, Fragment, useState } from 'react'
 import { Dialog, Popover, Transition } from '@headlessui/react'
-import {
-  Bars3Icon,
-  MagnifyingGlassIcon,
-  XMarkIcon,
-} from '@heroicons/react/24/outline'
-import Logo from '../assets/logo.svg'
-import Container from './Container'
-import { Link } from 'react-router-dom'
+import { Bars3Icon, MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { FC, Fragment, useState } from 'react'
 import { useDispatch } from 'react-redux'
+import { Link } from 'react-router-dom'
+import Logo from '../assets/logo.svg'
 import { clearArticles } from '../store/articles/articlesSlice'
+import Container from './Container'
 
 const navigation = {
   pages: [
@@ -24,7 +20,6 @@ const Header: FC = () => {
 
   return (
     <div className="bg-white border-b border-b-stone-300 mb-8">
-      {/* Mobile menu */}
       <Transition.Root show={open} as={Fragment}>
         <Dialog as="div" className="relative z-40 lg:hidden" onClose={setOpen}>
           <Transition.Child
@@ -65,10 +60,7 @@ const Header: FC = () => {
                 <div className="space-y-6 border-t border-gray-200 px-4 py-6">
                   {navigation.pages.map(page => (
                     <div key={page.name} className="flow-root">
-                      <Link
-                        to={page.href}
-                        className="-m-2 block p-2 font-medium text-gray-900"
-                      >
+                      <Link to={page.href} className="-m-2 block p-2 font-medium text-gray-900">
                         {page.name}
                       </Link>
                     </div>
@@ -77,18 +69,12 @@ const Header: FC = () => {
 
                 <div className="space-y-6 border-t border-gray-200 px-4 py-6">
                   <div className="flow-root">
-                    <a
-                      href="#"
-                      className="-m-2 block p-2 font-medium text-gray-900"
-                    >
+                    <a href="#" className="-m-2 block p-2 font-medium text-gray-900">
                       Sign in
                     </a>
                   </div>
                   <div className="flow-root">
-                    <a
-                      href="#"
-                      className="-m-2 block p-2 font-medium text-gray-900"
-                    >
+                    <a href="#" className="-m-2 block p-2 font-medium text-gray-900">
                       Create account
                     </a>
                   </div>
@@ -113,7 +99,6 @@ const Header: FC = () => {
                 <Bars3Icon className="h-6 w-6" aria-hidden="true" />
               </button>
 
-              {/* Logo */}
               <div className="ml-4 flex lg:ml-0">
                 <Link to="/">
                   <span className="sr-only">Your Company</span>
@@ -121,7 +106,6 @@ const Header: FC = () => {
                 </Link>
               </div>
 
-              {/* Flyout menus */}
               <Popover.Group className="hidden lg:ml-8 lg:block lg:self-stretch">
                 <div className="flex h-full space-x-8">
                   {navigation.pages.map(page => (
@@ -138,17 +122,11 @@ const Header: FC = () => {
 
               <div className="ml-auto flex items-center">
                 <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
-                  <a
-                    href="#"
-                    className="text-lg font-medium text-gray-700 hover:text-gray-800"
-                  >
+                  <a href="#" className="text-lg font-medium text-gray-700 hover:text-gray-800">
                     Sign in
                   </a>
                   <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
-                  <a
-                    href="#"
-                    className="text-lg   font-medium text-gray-700 hover:text-gray-800"
-                  >
+                  <a href="#" className="text-lg font-medium text-gray-700 hover:text-gray-800">
                     Create account
                   </a>
                 </div>
@@ -157,14 +135,11 @@ const Header: FC = () => {
                 <div className="flex lg:ml-6">
                   <Link
                     to="/search"
-                    className={'p-2 text-gray-400 hover:text-gray-500'}
+                    className="p-2 text-gray-400 hover:text-gray-500"
                     onClick={() => dispatch(clearArticles())}
                   >
                     <span className="sr-only">Search</span>
-                    <MagnifyingGlassIcon
-                      className="h-6 w-6"
-                      aria-hidden="true"
-                    />
+                    <MagnifyingGlassIcon className="h-6 w-6" aria-hidden="true" />
                   </Link>
                 </div>
               </div>

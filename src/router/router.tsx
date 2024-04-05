@@ -1,8 +1,13 @@
 import { createBrowserRouter } from 'react-router-dom'
-import { RouteType } from '../types.ts'
+import App from '../App.tsx'
 import Home from '../pages/Home.tsx'
 import Search from '../pages/Search.tsx'
-import App from '../App.tsx'
+
+interface RouteType {
+  path: string
+  element: JSX.Element
+  children?: RouteType[]
+}
 
 const routes: RouteType[] = [
   {

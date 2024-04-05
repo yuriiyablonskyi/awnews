@@ -1,4 +1,4 @@
-import { SelectableItem } from '../../types'
+import { SelectableItem } from '../../store/articles/articlesTypes'
 
 const languagesData: SelectableItem[] = [
   { id: 0, short: 'ar', name: 'العربية' },
@@ -13,7 +13,7 @@ const languagesData: SelectableItem[] = [
   { id: 9, short: 'pt', name: 'Português' },
   { id: 10, short: 'ru', name: 'Русский' },
   { id: 11, short: 'sv', name: 'Svenska' },
-  { id: 12, short: 'zh', name: '文' }
+  { id: 12, short: 'zh', name: '文' },
 ]
 
 export default languagesData

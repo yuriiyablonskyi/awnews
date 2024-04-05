@@ -1,9 +1,4 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import {
-  addArticlesFailure,
-  addArticlesSuccess,
-  setLoading,
-} from './articlesSlice'
 
 interface FetchArticlesParams {
   endpoint: string
@@ -12,9 +7,8 @@ interface FetchArticlesParams {
 
 export const fetchArticles = createAsyncThunk(
   'articles/fetchArticles',
-  async ({ endpoint, searchParams }: FetchArticlesParams, { dispatch }) => {
+  async ({ endpoint, searchParams }: FetchArticlesParams, { rejectWithValue }) => {
     try {
-      dispatch(setLoading(true))
       const baseURL: string = import.meta.env.VITE_API_URL
       const apiKey: string = import.meta.env.VITE_API_KEY
       const params = new URLSearchParams()
@@ -29,14 +23,9 @@ export const fetchArticles = createAsyncThunk(
         const parsedText = JSON.parse(text).message
         throw new Error(parsedText)
       }
-
-      const data = await response.json()
-      return dispatch(addArticlesSuccess(data))
+      return await response.json()
     } catch (error) {
-      dispatch(addArticlesFailure(error.message || 'Failed to fetch articles'))
-      throw error
-    } finally {
-      dispatch(setLoading(false))
+      return rejectWithValue(error.message)
     }
   },
 )

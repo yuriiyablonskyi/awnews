@@ -9,17 +9,14 @@ function classNames(...classes) {
 }
 
 const Calendar: FC = () => {
-
   const generateDayMonth = () => {
     const days = []
     for (let i = 0; i < 36; i++) {
       days.push(dayjs().date(i))
     }
-    return console.log({ generateDayMonth: days });
-
+    return console.log({ generateDayMonth: days })
   }
   generateDayMonth()
-
 
   const today = dayjs()
   const day = today.date()
@@ -28,7 +25,7 @@ const Calendar: FC = () => {
   const [currentMonth, setCurrentMonth] = useState(month)
 
   return (
-    <div className='max-w-md'>
+    <div className="max-w-md">
       <div className="flex items-center">
         <h2 className="flex-auto text-sm font-semibold text-gray-900">{1}</h2>
         <button
@@ -60,7 +57,7 @@ const Calendar: FC = () => {
           <div key={day.date} className={classNames(dayIdx > 6 && 'border-t border-gray-200', 'py-2')}>
             <button
               type="button"
-            // className='text-white'
+              // className='text-white'
             >
               <time dateTime={day.date}>{day.day}</time>
             </button>
