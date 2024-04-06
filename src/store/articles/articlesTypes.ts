@@ -7,11 +7,11 @@ export interface ArticleInterface {
   publishedAt: string
 }
 
-export interface RootState {
+export interface ArticlesState {
   articles: ArticleInterface[]
   totalResults: number
-  error: Error | null
   loading: boolean
+  error: string | null
 }
 
 export interface SelectableItem {
@@ -20,8 +20,8 @@ export interface SelectableItem {
   short?: string
 }
 
-export interface RouteType {
-  path: string
-  element: JSX.Element
-  children?: RouteType[]
+export interface SelectableItem {
+  id?: number
+  name: string
+  short?: string
 }

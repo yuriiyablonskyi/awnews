@@ -1,96 +1,80 @@
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
 import { FC, useState } from 'react'
-import { Link } from 'react-router-dom'
+import ReactPaginate from 'react-paginate'
+import { useDispatch } from 'react-redux'
+import { useSearchParams } from 'react-router-dom'
+import { fetchArticles } from '../store/articles/articlesActions'
+import classNames from '../utils/functions/classNames'
 
-const Pagination: FC = ({ totalResults }) => {
-  const [currentPage, setCurrentPage] = useState(1)
+const Pagination: FC<{ totalResults: number; endpoint: string }> = ({ totalResults, endpoint }) => {
+  const dispatch = useDispatch()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [currentPage, setCurrentPage] = useState<number>(Number(searchParams.get('page')) || 1)
+
+  let endIndex = currentPage * 9
+  if (endIndex > totalResults) {
+    endIndex = totalResults
+  }
+
+  const handlePageClick = (event: { selected: number }) => {
+    const newPage = event.selected + 1
+    const newSearchParams = new URLSearchParams(searchParams.toString())
+    newSearchParams.set('page', newPage.toString())
+    setCurrentPage(newPage)
+    setSearchParams(newSearchParams)
+    sendRequest(newSearchParams.toString())
+  }
+
+  const sendRequest = (urlParams: string) => {
+    dispatch(
+      fetchArticles({
+        endpoint,
+        searchParams: urlParams,
+      }),
+    )
+  }
+
+  const commonClasses = `relative inline-flex items-center px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0`
+  const buttonPrevClass = classNames(commonClasses, 'rounded-l-md', currentPage === 1 && 'cursor-not-allowed')
+  const buttonNextClass = classNames(
+    commonClasses,
+    'rounded-r-md',
+    currentPage === Math.ceil(totalResults / 9) && 'cursor-not-allowed',
+  )
 
   return (
-    <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
-      <div className="flex flex-1 justify-between sm:hidden">
-        <a
-          href="#"
-          className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-        >
-          Previous
-        </a>
-        <a
-          href="#"
-          className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-        >
-          Next
-        </a>
+    <div className="flex flex-1 flex-col sm:flex-row  items-center sm:justify-between justify-center mb-4 ">
+      <div className="order-2 sm:order-1">
+        <p className="text-sm text-gray-700">
+          Showing <span className="font-medium">{(Number(searchParams.get('page')) - 1) * 9 + 1}</span> to
+          <span className="font-medium"> {endIndex} </span>
+          of <span className="font-medium">{totalResults}</span> results
+        </p>
       </div>
-      <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-        <div>
-          <p className="text-sm text-gray-700">
-            Showing <span className="font-medium">1</span> to{' '}
-            <span className="font-medium">{Math.ceil(totalResults / 9)}</span>{' '}
-            of <span className="font-medium">{totalResults}</span> results
-          </p>
-        </div>
-        <div>
-          <nav
-            className="isolate inline-flex -space-x-px rounded-md shadow-sm"
-            aria-label="Pagination"
-          >
-            <a
-              href="#"
-              className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
-            >
-              <span className="sr-only">Previous</span>
-              <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
-            </a>
-            <Link
-              to="/1"
-              aria-current="page"
-              className="relative z-10 inline-flex items-center bg-indigo-600 px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              {currentPage}
-            </Link>
-            <Link
-              to="/2"
-              className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
-            >
-              {currentPage + 1}
-            </Link>
-            <Link
-              to="/3"
-              className="relative hidden items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 md:inline-flex"
-            >
-              {currentPage + 2}
-            </Link>
-            <span className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0">
-              ...
-            </span>
-            <Link
-              to={String(Math.ceil(totalResults / 9) - 2)}
-              className="relative hidden items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 md:inline-flex"
-            >
-              {Math.ceil(totalResults / 9) - 2}
-            </Link>
-            <Link
-              to={String(Math.ceil(totalResults / 9) - 1)}
-              className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
-            >
-              {Math.ceil(totalResults / 9) - 1}
-            </Link>
-            <Link
-              to={String(Math.ceil(totalResults / 9))}
-              className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
-            >
-              {Math.ceil(totalResults / 9)}
-            </Link>
-            <a
-              href="#"
-              className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
-            >
-              <span className="sr-only">Next</span>
-              <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
-            </a>
-          </nav>
-        </div>
-      </div>
+      <ReactPaginate
+        nextLabel={
+          <button className={buttonNextClass}>
+            <span className="sr-only">Next</span>
+            <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
+          </button>
+        }
+        onPageChange={handlePageClick}
+        pageRangeDisplayed={1}
+        marginPagesDisplayed={1}
+        pageCount={Math.ceil(totalResults / 9)}
+        previousLabel={
+          <button className={buttonPrevClass}>
+            <span className="sr-only">Previous</span>
+            <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
+          </button>
+        }
+        pageLinkClassName="items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:ring-1 focus:z-20 focus:outline-offset-0 inline-flex"
+        breakLabel="..."
+        forcePage={currentPage - 1}
+        breakClassName="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0"
+        containerClassName="isolate inline-flex rounded-md shadow-sm order-1 sm:order-2 mb-2 sm:mb-0"
+        activeClassName="z-10 bg-stone-400 text-white outline-offset-2 outline-indigo-600"
+      />
     </div>
   )
 }

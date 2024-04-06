@@ -1,81 +1,92 @@
+import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { FC, KeyboardEvent, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { useSearchParams } from 'react-router-dom'
+import Article from '../components/Article'
 import Container from '../components/Container'
+import Pagination from '../components/Pagination'
 import Select from '../components/Select'
+import SkeletonArticle from '../components/SkeletonArticle'
+import { fetchArticles } from '../store/articles/articlesActions'
+import { clearArticles } from '../store/articles/articlesSlice'
+import { articlesData } from '../store/articlesSelectors'
+import { ArticleInterface, ArticlesState, SelectableItem } from '../store/articles/articlesTypes'
 import languagesData from '../utils/data/languagesData'
 import sortByData from '../utils/data/sortByData'
-import { fetchSearchedArticles } from '../store/articles/articlesActions'
-import { articlesData } from '../store/articlesSelectors'
-import { ArticleInterface } from '../types'
-import Article from '../components/Article'
-import { clearArticles } from '../store/articles/articlesSlice'
-import SkeletonArticle from '../components/SkeletonArticle'
-import Pagination from '../components/Pagination'
-import { useSearchParams } from 'react-router-dom'
+import updateSearchParams from '../utils/functions/updateSearchParams'
+import classNames from '../utils/functions/classNames'
 
 const Search: FC = () => {
   const dispatch = useDispatch()
-  const { articles, totalResults, loading, error } = useSelector(articlesData)
-  const [keyword, setKeyword] = useState('')
-  const [language, setLanguage] = useState<{ short: string }>({ short: '' })
-  const [sortBy, setSortBy] = useState('')
-  const [searchParams, setSearchParams] = useSearchParams({})
-  const languageName = language.short
-  const hasArticles = !!articles.length
-  const isKeywordEmpty = keyword === ''
+  const [searchParams, setSearchParams] = useSearchParams()
+  const { articles, totalResults, loading, error }: ArticlesState = useSelector(articlesData)
+  const [keyword, setKeyword] = useState<string>(searchParams.get('q') ?? '')
+  const [language, setLanguage] = useState<SelectableItem>({ name: '', short: searchParams.get('language') ?? '' })
+  const [sortBy, setSortBy] = useState<string>(searchParams.get('sortBy') ?? '')
 
-  const handleSearch = () => {
-    if (isKeywordEmpty) return alert('No keywords')
-    dispatch(fetchSearchedArticles({ keyword, language: languageName, sortBy }))
+  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSelectChange('q', keyword)
+    }
+  }
+
+  const handleLanguage = (value: SelectableItem) => {
+    handleSelectChange('language', value.short)
+    setLanguage(value)
+  }
+
+  const handleSorting = (value: string) => {
+    handleSelectChange('sortBy', value)
+    setSortBy(value)
+  }
+
+  const handleSelectChange = (key: string, value: string | undefined) => {
+    const newSearchParams = new URLSearchParams(searchParams)
+    const updatedSearchParams = updateSearchParams(newSearchParams, key, value)
+    if (keyword) {
+      updatedSearchParams.set('page', '1')
+      sendRequest(newSearchParams.toString())
+    }
+    setSearchParams(updatedSearchParams)
   }
 
   const handleClearFilter = () => {
     setKeyword('')
-    setLanguage({ short: '' })
+    setLanguage({ name: '', short: '' })
     setSortBy('')
     dispatch(clearArticles())
+    setSearchParams(new URLSearchParams())
   }
 
-  useEffect(() => {
-    const params = Object.fromEntries(searchParams.entries())
+  useEffect(() => sendRequest(searchParams.toString()), [])
 
-    if (params.q) {
-      setKeyword(params.q)
-    }
-    if (params.language) {
-      setLanguage(
-        languagesData.find(language => language.short === params.language),
+  const sendRequest = (urlParams: string) => {
+    if (keyword) {
+      dispatch(
+        fetchArticles({
+          endpoint: 'everything',
+          searchParams: urlParams,
+        }),
       )
     }
-    if (params.sortBy) {
-      setSortBy(params.sortBy)
-    }
-  }, [])
+  }
 
-  useEffect(() => {
-    const paramsToUpdate = {}
-
-    if (!isKeywordEmpty) {
-      paramsToUpdate.q = keyword
+  const renderContent = () => {
+    const errorMessageStyles = 'text-base mt-8 text-center'
+    const skeletonCount = !articles.length ? 3 : 9
+    if (loading) {
+      return [...Array(skeletonCount)].map((_, index) => <SkeletonArticle key={index} />)
     }
-    if (languageName) {
-      paramsToUpdate.language = languageName
+    if (error) {
+      return <p className={errorMessageStyles}>Error: {error}</p>
     }
-    if (sortBy) {
-      paramsToUpdate.sortBy = sortBy
+    if (articles.length) {
+      return articles.map((item: ArticleInterface, id: number) => <Article key={id} {...item} />)
     }
-
-    setSearchParams(paramsToUpdate)
-
-    if (isKeywordEmpty) return
-    handleSearch()
-  }, [keyword, language, sortBy, dispatch])
-
-  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      handleSearch()
+    if (!searchParams.get('q')) {
+      return <p className={errorMessageStyles}>Start your search to see results.</p>
     }
+    return <p className={errorMessageStyles}>No articles found.</p>
   }
 
   return (
@@ -84,8 +95,7 @@ const Search: FC = () => {
         Article Search: Explore Content Based on Your Query
       </h2>
       <p className="text-base leading-8 font-sans mb-1.5">
-        Search articles effortlessly and refine your query using convenient
-        filters
+        Search articles effortlessly and refine your query using convenient filters
       </p>
       <div className="flex border-b border-b-stone-300 mb-4">
         <input
@@ -100,14 +110,16 @@ const Search: FC = () => {
           <button
             onClick={handleClearFilter}
             className=" text-gray-400 hover:text-gray-500"
+            aria-label="Clear all filters"
           >
             <span className="sr-only">Clear filter</span>
             <XMarkIcon className="h-6 w-6" aria-hidden="true" />
           </button>
           <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
           <button
-            onClick={handleSearch}
+            onClick={() => handleSelectChange('q', keyword)}
             className="text-gray-400 hover:text-gray-500"
+            aria-label="Start search"
           >
             <span className="sr-only">Search</span>
             <MagnifyingGlassIcon className="h-6 w-6" aria-hidden="true" />
@@ -116,37 +128,29 @@ const Search: FC = () => {
       </div>
       <div className="flex flex-col sm:flex-row">
         <Select
-          dataSelect={languageName}
+          dataSelect={language.short}
           options={languagesData}
-          onSelect={newLanguage => setLanguage(newLanguage)}
+          onSelect={(newLanguage: SelectableItem) => handleLanguage(newLanguage)}
           optionName="language"
         />
         <Select
           dataSelect={sortBy}
           options={sortByData}
-          onSelect={newSortByData => setSortBy(newSortByData.name)}
-          optionName={'sort by'}
+          onSelect={(newSortByData: SelectableItem) => handleSorting(newSortByData.name)}
+          optionName="sort by"
         />
       </div>
-
-      {error && <p>Error: {error}</p>}
-      {isKeywordEmpty && !loading && !error && !hasArticles && (
-        <p className="text-gunmetal">Start your search to see results.</p>
-      )}
-      {!loading && !error && !hasArticles && !isKeywordEmpty && (
-        <p className="text-gunmetal">No articles found.</p>
-      )}
-      <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 lg:mx-0 lg:max-w-none lg:grid-cols-3 mb-12">
-        {loading &&
-          [...Array(3)].map((_, index) => <SkeletonArticle key={index} />)}
-        {!loading &&
-          !error &&
-          hasArticles &&
-          articles.map((item: ArticleInterface, id: number) => (
-            <Article key={id} {...item} />
-          ))}
+      <div
+        className={classNames(
+          'mx-auto',
+          loading || !!articles.length
+            ? 'grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 lg:mx-0 lg:max-w-none lg:grid-cols-3 mb-12'
+            : 'text-center',
+        )}
+      >
+        {renderContent()}
       </div>
-      {hasArticles && <Pagination totalResults={totalResults} />}
+      {!!articles.length && !loading && !error && <Pagination totalResults={totalResults} endpoint="everything" />}
     </Container>
   )
 }

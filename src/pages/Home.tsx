@@ -1,108 +1,120 @@
 import { FC, useEffect, useState } from 'react'
-import countriesData from '../utils/data/countriesData'
-import categoriesData from '../utils/data/categoriesData'
-import Container from '../components/Container'
-import { fetchArticles } from '../store/articles/articlesActions'
-import { useSearchParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { articlesData } from '../store/articlesSelectors'
-import { ArticleInterface } from '../types'
+import { useSearchParams } from 'react-router-dom'
 import Article from '../components/Article'
-import Select from '../components/Select'
-import { SelectableItem } from '../types'
+import Container from '../components/Container'
 import Pagination from '../components/Pagination'
+import Select from '../components/Select'
 import SkeletonArticle from '../components/SkeletonArticle'
+import { fetchArticles } from '../store/articles/articlesActions'
 import { clearArticles } from '../store/articles/articlesSlice'
+import { articlesData } from '../store/articlesSelectors'
+import { ArticleInterface, ArticlesState, SelectableItem } from '../store/articles/articlesTypes'
+import categoriesData from '../utils/data/categoriesData'
+import countriesData from '../utils/data/countriesData'
+import updateSearchParams from '../utils/functions/updateSearchParams'
+import classNames from '../utils/functions/classNames'
 
 const Home: FC = () => {
   const dispatch = useDispatch()
-  const { articles, totalResults, loading, error } = useSelector(articlesData)
-  const [category, setCategory] = useState('')
-  const [country, setCountry] = useState(countriesData[50])
-  const [searchParams, setSearchParams] = useSearchParams({})
-  const countryName = country.short
-  const isBothSelected = countryName || category
-  const hasArticles = !!articles.length
+  const [searchParams, setSearchParams] = useSearchParams()
+  const { articles, totalResults, loading, error }: ArticlesState = useSelector(articlesData)
+  const [category, setCategory] = useState<string>(searchParams.get('category') ?? '')
+  const [country, setCountry] = useState<SelectableItem>({
+    name: '' ?? 'Ukraine',
+    short: searchParams.get('country') ?? 'ua',
+  })
 
-  useEffect(() => {
-    const params = Object.fromEntries(searchParams.entries())
+  const handleCategory = (value: string) => {
+    handleSelectChange('category', value)
+    setCategory(value)
+  }
 
-    if (params.country) {
-      setCountry(
-        countriesData.find(country => country.short === params.country),
-      )
-    }
-    if (params.category) {
-      setCategory(params.category)
-    }
-  }, [])
+  const handleCountry = (value: SelectableItem) => {
+    handleSelectChange('country', value.short)
+    setCountry(value)
+  }
 
-  useEffect(() => {
-    const paramsToUpdate = {}
-
-    if (countryName) {
-      paramsToUpdate.country = countryName
-    }
-    if (category) {
-      paramsToUpdate.category = category
-    }
-
-    setSearchParams(paramsToUpdate)
-
-    if (isBothSelected) {
-      dispatch(fetchArticles({ country: countryName, category }))
+  const handleSelectChange = (key: string, value: string | undefined) => {
+    const newSearchParams = new URLSearchParams(searchParams)
+    const updatedSearchParams = updateSearchParams(newSearchParams, key, value)
+    if (updatedSearchParams.has('category') || updatedSearchParams.has('country')) {
+      updatedSearchParams.set('page', '1')
+      sendRequest(updatedSearchParams.toString())
     } else {
+      updatedSearchParams.delete('page')
       dispatch(clearArticles())
     }
-  }, [countryName, category, isBothSelected, dispatch, setSearchParams])
+    setSearchParams(updatedSearchParams)
+  }
+
+  useEffect(() => {
+    const newSearchParams = new URLSearchParams(searchParams)
+    if (!newSearchParams.toString()) {
+      newSearchParams.set('country', 'ua')
+      newSearchParams.set('page', '1')
+    }
+    sendRequest(newSearchParams.toString())
+    setSearchParams(newSearchParams)
+  }, [])
+
+  const sendRequest = (urlParams: string) => {
+    dispatch(
+      fetchArticles({
+        endpoint: 'top-headlines',
+        searchParams: urlParams,
+      }),
+    )
+  }
+
+  const renderContent = () => {
+    const errorMessageStyles = 'text-base mt-8 text-center'
+    const skeletonCount = !articles.length ? 3 : 9
+    if (loading) {
+      return [...Array(skeletonCount)].map((_, index) => <SkeletonArticle key={index} />)
+    }
+    if (error) {
+      return <p className={errorMessageStyles}>Error: {error}</p>
+    }
+    if (articles.length) {
+      return articles.map((item: ArticleInterface, id: number) => <Article key={id} {...item} />)
+    }
+    return <p className={errorMessageStyles}>Select one or two options. At least one filter must be selected.</p>
+  }
 
   return (
     <Container>
+      {/* <Calendar /> */}
       <div className="mb-4 sm:mb-4">
-        <h2 className="text-2xl font-bold font-serif tracking-tight sm:text-3xl">
-          Stay update with AWNews
-        </h2>
-        <p className="text-base leading-8 font-sans">
-          Select Category and/or Country
-        </p>
+        <h2 className="text-2xl font-bold font-serif tracking-tight sm:text-3xl">Stay update with AWNews</h2>
+        <p className="text-base leading-8 font-sans">Select Category and/or Country</p>
       </div>
-      <div className="flex flex-col sm:flex-row">
+      <div className="flex flex-wrap sm:flex-wrap">
         <Select
           dataSelect={category}
           options={categoriesData}
-          onSelect={(newCategory: SelectableItem) =>
-            setCategory(newCategory.name)
-          }
+          onSelect={(newCategory: SelectableItem) => handleCategory(newCategory.name)}
           optionName="category"
         />
         <Select
-          dataSelect={countryName}
+          dataSelect={country.short}
           options={countriesData}
-          onSelect={(newCountry: SelectableItem) => setCountry(newCountry)}
+          onSelect={(newCountry: SelectableItem) => handleCountry(newCountry)}
           optionName="country"
         />
+        {/* <CalendarIcon /> */}
       </div>
-      {/* стоит ли создать компонент ArticlesContent в котором будут отображаться сообщение об ошибке либо сам контент */}
-      {error && <p>Error: {error}</p>}
-      {!isBothSelected && (
-        <p className="text-gunmetal">
-          Select one or two options. At least one filter must be selected.
-        </p>
-      )}
-      {!loading && !error && !hasArticles && isBothSelected && (
-        <p className="text-gunmetal">No articles found.</p>
-      )}
-      <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 lg:mx-0 lg:max-w-none lg:grid-cols-3 mb-12">
-        {loading &&
-          [...Array(3)].map((_, index) => <SkeletonArticle key={index} />)}
-        {!loading &&
-          !error &&
-          hasArticles &&
-          articles.map((item: ArticleInterface, id: number) => (
-            <Article key={id} {...item} />
-          ))}
+      <div
+        className={classNames(
+          'mx-auto',
+          loading || !!articles.length
+            ? 'grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 lg:mx-0 lg:max-w-none lg:grid-cols-3 mb-12'
+            : 'text-center',
+        )}
+      >
+        {renderContent()}
       </div>
-      {hasArticles && <Pagination totalResults={totalResults} />}
+      {!!articles.length && !loading && !error && <Pagination totalResults={totalResults} endpoint="top-headlines" />}
     </Container>
   )
 }

@@ -1,5 +1,13 @@
-import { PayloadAction, createSlice } from '@reduxjs/toolkit'
-import { ArticleInterface, RootState } from '../../types'
+import { PayloadAction, createSlice, isAnyOf } from '@reduxjs/toolkit'
+import { ArticleInterface } from './articlesTypes'
+import { fetchArticles } from './articlesActions'
+
+interface RootState {
+  articles: ArticleInterface[]
+  totalResults: number
+  error: string | null
+  loading: boolean
+}
 
 const initialState: RootState = {
   totalResults: 0,
@@ -12,25 +20,6 @@ const articlesSlice = createSlice({
   name: 'articlesData',
   initialState,
   reducers: {
-    setLoading: (state, action: PayloadAction<boolean>) => {
-      state.loading = action.payload
-    },
-    addArticlesSuccess: (
-      state,
-      action: PayloadAction<{
-        articles: ArticleInterface[]
-        totalResults: number
-      }>,
-    ) => {
-      state.articles = action.payload.articles
-      state.totalResults = action.payload.totalResults
-      state.error = null
-      state.loading = false
-    },
-    addArticlesFailure: (state, action: PayloadAction<Error>) => {
-      state.error = action.payload
-      state.loading = false
-    },
     clearArticles: state => {
       state.articles = []
       state.totalResults = 0
@@ -38,12 +27,23 @@ const articlesSlice = createSlice({
       state.loading = false
     },
   },
+  extraReducers: builder => {
+    builder
+      .addCase(fetchArticles.fulfilled, (state, action) => {
+        state.articles = action.payload.articles
+        state.totalResults = action.payload.totalResults
+        state.error = null
+        state.loading = false
+      })
+      .addMatcher(isAnyOf(fetchArticles.rejected), (state, action) => {
+        state.error = action.payload
+        state.loading = false
+      })
+      .addMatcher(isAnyOf(fetchArticles.pending), (state, action) => {
+        state.loading = action.meta.requestStatus === 'pending'
+      })
+  },
 })
 
-export const {
-  addArticlesSuccess,
-  addArticlesFailure,
-  clearArticles,
-  setLoading,
-} = articlesSlice.actions
+export const { clearArticles } = articlesSlice.actions
 export default articlesSlice.reducer
