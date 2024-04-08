@@ -26,7 +26,7 @@ const Select: FC<SelectProps> = ({ dataSelect, options, onSelect, optionName }) 
                 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2
                 focus:ring-neutral-500 sm:text-sm sm:leading-6"
               >
-                <span>{dataSelect || `Select a ${optionName}`}</span>
+                <span>{dataSelect || `Select ${optionName}`}</span>
                 <span className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
                   <ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
                 </span>

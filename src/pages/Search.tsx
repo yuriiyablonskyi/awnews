@@ -25,7 +25,7 @@ const Search: FC = () => {
   const [sortBy, setSortBy] = useState<string>(searchParams.get('sortBy') ?? '')
 
   const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && keyword) {
       handleSelectChange('q', keyword)
     }
   }
@@ -118,8 +118,13 @@ const Search: FC = () => {
           <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
           <button
             onClick={() => handleSelectChange('q', keyword)}
-            className="text-gray-400 hover:text-gray-500"
+            className={classNames(
+              'text-gray-400',
+              keyword && 'hover:text-gray-500 cursor-pointer',
+              !keyword && 'cursor-auto',
+            )}
             aria-label="Start search"
+            disabled={!keyword}
           >
             <span className="sr-only">Search</span>
             <MagnifyingGlassIcon className="h-6 w-6" aria-hidden="true" />

@@ -19,11 +19,12 @@ const Option: FC<OptionProps> = ({ select, optionName, onChange }) => (
         'relative cursor-default select-none py-2 pl-3 pr-9',
       )
     }
-    value={select || { name: `Select a ${optionName}` }}
+    value={select}
+    // value={select || { name: `Select21321312312 a ${optionName}` }}
   >
     {({ selected, active }) => (
       <>
-        <span>{select?.name || `Select a ${optionName}`}</span>
+        <span>{select?.name || `Select ${optionName}`}</span>
         {selected ? (
           <span
             className={classNames(
