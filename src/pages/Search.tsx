@@ -1,20 +1,21 @@
-import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { CalendarIcon, MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { FC, KeyboardEvent, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useSearchParams } from 'react-router-dom'
 import Article from '../components/Article'
+import Calendar from '../components/Calendar'
 import Container from '../components/Container'
 import Pagination from '../components/Pagination'
 import Select from '../components/Select'
 import SkeletonArticle from '../components/SkeletonArticle'
 import { fetchArticles } from '../store/articles/articlesActions'
 import { clearArticles } from '../store/articles/articlesSlice'
-import { articlesData } from '../store/articlesSelectors'
 import { ArticleInterface, ArticlesState, SelectableItem } from '../store/articles/articlesTypes'
+import { articlesData } from '../store/articlesSelectors'
 import languagesData from '../utils/data/languagesData'
 import sortByData from '../utils/data/sortByData'
-import updateSearchParams from '../utils/functions/updateSearchParams'
 import classNames from '../utils/functions/classNames'
+import dayjs from 'dayjs'
 
 const Search: FC = () => {
   const dispatch = useDispatch()
@@ -23,6 +24,10 @@ const Search: FC = () => {
   const [keyword, setKeyword] = useState<string>(searchParams.get('q') ?? '')
   const [language, setLanguage] = useState<SelectableItem>({ name: '', short: searchParams.get('language') ?? '' })
   const [sortBy, setSortBy] = useState<string>(searchParams.get('sortBy') ?? '')
+
+  const [showCalendar, setShowCalendar] = useState(false)
+  const [dateType, setDateType] = useState('')
+  const [dateCalendar, setDateCalendar] = useState('')
 
   const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && keyword) {
@@ -40,14 +45,34 @@ const Search: FC = () => {
     setSortBy(value)
   }
 
+  const handleDate = (newDate: string) => {
+    setShowCalendar(false)
+    setDateType(newDate)
+  }
+
+  const handleDataFromCalendar = (data: string) => {
+    setShowCalendar(false)
+    setDateCalendar(data)
+    if (dateType === 'From date') {
+      handleSelectChange('from', data)
+    } else if (dateType === 'To date') {
+      handleSelectChange('to', data)
+    }
+    // } else if (dateType === 'From date to date' ) {
+  }
+
   const handleSelectChange = (key: string, value: string | undefined) => {
     const newSearchParams = new URLSearchParams(searchParams)
-    const updatedSearchParams = updateSearchParams(newSearchParams, key, value)
+    if (value) {
+      newSearchParams.set(key, value)
+    } else {
+      newSearchParams.delete(key)
+    }
     if (keyword) {
-      updatedSearchParams.set('page', '1')
+      newSearchParams.set('page', '1')
       sendRequest(newSearchParams.toString())
     }
-    setSearchParams(updatedSearchParams)
+    setSearchParams(newSearchParams)
   }
 
   const handleClearFilter = () => {
@@ -131,7 +156,7 @@ const Search: FC = () => {
           </button>
         </div>
       </div>
-      <div className="flex flex-col sm:flex-row">
+      <div className="flex flex-col sm:flex-row items-center">
         <Select
           dataSelect={language.short}
           options={languagesData}
@@ -144,6 +169,36 @@ const Search: FC = () => {
           onSelect={(newSortByData: SelectableItem) => handleSorting(newSortByData.name)}
           optionName="sort by"
         />
+        {/* from=2024-04-07&to=2024-04-07 */}
+        <Select
+          dataSelect={dateType}
+          options={[
+            { id: 0, name: 'From date' },
+            { id: 1, name: 'To date' },
+            { id: 2, name: 'From date to date' },
+          ]}
+          onSelect={(newDate: SelectableItem) => handleDate(newDate.name)}
+          optionName="date range"
+        />
+        <div className="relative">
+          {dateType && (
+            <div
+              className="flex items-center w-44 h-9 cursor-pointer rounded-md bg-white py-1.5 px-3 text-left
+            text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2
+            focus:ring-neutral-500 sm:text-sm sm:leading-6"
+              onClick={() => setShowCalendar(true)}
+            >
+              <input
+                className="outline-none cursor-pointer w-full"
+                type="text"
+                value={(dateCalendar && dayjs(dateCalendar).format('D MMMM YYYY')) || 'Select date'} // отображать  выбранную дату в другом формате либо текст
+                readOnly
+              />
+              <CalendarIcon className="w-5 h-5" />
+            </div>
+          )}
+          {showCalendar && <Calendar onDataFromChild={handleDataFromCalendar} />}
+        </div>
       </div>
       <div
         className={classNames(

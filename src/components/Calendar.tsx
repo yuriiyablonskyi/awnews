@@ -18,7 +18,7 @@ const Calendar: FC = ({ onDataFromChild }) => {
   }
 
   return (
-    <div className="max-w-md">
+    <div className="absolute z-20 w-72 mt-1 p-3 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
       <div className="flex items-center">
         <h2 className="flex-auto text-sm font-semibold text-gray-900">{today.format('MMMM YYYY')}</h2>
         <button
@@ -31,25 +31,28 @@ const Calendar: FC = ({ onDataFromChild }) => {
         </button>
         <button
           type="button"
-          className="-my-1.5 -mr-1.5 ml-2 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500"
+          className={classNames(
+            '-my-1.5 -mr-1.5 ml-2 flex flex-none items-center justify-center p-1.5 text-gray-400',
+            currentDate.isAfter(today, 'month') && 'hover:text-gray-500',
+          )}
           onClick={() => setToday(today.month(today.month() + 1))}
+          disabled={!currentDate.isAfter(today, 'month')} // если следующий месяц позже чем сегодняшний то отключаю кнопку
         >
           <span className="sr-only">Next month</span>
           <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
         </button>
       </div>
-      <div className="mt-10 grid grid-cols-7 text-center text-xs leading-6 text-gray-500">
+      <div className="mt-8 grid grid-cols-7 text-center text-xs leading-6 text-gray-500">
         {daysOfWeek.map((day, i) => (
           <div key={i}>{day}</div>
         ))}
       </div>
-      <div className="mt-2 grid grid-cols-7 text-sm">
-        {datesArray.map(({ date, isToday, isCurrentMonth }: DayInfo) => {
+      <div className="mt-1 grid grid-cols-7 text-sm">
+        {datesArray.map(({ date, isToday, isCurrentMonth, isLaterThanToday }: DayInfo) => {
           const dayItem: string = date.toString().slice(5, 16)
           const daySelected = selectDate.toString() === date.toString()
-
           return (
-            <div key={dayItem} className={'py-2'}>
+            <div key={dayItem} className="py-1.5">
               <button
                 onClick={() => handleClickDate(date)}
                 type="button"
@@ -60,10 +63,11 @@ const Calendar: FC = ({ onDataFromChild }) => {
                   !daySelected && !isToday && !isCurrentMonth && 'text-gray-400',
                   daySelected && isToday && 'bg-indigo-600',
                   daySelected && !isToday && 'bg-gray-900',
-                  !daySelected && 'hover:bg-gray-200',
+                  !daySelected && !isLaterThanToday && 'hover:bg-gray-200',
                   (daySelected || isToday) && 'font-semibold',
-                  'mx-auto flex h-8 w-8 items-center justify-center rounded-full',
+                  'mx-auto flex h-6 w-6 items-center justify-center rounded-full',
                 )}
+                disabled={isLaterThanToday}
               >
                 <time dateTime={dayItem}>{date.date()}</time>
               </button>

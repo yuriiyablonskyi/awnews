@@ -1,9 +1,7 @@
-import { CalendarIcon } from '@heroicons/react/24/outline'
 import { FC, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useSearchParams } from 'react-router-dom'
 import Article from '../components/Article'
-import Calendar from '../components/Calendar'
 import Container from '../components/Container'
 import Pagination from '../components/Pagination'
 import Select from '../components/Select'
@@ -15,7 +13,6 @@ import { articlesData } from '../store/articlesSelectors'
 import categoriesData from '../utils/data/categoriesData'
 import countriesData from '../utils/data/countriesData'
 import classNames from '../utils/functions/classNames'
-import updateSearchParams from '../utils/functions/updateSearchParams'
 
 const Home: FC = () => {
   const dispatch = useDispatch()
@@ -27,20 +24,6 @@ const Home: FC = () => {
     short: searchParams.get('country') ?? 'ua',
   })
 
-  const [dateType, setDateType] = useState('')
-
-  const [showCalendar, setShowCalendar] = useState(false)
-
-  const handleDataFromCalendar = (data: string) => {
-    setShowCalendar(false)
-    if (dateType === 'From date') {
-      handleSelectChange('from', data)
-    } else if (dateType === 'To date') {
-      handleSelectChange('to', data)
-    }
-    // } else if (dateType === 'From date to date' ) {
-  }
-
   const handleCategory = (value: string) => {
     handleSelectChange('category', value)
     setCategory(value)
@@ -51,26 +34,21 @@ const Home: FC = () => {
     setCountry(value)
   }
 
-  const handleDate = (newDate: string) => {
-    if (newDate) {
-      setShowCalendar(true)
-    } else {
-      setShowCalendar(false)
-    }
-    setDateType(newDate)
-  }
-
   const handleSelectChange = (key: string, value: string | undefined) => {
     const newSearchParams = new URLSearchParams(searchParams)
-    const updatedSearchParams = updateSearchParams(newSearchParams, key, value)
-    if (updatedSearchParams.has('category') || updatedSearchParams.has('country')) {
-      updatedSearchParams.set('page', '1')
-      sendRequest(updatedSearchParams.toString())
+    if (value) {
+      newSearchParams.set(key, value)
     } else {
-      updatedSearchParams.delete('page')
+      newSearchParams.delete(key)
+    }
+    if (newSearchParams.has('category') || newSearchParams.has('country')) {
+      newSearchParams.set('page', '1')
+      sendRequest(newSearchParams.toString())
+    } else {
+      newSearchParams.delete('page')
       dispatch(clearArticles())
     }
-    setSearchParams(updatedSearchParams)
+    setSearchParams(newSearchParams)
   }
 
   useEffect(() => {
@@ -84,12 +62,12 @@ const Home: FC = () => {
   }, [])
 
   const sendRequest = (urlParams: string) => {
-    // dispatch(
-    //   fetchArticles({
-    //     endpoint: 'top-headlines',
-    //     searchParams: urlParams,
-    //   }),
-    // )
+    dispatch(
+      fetchArticles({
+        endpoint: 'top-headlines',
+        searchParams: urlParams,
+      }),
+    )
   }
 
   const renderContent = () => {
@@ -126,20 +104,7 @@ const Home: FC = () => {
           onSelect={(newCountry: SelectableItem) => handleCountry(newCountry)}
           optionName="country"
         />
-        {/* from=2024-04-07&to=2024-04-07 */}
-        <Select
-          dataSelect={dateType}
-          options={[
-            { id: 0, name: 'From date' },
-            { id: 1, name: 'To date' },
-            { id: 2, name: 'From date to date' },
-          ]}
-          onSelect={(newDate: SelectableItem) => handleDate(newDate.name)}
-          optionName="date range"
-        />
-        {/* <CalendarIcon /> */}
       </div>
-      {showCalendar && <Calendar onDataFromChild={handleDataFromCalendar} />}
       <div
         className={classNames(
           'mx-auto',

@@ -16,7 +16,7 @@ const Option: FC<OptionProps> = ({ select, optionName, onChange }) => (
     className={({ active }) =>
       classNames(
         active ? 'bg-stone-300 text-silver cursor-pointer' : 'text-gray-900',
-        'relative cursor-default select-none py-2 pl-3 pr-9',
+        'relative cursor-pointer select-none py-2 pl-3 pr-9',
       )
     }
     value={select}
