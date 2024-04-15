@@ -50,6 +50,8 @@ const Search: FC = () => {
     }
     if (keyword) {
       newSearchParams.set('page', '1')
+    } else {
+      newSearchParams.delete('page')
     }
     sendRequest(newSearchParams.toString())
     setSearchParams(newSearchParams)
@@ -137,7 +139,7 @@ const Search: FC = () => {
           </button>
         </div>
       </div>
-      <div className="flex flex-col sm:flex-row items-center">
+      <div className="flex flex-wrap sm:flex-wrap ">
         <Select
           dataSelect={language.short}
           options={languagesData}

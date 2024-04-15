@@ -69,22 +69,24 @@ const Datepicker: FC<DatepickerProps> = ({ hasKeyword, dateType, onDateType }) =
         onSelect={(newDate: SelectableItem) => handleDate(newDate.name)}
         optionName="date range"
       />
-      <div className="relative">
+      <div className="relative mr-28">
         {dateType && (
-          <div
-            className="flex items-center w-44 h-9 cursor-pointer rounded-md bg-white py-1.5 px-3 text-left
-      text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2
-      focus:ring-neutral-500 sm:text-sm sm:leading-6"
-            onClick={() => setShowCalendar(true)}
-          >
-            <input
-              className="outline-none cursor-pointer w-full"
-              type="text"
-              value={(dateCalendar && dayjs(dateCalendar).format('D MMMM YYYY')) || 'Select date'} // отображать  выбранную дату в другом формате либо текст
-              readOnly
-            />
-            <CalendarIcon className="w-5 h-5" />
-          </div>
+          <>
+            <label className="block text-sm font-medium leading-6 text-gray-900 capitalize">Select date</label>
+            <button
+              className="flex items-center w-44 h-9 mt-2 cursor-pointer rounded-md bg-white py-1.5 px-3 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-neutral-500 sm:text-sm sm:leading-6"
+              onClick={() => setShowCalendar(!showCalendar)}
+            >
+              <input
+                className="outline-none cursor-pointer w-full"
+                type="text"
+                value={(dateCalendar && dayjs(dateCalendar).format('D MMMM YYYY')) || 'Select date'} // отображать  выбранную дату в другом формате либо текст
+                // value="3 April 2024 - 3 April 2024"
+                readOnly
+              />
+              <CalendarIcon className="w-5 h-5" />
+            </button>
+          </>
         )}
         {showCalendar && <Calendar onDataFromChild={handleDataFromCalendar} />}
       </div>
