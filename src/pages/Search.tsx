@@ -153,6 +153,7 @@ const Search: FC = () => {
           optionName="sort by"
         />
         <Datepicker hasKeyword={!!keyword} dateType={dateType} onDateType={setDateType} />
+        {/* создал отдельный компонент, пропсов вроде немного */}
       </div>
       <div
         className={classNames(

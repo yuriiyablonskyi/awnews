@@ -1,5 +1,4 @@
 import { CalendarIcon } from '@heroicons/react/24/outline'
-import dayjs from 'dayjs'
 import { Dispatch, FC, SetStateAction, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useSearchParams } from 'react-router-dom'
@@ -30,23 +29,32 @@ const Datepicker: FC<DatepickerProps> = ({ hasKeyword, dateType, onDateType }) =
     onDateType(newDate)
   }
 
-  const handleDataFromCalendar = (data: string) => {
+  const handleDataFromCalendar = data => {
+    // страшно смотреть на такой код)     но сделал для начала чтоб хотяб работало тк не знал как сделать промежуток от и до вместе, потом поправлять буду
     const newSearchParams = new URLSearchParams(searchParams)
     setShowCalendar(false)
-    setDateCalendar(data)
     if (dateType === 'From date') {
       newSearchParams.set('from', data)
       newSearchParams.delete('to')
+      setDateCalendar(data)
     } else if (dateType === 'To date') {
       newSearchParams.set('to', data)
       newSearchParams.delete('from')
+      setDateCalendar(data)
+    } else if (dateType === 'From date to date') {
+      console.log({ data })
+      const { startDate, endDate } = data
+      newSearchParams.set('from', startDate)
+      newSearchParams.set('to', endDate)
+      setDateCalendar(startDate + '/' + endDate)
     }
     newSearchParams.set('page', '1')
-    // } else if (dateType === 'From date to date' ) {
+
     sendRequest(newSearchParams.toString())
     setSearchParams(newSearchParams)
   }
 
+  // функция для отправки запроса очень похожа в 4 компонентах (home, search, pagination, datepicker) - может стоит как то оптимизировать?
   const sendRequest = (urlParams: string) => {
     if (hasKeyword) {
       dispatch(
@@ -57,6 +65,7 @@ const Datepicker: FC<DatepickerProps> = ({ hasKeyword, dateType, onDateType }) =
       )
     }
   }
+
   return (
     <>
       <Select
@@ -80,15 +89,14 @@ const Datepicker: FC<DatepickerProps> = ({ hasKeyword, dateType, onDateType }) =
               <input
                 className="outline-none cursor-pointer w-full"
                 type="text"
-                value={(dateCalendar && dayjs(dateCalendar).format('D MMMM YYYY')) || 'Select date'} // отображать  выбранную дату в другом формате либо текст
-                // value="3 April 2024 - 3 April 2024"
+                value={dateCalendar || 'Select date'}
                 readOnly
               />
               <CalendarIcon className="w-5 h-5" />
             </button>
           </>
         )}
-        {showCalendar && <Calendar onDataFromChild={handleDataFromCalendar} />}
+        {showCalendar && <Calendar dateType={dateType} onDataFromChild={handleDataFromCalendar} />}
       </div>
     </>
   )

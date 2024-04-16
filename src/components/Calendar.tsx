@@ -6,15 +6,33 @@ import generateDateRange, { DayInfo } from '../utils/functions/generateDateRange
 
 const daysOfWeek: string[] = ['M', 'T', 'W', 'T', 'F', 'S', 'S']
 
-const Calendar: FC = ({ onDataFromChild }) => {
+const Calendar: FC = ({ onDataFromChild, dateType }) => {
+  // onDataFromChild - для передачи дат из calendar в search
+  // dateType - для определения какую функцию использовать (handleClickDate или nandleDateRange)
+
   const currentDate: Dayjs = dayjs()
   const [today, setToday] = useState<Dayjs>(currentDate)
   const [selectDate, setSelectDate] = useState<Dayjs>(currentDate)
   const datesArray = generateDateRange(today.month(), today.year())
+  const [startDate, setStartDate] = useState()
+  const [endDate, setEndDate] = useState('')
+  // типов не везде прописал тк еще будет рефактор
 
-  const handleClickDate = date => {
+  const handleClickDate = (date: Dayjs) => {
+    // обработка когда либо "From date" либо "To date"
     onDataFromChild(date.format('YYYY-MM-DD'))
     setSelectDate(date)
+  }
+
+  const nandleDateRange = (date: Dayjs) => {
+    // обработка исключительно когда "From date to date"
+    const newDate = date.format('YYYY-MM-DD')
+    if (!startDate) {
+      setStartDate(newDate)
+    } else if (!endDate) {
+      setEndDate(newDate)
+      onDataFromChild({ startDate, endDate: newDate })
+    }
   }
 
   return (
@@ -36,7 +54,7 @@ const Calendar: FC = ({ onDataFromChild }) => {
             currentDate.isAfter(today, 'month') && 'hover:text-gray-500',
           )}
           onClick={() => setToday(today.month(today.month() + 1))}
-          disabled={!currentDate.isAfter(today, 'month')} // если следующий месяц позже чем сегодняшний то отключаю кнопку
+          disabled={!currentDate.isAfter(today, 'month')}
         >
           <span className="sr-only">Next month</span>
           <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
@@ -54,7 +72,10 @@ const Calendar: FC = ({ onDataFromChild }) => {
           return (
             <div key={dayItem} className="py-1.5">
               <button
-                onClick={() => handleClickDate(date)}
+                onClick={() => {
+                  dateType === 'From date to date' ? nandleDateRange(date) : handleClickDate(date)
+                  // тут идет проверка какую функцию для обработки дат использовать
+                }}
                 type="button"
                 className={classNames(
                   daySelected && 'text-white',
