@@ -11,7 +11,7 @@ export const fetchArticles = createAsyncThunk(
     try {
       const baseURL: string = import.meta.env.VITE_API_URL
       const apiKey: string = import.meta.env.VITE_API_KEY
-      const params = new URLSearchParams()
+      const params: URLSearchParams = new URLSearchParams()
       params.append('pageSize', '9')
       params.append('apiKey', apiKey)
 

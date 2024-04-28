@@ -9,13 +9,14 @@ import SkeletonArticle from '../components/SkeletonArticle'
 import { fetchArticles } from '../store/articles/articlesActions'
 import { clearArticles } from '../store/articles/articlesSlice'
 import { ArticleInterface, ArticlesState, SelectableItem } from '../store/articles/articlesTypes'
-import { articlesData } from '../store/articlesSelectors'
 import categoriesData from '../utils/data/categoriesData'
 import countriesData from '../utils/data/countriesData'
 import classNames from '../utils/functions/classNames'
+import { articlesData } from '../store/articlesSelectors'
+import { AppDispatch } from '../store'
 
 const Home: FC = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch<AppDispatch>()
   const [searchParams, setSearchParams] = useSearchParams()
   const { articles, totalResults, loading, error }: ArticlesState = useSelector(articlesData)
   const [category, setCategory] = useState<string>(searchParams.get('category') ?? '')

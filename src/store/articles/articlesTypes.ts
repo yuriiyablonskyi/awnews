@@ -12,11 +12,16 @@ export interface ArticlesState {
   totalResults: number
   loading: boolean
   error: string | null
+  filterCalendar: {
+    type?: CalendarType
+    singleDate?: string
+    dateRange?: string
+  }
 }
 
 export interface SelectableItem {
   id?: number
-  name: string
+  name: string | CalendarType
   short?: string
 }
 
@@ -24,4 +29,10 @@ export interface SelectableItem {
   id?: number
   name: string
   short?: string
+}
+
+export enum CalendarType {
+  FROM = 'from',
+  TO = 'to',
+  RANGE = 'range',
 }

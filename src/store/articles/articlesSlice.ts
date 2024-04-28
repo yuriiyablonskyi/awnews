@@ -1,19 +1,13 @@
-import { PayloadAction, createSlice, isAnyOf } from '@reduxjs/toolkit'
-import { ArticleInterface } from './articlesTypes'
+import { createSlice, isAnyOf } from '@reduxjs/toolkit'
+import { ArticlesState } from './articlesTypes'
 import { fetchArticles } from './articlesActions'
 
-interface RootState {
-  articles: ArticleInterface[]
-  totalResults: number
-  error: string | null
-  loading: boolean
-}
-
-const initialState: RootState = {
+const initialState: ArticlesState = {
   totalResults: 0,
   articles: [],
   error: null,
   loading: false,
+  filterCalendar: {},
 }
 
 const articlesSlice = createSlice({
@@ -25,6 +19,10 @@ const articlesSlice = createSlice({
       state.totalResults = 0
       state.error = null
       state.loading = false
+      state.filterCalendar = {}
+    },
+    setCalendar: (state, action) => {
+      state.filterCalendar = action.payload
     },
   },
   extraReducers: builder => {
@@ -45,5 +43,5 @@ const articlesSlice = createSlice({
   },
 })
 
-export const { clearArticles } = articlesSlice.actions
+export const { clearArticles, setCalendar } = articlesSlice.actions
 export default articlesSlice.reducer

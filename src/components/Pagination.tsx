@@ -5,9 +5,10 @@ import { useDispatch } from 'react-redux'
 import { useSearchParams } from 'react-router-dom'
 import { fetchArticles } from '../store/articles/articlesActions'
 import classNames from '../utils/functions/classNames'
+import { AppDispatch } from '../store'
 
 const Pagination: FC<{ totalResults: number; endpoint: string }> = ({ totalResults, endpoint }) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch<AppDispatch>()
   const [searchParams, setSearchParams] = useSearchParams()
   const [currentPage, setCurrentPage] = useState<number>(Number(searchParams.get('page')) || 1)
 

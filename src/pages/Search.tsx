@@ -10,20 +10,35 @@ import SkeletonArticle from '../components/SkeletonArticle'
 import { fetchArticles } from '../store/articles/articlesActions'
 import { clearArticles } from '../store/articles/articlesSlice'
 import { ArticleInterface, ArticlesState, SelectableItem } from '../store/articles/articlesTypes'
-import { articlesData } from '../store/articlesSelectors'
 import languagesData from '../utils/data/languagesData'
 import sortByData from '../utils/data/sortByData'
 import classNames from '../utils/functions/classNames'
 import Datepicker from '../components/Datepicker'
+import { articlesData } from '../store/articlesSelectors'
+import { AppDispatch } from '../store'
 
 const Search: FC = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch<AppDispatch>()
   const [searchParams, setSearchParams] = useSearchParams()
   const { articles, totalResults, loading, error }: ArticlesState = useSelector(articlesData)
   const [keyword, setKeyword] = useState<string>(searchParams.get('q') ?? '')
   const [language, setLanguage] = useState<SelectableItem>({ name: '', short: searchParams.get('language') ?? '' })
   const [sortBy, setSortBy] = useState<string>(searchParams.get('sortBy') ?? '')
-  const [dateType, setDateType] = useState<string>('')
+
+  const sendRequest = (urlParams: string) => {
+    if (keyword) {
+      dispatch(
+        fetchArticles({
+          endpoint: 'everything',
+          searchParams: urlParams,
+        }),
+      )
+    }
+  }
+
+  useEffect(() => {
+    sendRequest(searchParams.toString()), []
+  })
 
   const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && keyword) {
@@ -61,22 +76,8 @@ const Search: FC = () => {
     setKeyword('')
     setLanguage({ name: '', short: '' })
     setSortBy('')
-    setDateType('')
     dispatch(clearArticles())
     setSearchParams(new URLSearchParams())
-  }
-
-  useEffect(() => sendRequest(searchParams.toString()), [])
-
-  const sendRequest = (urlParams: string) => {
-    if (keyword) {
-      dispatch(
-        fetchArticles({
-          endpoint: 'everything',
-          searchParams: urlParams,
-        }),
-      )
-    }
   }
 
   const renderContent = () => {
@@ -152,8 +153,7 @@ const Search: FC = () => {
           onSelect={(newSortByData: SelectableItem) => handleSorting(newSortByData.name)}
           optionName="sort by"
         />
-        <Datepicker hasKeyword={!!keyword} dateType={dateType} onDateType={setDateType} />
-        {/* создал отдельный компонент, пропсов вроде немного */}
+        <Datepicker />
       </div>
       <div
         className={classNames(

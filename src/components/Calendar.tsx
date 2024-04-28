@@ -1,37 +1,102 @@
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
 import dayjs, { Dayjs } from 'dayjs'
 import { FC, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useSearchParams } from 'react-router-dom'
 import classNames from '../utils/functions/classNames'
 import generateDateRange, { DayInfo } from '../utils/functions/generateDateRange'
+import { AppDispatch } from '../store'
+import { articlesData } from '../store/articlesSelectors'
+import { setCalendar } from '../store/articles/articlesSlice'
 
 const daysOfWeek: string[] = ['M', 'T', 'W', 'T', 'F', 'S', 'S']
 
-const Calendar: FC = ({ onDataFromChild, dateType }) => {
-  // onDataFromChild - для передачи дат из calendar в search
-  // dateType - для определения какую функцию использовать (handleClickDate или nandleDateRange)
-
+const Calendar: FC = ({ onShowCalendar }) => {
+  const dispatch = useDispatch<AppDispatch>()
+  const {
+    filterCalendar: { type, singleDate, dateRange },
+  } = useSelector(articlesData)
+  const [searchParams, setSearchParams] = useSearchParams()
   const currentDate: Dayjs = dayjs()
   const [today, setToday] = useState<Dayjs>(currentDate)
-  const [selectDate, setSelectDate] = useState<Dayjs>(currentDate)
   const datesArray = generateDateRange(today.month(), today.year())
-  const [startDate, setStartDate] = useState()
-  const [endDate, setEndDate] = useState('')
-  // типов не везде прописал тк еще будет рефактор
+  const [startDate, setStartDate] = useState<Dayjs>(dayjs(searchParams.get('from')) ?? '')
+  const [endDate, setEndDate] = useState<Dayjs>(dayjs(searchParams.get('to')))
 
-  const handleClickDate = (date: Dayjs) => {
-    // обработка когда либо "From date" либо "To date"
-    onDataFromChild(date.format('YYYY-MM-DD'))
-    setSelectDate(date)
+  const dispatchUrlParams = () => {
+    const urlParamFrom = searchParams.get('from')
+    const urlParamTo = searchParams.get('to')
+
+    if (urlParamFrom && !urlParamTo) {
+      return dispatch(setCalendar({ type: 'from', singleDate: urlParamFrom }))
+    } else if (!urlParamFrom && urlParamTo) {
+      return dispatch(setCalendar({ type: 'to', singleDate: urlParamTo }))
+    } else if (urlParamFrom && urlParamTo) {
+      return dispatch(setCalendar({ type: 'range', singleDate: urlParamFrom, dateRange: urlParamTo }))
+    }
+  }
+  // dispatchUrlParams()
+
+  const updateUrlParams = (firstValue, secondValue) => {
+    const newSearchParams = new URLSearchParams(searchParams)
+    newSearchParams.delete('from')
+
+    !secondValue && newSearchParams.set(type, firstValue)
+    secondValue && newSearchParams.set('from', firstValue)
+    secondValue && newSearchParams.set('to', secondValue)
+    setSearchParams(newSearchParams)
   }
 
-  const nandleDateRange = (date: Dayjs) => {
-    // обработка исключительно когда "From date to date"
+  const handleFirstDateValue = date => {
+    // если есть только один параметр
+    setStartDate(date)
+    dispatch(
+      setCalendar({
+        type: type,
+        singleDate: date.format('YYYY-MM-DD'),
+      }),
+    )
+  }
+
+  const handleTwoDateValues = date => {
+    // если есть два параметра
+    setEndDate(date)
+    dispatch(
+      setCalendar({
+        type: type,
+        singleDate: startDate.format('YYYY-MM-DD'),
+        dateRange: date.format('YYYY-MM-DD'),
+      }),
+    )
+    onShowCalendar(false)
+  }
+
+  const handleRangeType = (date: Dayjs) => {
+    if (startDate.isBefore(date)) {
+      console.log('!else if')
+      // если уже есть первая дата то нелзя чтоб вторая дата была раньше первой, в таком случае срабатывает handleFirstDateValue (заново нужно выбрать первую дату)
+      handleTwoDateValues(date)
+      updateUrlParams(startDate.format('YYYY-MM-DD'), date.format('YYYY-MM-DD'))
+    } else {
+      handleFirstDateValue(date)
+      console.log('else')
+    }
+  }
+
+  const handleClickDate = (date: Dayjs) => {
     const newDate = date.format('YYYY-MM-DD')
-    if (!startDate) {
-      setStartDate(newDate)
-    } else if (!endDate) {
-      setEndDate(newDate)
-      onDataFromChild({ startDate, endDate: newDate })
+    if (type === 'range') {
+      handleRangeType(date)
+    } else {
+      updateUrlParams(newDate, '')
+      onShowCalendar(false)
+      dispatch(setCalendar({ type: type, singleDate: newDate }))
+    }
+  }
+
+  const handleMouseMove = (date: Dayjs) => {
+    if (startDate) {
+      date.isAfter(singleDate) && console.log({ dateReadyToStyle: date.format('YYYY-MM-DD') })
     }
   }
 
@@ -68,24 +133,29 @@ const Calendar: FC = ({ onDataFromChild, dateType }) => {
       <div className="mt-1 grid grid-cols-7 text-sm">
         {datesArray.map(({ date, isToday, isCurrentMonth, isLaterThanToday }: DayInfo) => {
           const dayItem: string = date.toString().slice(5, 16)
-          const daySelected = selectDate.toString() === date.toString()
+          const isSelectDate = singleDate && singleDate === date.format('YYYY-MM-DD')
+          const isEndDate = dateRange && dateRange === date.format('YYYY-MM-DD')
+          const isRangeDate = date.isAfter(singleDate) && date.isBefore(dayjs(dateRange)) && type === 'range'
+
           return (
             <div key={dayItem} className="py-1.5">
               <button
-                onClick={() => {
-                  dateType === 'From date to date' ? nandleDateRange(date) : handleClickDate(date)
-                  // тут идет проверка какую функцию для обработки дат использовать
-                }}
+                onClick={() => handleClickDate(date)}
+                onMouseMove={() => handleMouseMove(date)}
                 type="button"
                 className={classNames(
-                  daySelected && 'text-white',
-                  !daySelected && isToday && 'text-indigo-600',
-                  !daySelected && !isToday && isCurrentMonth && 'text-gray-900',
-                  !daySelected && !isToday && !isCurrentMonth && 'text-gray-400',
-                  daySelected && isToday && 'bg-indigo-600',
-                  daySelected && !isToday && 'bg-gray-900',
-                  !daySelected && !isLaterThanToday && 'hover:bg-gray-200',
-                  (daySelected || isToday) && 'font-semibold',
+                  isEndDate && 'bg-gray-900',
+                  isEndDate && 'text-white',
+                  isRangeDate && 'bg-indigo-300',
+                  isSelectDate && 'text-white',
+                  !isSelectDate && isToday && 'text-indigo-600',
+                  !isSelectDate && !isToday && isCurrentMonth && 'text-gray-900',
+                  !isSelectDate && !isToday && !isCurrentMonth && 'text-gray-400',
+                  isLaterThanToday && 'text-gray-400',
+                  isSelectDate && isToday && 'bg-indigo-600',
+                  isSelectDate && !isToday && 'bg-gray-900',
+                  !isSelectDate && !isLaterThanToday && 'hover:bg-gray-200',
+                  (isSelectDate || isToday) && 'font-semibold',
                   'mx-auto flex h-6 w-6 items-center justify-center rounded-full',
                 )}
                 disabled={isLaterThanToday}

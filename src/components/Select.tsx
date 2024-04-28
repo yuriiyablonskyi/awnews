@@ -5,7 +5,7 @@ import { SelectableItem } from '../store/articles/articlesTypes'
 import Option from './Option'
 
 interface SelectProps {
-  dataSelect: string | null
+  dataSelect: string | undefined
   options: SelectableItem[]
   onSelect: (newCategory: SelectableItem) => void
   optionName: string
@@ -24,7 +24,7 @@ const Select: FC<SelectProps> = ({ dataSelect, options, onSelect, optionName }) 
               <Listbox.Button
                 className="relative w-full max-w-52 min-w-44 cursor-pointer rounded-md bg-white py-1.5 pl-3 pr-10 text-left
                 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2
-                focus:ring-neutral-500 sm:text-sm sm:leading-6"
+                focus:ring-neutral-500 sm:text-sm sm:leading-6 capitalize"
               >
                 <span>{dataSelect || `Select ${optionName}`}</span>
                 <span className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">

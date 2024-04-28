@@ -1,1 +1,3 @@
-export const articlesData = state => state.articles
+import { ArticlesState } from './articles/articlesTypes'
+
+export const articlesData = (state: ArticlesState) => state.articles
