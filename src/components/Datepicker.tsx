@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch } from '../store'
 import { articlesData } from '../store/articlesSelectors'
 import { setCalendar } from '../store/articles/articlesSlice'
+import classNames from '../utils/functions/classNames'
 
 const Datepicker: FC = () => {
   const dispatch = useDispatch<AppDispatch>()
@@ -41,24 +42,27 @@ const Datepicker: FC = () => {
         onSelect={(newDate: SelectableItem) => handleDate(newDate.name)}
         optionName="date"
       />
-      <div className="relative mr-28">
+      <div className={classNames(type && 'mr-28', type === 'range' && 'mr-16', 'relative')}>
         {type && (
           <>
             <label className="block text-sm font-medium leading-6 text-gray-900 capitalize">Calendar</label>
             <button
-              className="flex items-center w-44 h-9 mt-2 cursor-pointer rounded-md bg-white py-1.5 px-3 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-neutral-500 sm:text-sm sm:leading-6"
+              className={classNames(
+                type === 'range' ? 'w-56' : 'w-44',
+                'flex items-center h-9 mt-2 cursor-pointer rounded-md bg-white py-1.5 px-3 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-neutral-500 sm:text-sm sm:leading-6',
+              )}
               onClick={() => setShowCalendar(!showCalendar)}
             >
               <input
                 className="outline-none cursor-pointer w-full"
                 type="text"
                 value={
-                  dateRange ? singleDate + '/' + dateRange : singleDate || `Select ${type} date`
+                  dateRange ? singleDate + ' - ' + dateRange : singleDate || `Select ${type} date`
                   // если есть второй параметр то показать оба, если есть только один то показать один
                 }
                 readOnly
               />
-              <CalendarIcon className="w-5 h-5" />
+              <CalendarIcon className={classNames(type === 'range' && 'ml-2.5', 'w-5 h-5')} />
             </button>
           </>
         )}

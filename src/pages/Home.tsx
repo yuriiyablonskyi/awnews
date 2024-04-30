@@ -100,7 +100,7 @@ const Home: FC = () => {
           optionName="category"
         />
         <Select
-          dataSelect={country.short}
+          dataSelect={country.name}
           options={countriesData}
           onSelect={(newCountry: SelectableItem) => handleCountry(newCountry)}
           optionName="country"

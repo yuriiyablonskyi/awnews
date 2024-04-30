@@ -144,17 +144,15 @@ const Calendar: FC = ({ onShowCalendar }) => {
                 onMouseMove={() => handleMouseMove(date)}
                 type="button"
                 className={classNames(
-                  isEndDate && 'bg-gray-900',
-                  isEndDate && 'text-white',
-                  isRangeDate && 'bg-indigo-300',
-                  isSelectDate && 'text-white',
-                  !isSelectDate && isToday && 'text-indigo-600',
-                  !isSelectDate && !isToday && isCurrentMonth && 'text-gray-900',
-                  !isSelectDate && !isToday && !isCurrentMonth && 'text-gray-400',
+                  isRangeDate && 'bg-gray-300',
+                  (isEndDate || isSelectDate) && 'text-white',
+                  !isSelectDate && !isEndDate && isToday && 'text-indigo-600',
+                  !isSelectDate && !isEndDate && !isToday && isCurrentMonth && 'text-gray-900',
+                  !isSelectDate && !isEndDate && !isToday && !isCurrentMonth && 'text-gray-400',
                   isLaterThanToday && 'text-gray-400',
                   isSelectDate && isToday && 'bg-indigo-600',
-                  isSelectDate && !isToday && 'bg-gray-900',
-                  !isSelectDate && !isLaterThanToday && 'hover:bg-gray-200',
+                  (isSelectDate || isEndDate) && !isToday && 'bg-gray-900',
+                  !isSelectDate && !isEndDate && !isLaterThanToday && 'hover:bg-gray-200',
                   (isSelectDate || isToday) && 'font-semibold',
                   'mx-auto flex h-6 w-6 items-center justify-center rounded-full',
                 )}

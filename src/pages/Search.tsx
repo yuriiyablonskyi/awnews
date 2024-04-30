@@ -142,7 +142,7 @@ const Search: FC = () => {
       </div>
       <div className="flex flex-wrap sm:flex-wrap ">
         <Select
-          dataSelect={language.short}
+          dataSelect={language.name}
           options={languagesData}
           onSelect={(newLanguage: SelectableItem) => handleLanguage(newLanguage)}
           optionName="language"
