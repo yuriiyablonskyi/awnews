@@ -1,6 +1,6 @@
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
 import dayjs, { Dayjs } from 'dayjs'
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useSearchParams } from 'react-router-dom'
 import classNames from '../utils/functions/classNames'
@@ -8,6 +8,7 @@ import generateDateRange, { DayInfo } from '../utils/functions/generateDateRange
 import { AppDispatch } from '../store'
 import { articlesData } from '../store/articlesSelectors'
 import { setCalendar } from '../store/articles/articlesSlice'
+import { fetchArticles } from '../store/articles/articlesActions'
 
 const daysOfWeek: string[] = ['M', 'T', 'W', 'T', 'F', 'S', 'S']
 
@@ -20,22 +21,6 @@ const Calendar: FC = ({ onShowCalendar }) => {
   const currentDate: Dayjs = dayjs()
   const [today, setToday] = useState<Dayjs>(currentDate)
   const datesArray = generateDateRange(today.month(), today.year())
-  const [startDate, setStartDate] = useState<Dayjs>(dayjs(searchParams.get('from')) ?? '')
-  const [endDate, setEndDate] = useState<Dayjs>(dayjs(searchParams.get('to')))
-
-  const dispatchUrlParams = () => {
-    const urlParamFrom = searchParams.get('from')
-    const urlParamTo = searchParams.get('to')
-
-    if (urlParamFrom && !urlParamTo) {
-      return dispatch(setCalendar({ type: 'from', singleDate: urlParamFrom }))
-    } else if (!urlParamFrom && urlParamTo) {
-      return dispatch(setCalendar({ type: 'to', singleDate: urlParamTo }))
-    } else if (urlParamFrom && urlParamTo) {
-      return dispatch(setCalendar({ type: 'range', singleDate: urlParamFrom, dateRange: urlParamTo }))
-    }
-  }
-  // dispatchUrlParams()
 
   const updateUrlParams = (firstValue, secondValue) => {
     const newSearchParams = new URLSearchParams(searchParams)
@@ -44,12 +29,25 @@ const Calendar: FC = ({ onShowCalendar }) => {
     !secondValue && newSearchParams.set(type, firstValue)
     secondValue && newSearchParams.set('from', firstValue)
     secondValue && newSearchParams.set('to', secondValue)
+
+    // TODO: поміняти логіку (можливо обєднати dispatch)
+    if (newSearchParams.get('q')) {
+      console.log('handleFirstDateValue - dispatch')
+      dispatch(
+        fetchArticles({
+          endpoint: 'everything',
+          searchParams: newSearchParams.toString(),
+        }),
+      )
+    }
     setSearchParams(newSearchParams)
   }
 
   const handleFirstDateValue = date => {
+    console.log('handleFirstDateValue')
+
     // если есть только один параметр
-    setStartDate(date)
+
     dispatch(
       setCalendar({
         type: type,
@@ -60,11 +58,10 @@ const Calendar: FC = ({ onShowCalendar }) => {
 
   const handleTwoDateValues = date => {
     // если есть два параметра
-    setEndDate(date)
     dispatch(
       setCalendar({
         type: type,
-        singleDate: startDate.format('YYYY-MM-DD'),
+        singleDate,
         dateRange: date.format('YYYY-MM-DD'),
       }),
     )
@@ -72,11 +69,11 @@ const Calendar: FC = ({ onShowCalendar }) => {
   }
 
   const handleRangeType = (date: Dayjs) => {
-    if (startDate.isBefore(date)) {
+    if (dayjs(singleDate).isBefore(date)) {
       console.log('!else if')
       // если уже есть первая дата то нелзя чтоб вторая дата была раньше первой, в таком случае срабатывает handleFirstDateValue (заново нужно выбрать первую дату)
       handleTwoDateValues(date)
-      updateUrlParams(startDate.format('YYYY-MM-DD'), date.format('YYYY-MM-DD'))
+      updateUrlParams(singleDate, date.format('YYYY-MM-DD'))
     } else {
       handleFirstDateValue(date)
       console.log('else')
@@ -95,7 +92,7 @@ const Calendar: FC = ({ onShowCalendar }) => {
   }
 
   const handleMouseMove = (date: Dayjs) => {
-    if (startDate) {
+    if (singleDate) {
       date.isAfter(singleDate) && console.log({ dateReadyToStyle: date.format('YYYY-MM-DD') })
     }
   }

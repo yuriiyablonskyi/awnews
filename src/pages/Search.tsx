@@ -8,7 +8,7 @@ import Pagination from '../components/Pagination'
 import Select from '../components/Select'
 import SkeletonArticle from '../components/SkeletonArticle'
 import { fetchArticles } from '../store/articles/articlesActions'
-import { clearArticles } from '../store/articles/articlesSlice'
+import { clearArticles, setCalendar } from '../store/articles/articlesSlice'
 import { ArticleInterface, ArticlesState, SelectableItem } from '../store/articles/articlesTypes'
 import languagesData from '../utils/data/languagesData'
 import sortByData from '../utils/data/sortByData'
@@ -26,6 +26,7 @@ const Search: FC = () => {
   const [sortBy, setSortBy] = useState<string>(searchParams.get('sortBy') ?? '')
 
   const sendRequest = (urlParams: string) => {
+    console.log({ sendRequest: urlParams })
     if (keyword) {
       dispatch(
         fetchArticles({
@@ -36,9 +37,27 @@ const Search: FC = () => {
     }
   }
 
+  const dispatchUrlParams = () => {
+    const urlParamFrom = searchParams.get('from')
+    const urlParamTo = searchParams.get('to')
+
+    console.log({ urlParamFrom, urlParamTo })
+
+    if (urlParamFrom && !urlParamTo) {
+      return dispatch(setCalendar({ type: 'from', singleDate: urlParamFrom }))
+    } else if (!urlParamFrom && urlParamTo) {
+      return dispatch(setCalendar({ type: 'to', singleDate: urlParamTo }))
+    } else if (urlParamFrom && urlParamTo) {
+      return dispatch(setCalendar({ type: 'range', singleDate: urlParamFrom, dateRange: urlParamTo }))
+    }
+  }
+
   useEffect(() => {
-    sendRequest(searchParams.toString()), []
-  })
+    console.log('use')
+
+    dispatchUrlParams()
+    sendRequest(searchParams.toString())
+  }, [])
 
   const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && keyword) {
