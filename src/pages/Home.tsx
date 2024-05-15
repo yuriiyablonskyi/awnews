@@ -20,10 +20,27 @@ const Home: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const { articles, totalResults, loading, error }: ArticlesState = useSelector(articlesData)
   const [category, setCategory] = useState<string>(searchParams.get('category') ?? '')
-  const [country, setCountry] = useState<SelectableItem>({
-    name: '' ?? 'Ukraine',
-    short: searchParams.get('country') ?? 'ua',
-  })
+  const [country, setCountry] = useState<SelectableItem>({ short: '', name: searchParams.get('country') ?? '' })
+
+  const sendRequest = (urlParams: string) => {
+    dispatch(
+      fetchArticles({
+        endpoint: 'top-headlines',
+        searchParams: urlParams,
+      }),
+    )
+  }
+
+  useEffect(() => {
+    const newSearchParams = new URLSearchParams(searchParams)
+    if (!newSearchParams.toString()) {
+      newSearchParams.set('country', 'ua')
+      newSearchParams.set('page', '1')
+      setCountry({ name: 'Ukraine', short: 'ua' })
+    }
+    sendRequest(newSearchParams.toString())
+    setSearchParams(newSearchParams)
+  }, [])
 
   const handleCategory = (value: string) => {
     handleSelectChange('category', value)
@@ -50,25 +67,6 @@ const Home: FC = () => {
       dispatch(clearArticles())
     }
     setSearchParams(newSearchParams)
-  }
-
-  useEffect(() => {
-    const newSearchParams = new URLSearchParams(searchParams)
-    if (!newSearchParams.toString()) {
-      newSearchParams.set('country', 'ua')
-      newSearchParams.set('page', '1')
-    }
-    sendRequest(newSearchParams.toString())
-    setSearchParams(newSearchParams)
-  }, [])
-
-  const sendRequest = (urlParams: string) => {
-    dispatch(
-      fetchArticles({
-        endpoint: 'top-headlines',
-        searchParams: urlParams,
-      }),
-    )
   }
 
   const renderContent = () => {

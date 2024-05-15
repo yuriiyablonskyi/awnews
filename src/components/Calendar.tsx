@@ -1,6 +1,6 @@
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
 import dayjs, { Dayjs } from 'dayjs'
-import { FC, useEffect, useState } from 'react'
+import { FC, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useSearchParams } from 'react-router-dom'
 import classNames from '../utils/functions/classNames'
@@ -20,80 +20,52 @@ const Calendar: FC = ({ onShowCalendar }) => {
   const [searchParams, setSearchParams] = useSearchParams()
   const currentDate: Dayjs = dayjs()
   const [today, setToday] = useState<Dayjs>(currentDate)
+  const [hoveredDate, setHoveredDate] = useState<Dayjs | null>(null) // никогда не сбрасываю к null, но работает корректно
   const datesArray = generateDateRange(today.month(), today.year())
 
-  const updateUrlParams = (firstValue, secondValue) => {
-    const newSearchParams = new URLSearchParams(searchParams)
-    newSearchParams.delete('from')
-
-    !secondValue && newSearchParams.set(type, firstValue)
-    secondValue && newSearchParams.set('from', firstValue)
-    secondValue && newSearchParams.set('to', secondValue)
-
-    // TODO: поміняти логіку (можливо обєднати dispatch)
-    if (newSearchParams.get('q')) {
-      console.log('handleFirstDateValue - dispatch')
+  const sendRequest = (newSearchParams: string) => {
+    if (searchParams.get('q')) {
       dispatch(
         fetchArticles({
           endpoint: 'everything',
-          searchParams: newSearchParams.toString(),
+          searchParams: newSearchParams,
         }),
       )
-    }
-    setSearchParams(newSearchParams)
-  }
-
-  const handleFirstDateValue = date => {
-    console.log('handleFirstDateValue')
-
-    // если есть только один параметр
-
-    dispatch(
-      setCalendar({
-        type: type,
-        singleDate: date.format('YYYY-MM-DD'),
-      }),
-    )
-  }
-
-  const handleTwoDateValues = date => {
-    // если есть два параметра
-    dispatch(
-      setCalendar({
-        type: type,
-        singleDate,
-        dateRange: date.format('YYYY-MM-DD'),
-      }),
-    )
-    onShowCalendar(false)
-  }
-
-  const handleRangeType = (date: Dayjs) => {
-    if (dayjs(singleDate).isBefore(date)) {
-      console.log('!else if')
-      // если уже есть первая дата то нелзя чтоб вторая дата была раньше первой, в таком случае срабатывает handleFirstDateValue (заново нужно выбрать первую дату)
-      handleTwoDateValues(date)
-      updateUrlParams(singleDate, date.format('YYYY-MM-DD'))
-    } else {
-      handleFirstDateValue(date)
-      console.log('else')
     }
   }
 
   const handleClickDate = (date: Dayjs) => {
-    const newDate = date.format('YYYY-MM-DD')
-    if (type === 'range') {
-      handleRangeType(date)
-    } else {
-      updateUrlParams(newDate, '')
-      onShowCalendar(false)
-      dispatch(setCalendar({ type: type, singleDate: newDate }))
-    }
-  }
+    const newSearchParams = new URLSearchParams(searchParams)
+    const newDateFormat = date.format('YYYY-MM-DD')
+    let shouldDispatchRequest = true
+    // let чтоб не дублировать код отправки запроса (нужно отправить когда type = 'from' или 'to' или в случае если 'range' и есть вторая дата, когда есть только первая дата то не отправлять запрос )
 
-  const handleMouseMove = (date: Dayjs) => {
-    if (singleDate) {
-      date.isAfter(singleDate) && console.log({ dateReadyToStyle: date.format('YYYY-MM-DD') })
+    switch (type) {
+      case 'from':
+      case 'to':
+        dispatch(setCalendar({ type, singleDate: newDateFormat }))
+        newSearchParams.set(type, newDateFormat)
+        break
+      case 'range':
+        if (dayjs(singleDate).isBefore(date) && !dateRange) {
+          // первая проверка "dayjs(singleDate).isBefore(date)" - если есть первая дата то вторая выбираемая дата должна быть позже первой
+          dispatch(setCalendar({ type: 'range', singleDate: newDateFormat, dateRange: singleDate }))
+          newSearchParams.set('from', singleDate)
+          newSearchParams.set('to', newDateFormat)
+        } else {
+          dispatch(setCalendar({ type, singleDate: newDateFormat }))
+          shouldDispatchRequest = false
+        }
+        break
+      default:
+        break
+    }
+
+    if (shouldDispatchRequest) {
+      newSearchParams.set('page', '1')
+      sendRequest(newSearchParams.toString())
+      setSearchParams(newSearchParams)
+      onShowCalendar(false)
     }
   }
 
@@ -132,16 +104,19 @@ const Calendar: FC = ({ onShowCalendar }) => {
           const dayItem: string = date.toString().slice(5, 16)
           const isSelectDate = singleDate && singleDate === date.format('YYYY-MM-DD')
           const isEndDate = dateRange && dateRange === date.format('YYYY-MM-DD')
-          const isRangeDate = date.isAfter(singleDate) && date.isBefore(dayjs(dateRange)) && type === 'range'
+          const isHighlightedDate =
+            (date.isAfter(dayjs(singleDate)) && !dateRange && date.isBefore(hoveredDate)) ||
+            (date.isAfter(dayjs(searchParams.get('from'))) && dateRange && date.isBefore(dayjs(searchParams.get('to'))))
+          // тут покраска дат при наведении либо между двумя выбраными датами, стоит ли сделать более читаемо?
 
           return (
             <div key={dayItem} className="py-1.5">
               <button
                 onClick={() => handleClickDate(date)}
-                onMouseMove={() => handleMouseMove(date)}
+                onMouseMove={() => type === 'range' && setHoveredDate(date)}
                 type="button"
                 className={classNames(
-                  isRangeDate && 'bg-gray-300',
+                  isHighlightedDate && 'bg-gray-200',
                   (isEndDate || isSelectDate) && 'text-white',
                   !isSelectDate && !isEndDate && isToday && 'text-indigo-600',
                   !isSelectDate && !isEndDate && !isToday && isCurrentMonth && 'text-gray-900',
@@ -150,7 +125,7 @@ const Calendar: FC = ({ onShowCalendar }) => {
                   isSelectDate && isToday && 'bg-indigo-600',
                   (isSelectDate || isEndDate) && !isToday && 'bg-gray-900',
                   !isSelectDate && !isEndDate && !isLaterThanToday && 'hover:bg-gray-200',
-                  (isSelectDate || isToday) && 'font-semibold',
+                  (isSelectDate || isToday || isEndDate) && 'font-semibold',
                   'mx-auto flex h-6 w-6 items-center justify-center rounded-full',
                 )}
                 disabled={isLaterThanToday}

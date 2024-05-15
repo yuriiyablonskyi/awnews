@@ -22,26 +22,18 @@ const Search: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const { articles, totalResults, loading, error }: ArticlesState = useSelector(articlesData)
   const [keyword, setKeyword] = useState<string>(searchParams.get('q') ?? '')
-  const [language, setLanguage] = useState<SelectableItem>({ name: '', short: searchParams.get('language') ?? '' })
+  const [language, setLanguage] = useState<SelectableItem>({ short: '', name: searchParams.get('language') ?? '' })
+  // TODO: 1
+  //есть проблема с "language" здесь и с "country" в компоненте Home - при первой загрузке (запрос из useEfect) в Select на странице отображаеться сокращенное название, хотя должно быть полное
+  // не работает корректно потому что в url строке храниться сокращенное название. есть 3 пути:
+  // 1) оставить как есть (ошибка редко появляеться);
+  // 2) сделать сокращенную запись во всех остальных случаях, чтоб всегда однаково выглядело (так раньше было)
+  // 3) при первой загрузке получить сокращенную запись и проходиться по масиву "language" или "country" чтоб получить полное название
   const [sortBy, setSortBy] = useState<string>(searchParams.get('sortBy') ?? '')
-
-  const sendRequest = (urlParams: string) => {
-    console.log({ sendRequest: urlParams })
-    if (keyword) {
-      dispatch(
-        fetchArticles({
-          endpoint: 'everything',
-          searchParams: urlParams,
-        }),
-      )
-    }
-  }
 
   const dispatchUrlParams = () => {
     const urlParamFrom = searchParams.get('from')
     const urlParamTo = searchParams.get('to')
-
-    console.log({ urlParamFrom, urlParamTo })
 
     if (urlParamFrom && !urlParamTo) {
       return dispatch(setCalendar({ type: 'from', singleDate: urlParamFrom }))
@@ -52,27 +44,32 @@ const Search: FC = () => {
     }
   }
 
-  useEffect(() => {
-    console.log('use')
+  const sendRequest = (urlParams: string) => {
+    if (keyword) {
+      dispatch(
+        fetchArticles({
+          endpoint: 'everything',
+          searchParams: urlParams,
+        }),
+      )
+    }
+  }
 
+  useEffect(() => {
     dispatchUrlParams()
     sendRequest(searchParams.toString())
   }, [])
 
-  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && keyword) {
-      handleSelectChange('q', keyword)
-    }
-  }
-
   const handleLanguage = (value: SelectableItem) => {
-    handleSelectChange('language', value.short)
+    const newSearchParams = handleSelectChange('language', value.short)
     setLanguage(value)
+    sendRequest(newSearchParams.toString())
   }
 
   const handleSorting = (value: string) => {
-    handleSelectChange('sortBy', value)
+    const newSearchParams = handleSelectChange('sortBy', value)
     setSortBy(value)
+    sendRequest(newSearchParams.toString())
   }
 
   const handleSelectChange = (key: string, value: string | undefined) => {
@@ -87,8 +84,8 @@ const Search: FC = () => {
     } else {
       newSearchParams.delete('page')
     }
-    sendRequest(newSearchParams.toString())
     setSearchParams(newSearchParams)
+    return newSearchParams
   }
 
   const handleClearFilter = () => {
@@ -111,10 +108,7 @@ const Search: FC = () => {
     if (articles.length) {
       return articles.map((item: ArticleInterface, id: number) => <Article key={id} {...item} />)
     }
-    if (!searchParams.get('q')) {
-      return <p className={errorMessageStyles}>Start your search to see results.</p>
-    }
-    return <p className={errorMessageStyles}>No articles found.</p>
+    return <p className={errorMessageStyles}>Start your search to see results.</p>
   }
 
   return (
@@ -129,8 +123,11 @@ const Search: FC = () => {
         <input
           type="text"
           value={keyword}
-          onChange={e => setKeyword(e.target.value)}
-          onKeyDown={handleKeyPress}
+          onChange={e => {
+            setKeyword(e.target.value)
+            handleSelectChange('q', e.target.value)
+          }}
+          onKeyDown={e => e.key === 'Enter' && sendRequest(searchParams.toString())}
           className="w-full py-4 outline-none"
           placeholder="Searching by keyword..."
         />
@@ -145,7 +142,7 @@ const Search: FC = () => {
           </button>
           <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
           <button
-            onClick={() => handleSelectChange('q', keyword)}
+            onClick={() => sendRequest(searchParams.toString())}
             className={classNames(
               'text-gray-400',
               keyword && 'hover:text-gray-500 cursor-pointer',
