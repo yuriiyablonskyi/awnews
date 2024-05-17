@@ -1,18 +1,23 @@
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
 import dayjs, { Dayjs } from 'dayjs'
-import { FC, useState } from 'react'
+import { FC, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useSearchParams } from 'react-router-dom'
+import { AppDispatch } from '../store'
+import { fetchArticles } from '../store/articles/articlesActions'
+import { setCalendar } from '../store/articles/articlesSlice'
+import { articlesData } from '../store/articlesSelectors'
 import classNames from '../utils/functions/classNames'
 import generateDateRange, { DayInfo } from '../utils/functions/generateDateRange'
-import { AppDispatch } from '../store'
-import { articlesData } from '../store/articlesSelectors'
-import { setCalendar } from '../store/articles/articlesSlice'
-import { fetchArticles } from '../store/articles/articlesActions'
 
 const daysOfWeek: string[] = ['M', 'T', 'W', 'T', 'F', 'S', 'S']
 
-const Calendar: FC = ({ onShowCalendar }) => {
+type SetShowCalendar = React.Dispatch<React.SetStateAction<boolean>>
+interface CalendarProps {
+  onShowCalendar: SetShowCalendar
+}
+
+const Calendar: FC<CalendarProps> = ({ onShowCalendar }) => {
   const dispatch = useDispatch<AppDispatch>()
   const {
     filterCalendar: { type, singleDate, dateRange },
@@ -20,7 +25,7 @@ const Calendar: FC = ({ onShowCalendar }) => {
   const [searchParams, setSearchParams] = useSearchParams()
   const currentDate: Dayjs = dayjs()
   const [today, setToday] = useState<Dayjs>(currentDate)
-  const [hoveredDate, setHoveredDate] = useState<Dayjs | null>(null) // никогда не сбрасываю к null, но работает корректно
+  const [hoveredDate, setHoveredDate] = useState<Dayjs | null>(null)
   const datesArray = generateDateRange(today.month(), today.year())
 
   const sendRequest = (newSearchParams: string) => {
@@ -38,7 +43,6 @@ const Calendar: FC = ({ onShowCalendar }) => {
     const newSearchParams = new URLSearchParams(searchParams)
     const newDateFormat = date.format('YYYY-MM-DD')
     let shouldDispatchRequest = true
-    // let чтоб не дублировать код отправки запроса (нужно отправить когда type = 'from' или 'to' или в случае если 'range' и есть вторая дата, когда есть только первая дата то не отправлять запрос )
 
     switch (type) {
       case 'from':
@@ -48,10 +52,10 @@ const Calendar: FC = ({ onShowCalendar }) => {
         break
       case 'range':
         if (dayjs(singleDate).isBefore(date) && !dateRange) {
-          // первая проверка "dayjs(singleDate).isBefore(date)" - если есть первая дата то вторая выбираемая дата должна быть позже первой
           dispatch(setCalendar({ type: 'range', singleDate: newDateFormat, dateRange: singleDate }))
           newSearchParams.set('from', singleDate)
           newSearchParams.set('to', newDateFormat)
+          setHoveredDate(null)
         } else {
           dispatch(setCalendar({ type, singleDate: newDateFormat }))
           shouldDispatchRequest = false
@@ -67,6 +71,19 @@ const Calendar: FC = ({ onShowCalendar }) => {
       setSearchParams(newSearchParams)
       onShowCalendar(false)
     }
+  }
+
+  const useHighlightedDate = (date: Dayjs): Boolean => {
+    return useMemo(() => {
+      const fromDate = dayjs(searchParams.get('from'))
+      const toDate = dayjs(searchParams.get('to'))
+
+      const isAfterSingleDate = date.isAfter(dayjs(singleDate))
+      const isBeforeHoveredDate = date.isBefore(hoveredDate)
+      const isInDateRange = dateRange && date.isAfter(fromDate) && date.isBefore(toDate)
+
+      return (!dateRange && isAfterSingleDate && isBeforeHoveredDate) || isInDateRange
+    }, [singleDate, dateRange, hoveredDate])
   }
 
   return (
@@ -104,10 +121,7 @@ const Calendar: FC = ({ onShowCalendar }) => {
           const dayItem: string = date.toString().slice(5, 16)
           const isSelectDate = singleDate && singleDate === date.format('YYYY-MM-DD')
           const isEndDate = dateRange && dateRange === date.format('YYYY-MM-DD')
-          const isHighlightedDate =
-            (date.isAfter(dayjs(singleDate)) && !dateRange && date.isBefore(hoveredDate)) ||
-            (date.isAfter(dayjs(searchParams.get('from'))) && dateRange && date.isBefore(dayjs(searchParams.get('to'))))
-          // тут покраска дат при наведении либо между двумя выбраными датами, стоит ли сделать более читаемо?
+          const isHighlightedDate = useHighlightedDate(date)
 
           return (
             <div key={dayItem} className="py-1.5">

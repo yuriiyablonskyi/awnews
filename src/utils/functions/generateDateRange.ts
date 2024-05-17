@@ -4,7 +4,7 @@ export interface DayInfo {
   date: Dayjs
   isToday?: boolean
   isCurrentMonth: boolean
-  isLaterThanToday: boolean // для стилизации - если дата позже чем текущая то disabled
+  isLaterThanToday: boolean
 }
 
 const generateDateRange = (month: number = dayjs().month(), year: number = dayjs().year()) => {

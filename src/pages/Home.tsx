@@ -6,21 +6,22 @@ import Container from '../components/Container'
 import Pagination from '../components/Pagination'
 import Select from '../components/Select'
 import SkeletonArticle from '../components/SkeletonArticle'
+import { AppDispatch } from '../store'
 import { fetchArticles } from '../store/articles/articlesActions'
 import { clearArticles } from '../store/articles/articlesSlice'
 import { ArticleInterface, ArticlesState, SelectableItem } from '../store/articles/articlesTypes'
+import { articlesData } from '../store/articlesSelectors'
 import categoriesData from '../utils/data/categoriesData'
 import countriesData from '../utils/data/countriesData'
 import classNames from '../utils/functions/classNames'
-import { articlesData } from '../store/articlesSelectors'
-import { AppDispatch } from '../store'
+import findByShort from '../utils/functions/findByShort'
 
 const Home: FC = () => {
   const dispatch = useDispatch<AppDispatch>()
   const [searchParams, setSearchParams] = useSearchParams()
   const { articles, totalResults, loading, error }: ArticlesState = useSelector(articlesData)
   const [category, setCategory] = useState<string>(searchParams.get('category') ?? '')
-  const [country, setCountry] = useState<SelectableItem>({ short: '', name: searchParams.get('country') ?? '' })
+  const [country, setCountry] = useState<SelectableItem>({ name: '' })
 
   const sendRequest = (urlParams: string) => {
     dispatch(
@@ -37,7 +38,11 @@ const Home: FC = () => {
       newSearchParams.set('country', 'ua')
       newSearchParams.set('page', '1')
       setCountry({ name: 'Ukraine', short: 'ua' })
+    } else if (searchParams.get('country')) {
+      const newCountry = findByShort(searchParams.get('country') ?? '', countriesData)
+      newCountry && setCountry(newCountry)
     }
+
     sendRequest(newSearchParams.toString())
     setSearchParams(newSearchParams)
   }, [])

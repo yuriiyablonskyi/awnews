@@ -1,17 +1,12 @@
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
 import { FC } from 'react'
 import DefaultImg from '../assets/al.png'
 import { ArticleInterface } from '../store/articles/articlesTypes'
-// import dayjs from 'dayjs'
 
 const Article: FC<ArticleInterface> = ({ author, title, description, url, urlToImage, publishedAt }) => {
-  const date = `${publishedAt.slice(0, 10)} ${publishedAt.slice(11, 19)}`
-  // TODO 2
-  // "publishedAt" береться из ответа сервера
-  // проблема с датой (разное время - решение использовать iso наверное, но тогда надо будет в store хранить строку iso и в некоторых местах переводить формат iso в обычную строку)
-  // но такое решение как я написал работает корректно
-
-  // const date = new Date(publishedAt).toLocaleString().replace(/,/g, '')
-  // const date = dayjs(publishedAt).format('DD.MM.YYYY HH:mm:ss')
+  dayjs.extend(utc)
+  const date = dayjs(publishedAt).utc(false).format('DD.MM.YYYY HH:mm:ss')
   return (
     <a className="flex max-w-xl flex-col justify-between border-b border-b-stone-300 pb-1" href={url} target="_blank">
       <div className="mb-3 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">

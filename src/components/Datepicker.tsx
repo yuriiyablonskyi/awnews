@@ -20,7 +20,6 @@ const Datepicker: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const [showCalendar, setShowCalendar] = useState<boolean>(false)
 
-  // добавил отправку запроса когда фильтр по дате сброшен (тоесть когда на странице в Select текст "Select date")
   const sendRequest = (urlParams: string) => {
     if (searchParams.get('q')) {
       dispatch(
@@ -33,7 +32,6 @@ const Datepicker: FC = () => {
   }
 
   const clearUrlParams = (newCalendarType: CalendarType) => {
-    // функция создана чтоб удалять параметры календаря при изменении типа календаря (при изменении type)
     const newSearchParams = new URLSearchParams(searchParams)
     newSearchParams.delete('from')
     newSearchParams.delete('to')
@@ -48,7 +46,7 @@ const Datepicker: FC = () => {
   }
 
   return (
-    <>
+    <div className="flex flex-wrap sm:flex-wraps">
       {showCalendar && <div onClick={() => setShowCalendar(false)} className="absolute inset-0"></div>}
       <Select
         dataSelect={type}
@@ -56,7 +54,7 @@ const Datepicker: FC = () => {
         onSelect={(newDate: SelectableItem) => handleDate(newDate.name)}
         optionName="date"
       />
-      <div className={classNames(type && 'mr-28', type === 'range' && 'mr-16', 'relative')}>
+      <div className={classNames(type && 'mr-28 mb-3', type === 'range' && 'mr-16 relative')}>
         {type && (
           <>
             <label className="block text-sm font-medium leading-6 text-gray-900 capitalize">Calendar</label>
@@ -79,7 +77,7 @@ const Datepicker: FC = () => {
         )}
         {showCalendar && <Calendar onShowCalendar={setShowCalendar} />}
       </div>
-    </>
+    </div>
   )
 }
 
