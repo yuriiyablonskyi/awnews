@@ -1,11 +1,9 @@
 import dayjs from 'dayjs'
-import utc from 'dayjs/plugin/utc'
 import { FC } from 'react'
 import DefaultImg from '../assets/al.png'
 import { ArticleInterface } from '../store/articles/articlesTypes'
 
 const Article: FC<ArticleInterface> = ({ author, title, description, url, urlToImage, publishedAt }) => {
-  dayjs.extend(utc)
   const date = dayjs(publishedAt).utc(false).format('DD.MM.YYYY HH:mm:ss')
   return (
     <a className="flex max-w-xl flex-col justify-between border-b border-b-stone-300 pb-1" href={url} target="_blank">
