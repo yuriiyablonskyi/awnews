@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom'
 import Logo from '../assets/logo.svg'
 import { clearArticles } from '../store/articles/articlesSlice'
 import Container from './Container'
+import { AppDispatch } from '../store'
 
 const navigation = {
   pages: [
@@ -15,7 +16,7 @@ const navigation = {
 }
 
 const Header: FC = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch<AppDispatch>()
   const [open, setOpen] = useState(false)
 
   return (

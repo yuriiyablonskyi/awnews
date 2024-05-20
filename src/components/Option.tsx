@@ -1,13 +1,13 @@
 import { Listbox } from '@headlessui/react'
 import { CheckIcon } from '@heroicons/react/20/solid'
-import { FC } from 'react'
+import { FC, MouseEventHandler } from 'react'
 import { SelectableItem } from '../store/articles/articlesTypes'
 import classNames from '../utils/functions/classNames'
 
 interface OptionProps {
   select?: SelectableItem
   optionName?: string
-  onChange: (selectedItem: SelectableItem) => void
+  onChange: MouseEventHandler<HTMLLIElement>
 }
 
 const Option: FC<OptionProps> = ({ select, optionName, onChange }) => (
@@ -16,14 +16,14 @@ const Option: FC<OptionProps> = ({ select, optionName, onChange }) => (
     className={({ active }) =>
       classNames(
         active ? 'bg-stone-300 text-silver cursor-pointer' : 'text-gray-900',
-        'relative cursor-default select-none py-2 pl-3 pr-9',
+        'relative cursor-pointer select-none py-2 pl-3 pr-9 capitalize',
       )
     }
-    value={select || { name: `Select a ${optionName}` }}
+    value={select}
   >
     {({ selected, active }) => (
       <>
-        <span>{select?.name || `Select a ${optionName}`}</span>
+        <span>{select?.name || `Select ${optionName}`}</span>
         {selected ? (
           <span
             className={classNames(

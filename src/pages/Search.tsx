@@ -1,64 +1,43 @@
 import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import { FC, KeyboardEvent, useEffect, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useSearchParams } from 'react-router-dom'
 import Article from '../components/Article'
 import Container from '../components/Container'
+import Datepicker from '../components/Datepicker'
 import Pagination from '../components/Pagination'
 import Select from '../components/Select'
 import SkeletonArticle from '../components/SkeletonArticle'
+import { AppDispatch } from '../store'
 import { fetchArticles } from '../store/articles/articlesActions'
-import { clearArticles } from '../store/articles/articlesSlice'
-import { articlesData } from '../store/articlesSelectors'
+import { clearArticles, setCalendar } from '../store/articles/articlesSlice'
 import { ArticleInterface, ArticlesState, SelectableItem } from '../store/articles/articlesTypes'
+import { articlesData } from '../store/articlesSelectors'
 import languagesData from '../utils/data/languagesData'
 import sortByData from '../utils/data/sortByData'
-import updateSearchParams from '../utils/functions/updateSearchParams'
 import classNames from '../utils/functions/classNames'
+import findByShort from '../utils/functions/findByShort'
 
 const Search: FC = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch<AppDispatch>()
   const [searchParams, setSearchParams] = useSearchParams()
   const { articles, totalResults, loading, error }: ArticlesState = useSelector(articlesData)
   const [keyword, setKeyword] = useState<string>(searchParams.get('q') ?? '')
-  const [language, setLanguage] = useState<SelectableItem>({ name: '', short: searchParams.get('language') ?? '' })
+  const [language, setLanguage] = useState<SelectableItem>({ name: '' })
   const [sortBy, setSortBy] = useState<string>(searchParams.get('sortBy') ?? '')
 
-  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      handleSelectChange('q', keyword)
+  const dispatchUrlParams = () => {
+    const urlParamFrom = searchParams.get('from')
+    const urlParamTo = searchParams.get('to')
+
+    if (urlParamFrom && !urlParamTo) {
+      return dispatch(setCalendar({ type: 'from', singleDate: urlParamFrom }))
+    } else if (!urlParamFrom && urlParamTo) {
+      return dispatch(setCalendar({ type: 'to', singleDate: urlParamTo }))
+    } else if (urlParamFrom && urlParamTo) {
+      return dispatch(setCalendar({ type: 'range', singleDate: urlParamFrom, dateRange: urlParamTo }))
     }
   }
-
-  const handleLanguage = (value: SelectableItem) => {
-    handleSelectChange('language', value.short)
-    setLanguage(value)
-  }
-
-  const handleSorting = (value: string) => {
-    handleSelectChange('sortBy', value)
-    setSortBy(value)
-  }
-
-  const handleSelectChange = (key: string, value: string | undefined) => {
-    const newSearchParams = new URLSearchParams(searchParams)
-    const updatedSearchParams = updateSearchParams(newSearchParams, key, value)
-    if (keyword) {
-      updatedSearchParams.set('page', '1')
-      sendRequest(newSearchParams.toString())
-    }
-    setSearchParams(updatedSearchParams)
-  }
-
-  const handleClearFilter = () => {
-    setKeyword('')
-    setLanguage({ name: '', short: '' })
-    setSortBy('')
-    dispatch(clearArticles())
-    setSearchParams(new URLSearchParams())
-  }
-
-  useEffect(() => sendRequest(searchParams.toString()), [])
 
   const sendRequest = (urlParams: string) => {
     if (keyword) {
@@ -69,6 +48,52 @@ const Search: FC = () => {
         }),
       )
     }
+  }
+
+  useEffect(() => {
+    if (searchParams.get('language')) {
+      const newLanguage = findByShort(searchParams.get('language') ?? '', languagesData)
+      newLanguage && setLanguage(newLanguage)
+    }
+
+    dispatchUrlParams()
+    sendRequest(searchParams.toString())
+  }, [])
+
+  const handleLanguage = (value: SelectableItem) => {
+    const newSearchParams = handleSelectChange('language', value.short)
+    setLanguage(value)
+    sendRequest(newSearchParams.toString())
+  }
+
+  const handleSorting = (value: string) => {
+    const newSearchParams = handleSelectChange('sortBy', value)
+    setSortBy(value)
+    sendRequest(newSearchParams.toString())
+  }
+
+  const handleSelectChange = (key: string, value: string | undefined) => {
+    const newSearchParams = new URLSearchParams(searchParams)
+    if (value) {
+      newSearchParams.set(key, value)
+    } else {
+      newSearchParams.delete(key)
+    }
+    if (keyword) {
+      newSearchParams.set('page', '1')
+    } else {
+      newSearchParams.delete('page')
+    }
+    setSearchParams(newSearchParams)
+    return newSearchParams
+  }
+
+  const handleClearFilter = () => {
+    setKeyword('')
+    setLanguage({ name: '', short: '' })
+    setSortBy('')
+    dispatch(clearArticles())
+    setSearchParams(new URLSearchParams())
   }
 
   const renderContent = () => {
@@ -83,10 +108,7 @@ const Search: FC = () => {
     if (articles.length) {
       return articles.map((item: ArticleInterface, id: number) => <Article key={id} {...item} />)
     }
-    if (!searchParams.get('q')) {
-      return <p className={errorMessageStyles}>Start your search to see results.</p>
-    }
-    return <p className={errorMessageStyles}>No articles found.</p>
+    return <p className={errorMessageStyles}>Start your search to see results.</p>
   }
 
   return (
@@ -101,8 +123,11 @@ const Search: FC = () => {
         <input
           type="text"
           value={keyword}
-          onChange={e => setKeyword(e.target.value)}
-          onKeyDown={handleKeyPress}
+          onChange={e => {
+            setKeyword(e.target.value)
+            handleSelectChange('q', e.target.value)
+          }}
+          onKeyDown={e => e.key === 'Enter' && sendRequest(searchParams.toString())}
           className="w-full py-4 outline-none"
           placeholder="Searching by keyword..."
         />
@@ -117,28 +142,36 @@ const Search: FC = () => {
           </button>
           <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
           <button
-            onClick={() => handleSelectChange('q', keyword)}
-            className="text-gray-400 hover:text-gray-500"
+            onClick={() => sendRequest(searchParams.toString())}
+            className={classNames(
+              'text-gray-400',
+              keyword && 'hover:text-gray-500 cursor-pointer',
+              !keyword && 'cursor-auto',
+            )}
             aria-label="Start search"
+            disabled={!keyword}
           >
             <span className="sr-only">Search</span>
             <MagnifyingGlassIcon className="h-6 w-6" aria-hidden="true" />
           </button>
         </div>
       </div>
-      <div className="flex flex-col sm:flex-row">
-        <Select
-          dataSelect={language.short}
-          options={languagesData}
-          onSelect={(newLanguage: SelectableItem) => handleLanguage(newLanguage)}
-          optionName="language"
-        />
-        <Select
-          dataSelect={sortBy}
-          options={sortByData}
-          onSelect={(newSortByData: SelectableItem) => handleSorting(newSortByData.name)}
-          optionName="sort by"
-        />
+      <div className="flex flex-wrap sm:flex-wrap">
+        <div className="flex flex-wrap sm:flex-wrap">
+          <Select
+            dataSelect={language.name}
+            options={languagesData}
+            onSelect={(newLanguage: SelectableItem) => handleLanguage(newLanguage)}
+            optionName="language"
+          />
+          <Select
+            dataSelect={sortBy}
+            options={sortByData}
+            onSelect={(newSortByData: SelectableItem) => handleSorting(newSortByData.name)}
+            optionName="sort by"
+          />
+        </div>
+        <Datepicker />
       </div>
       <div
         className={classNames(
