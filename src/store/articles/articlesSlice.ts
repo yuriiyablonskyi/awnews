@@ -5,7 +5,6 @@ import { fetchArticles } from './articlesActions'
 const initialState: ArticlesState = {
   totalResults: 0,
   articles: [],
-  error: null,
   loading: false,
   filterCalendar: {},
 }
@@ -17,7 +16,6 @@ const articlesSlice = createSlice({
     clearArticles: state => {
       state.articles = []
       state.totalResults = 0
-      state.error = null
       state.loading = false
       state.filterCalendar = {}
     },
@@ -30,11 +28,9 @@ const articlesSlice = createSlice({
       .addCase(fetchArticles.fulfilled, (state, action) => {
         state.articles = action.payload.articles
         state.totalResults = action.payload.totalResults
-        state.error = null
         state.loading = false
       })
-      .addMatcher(isAnyOf(fetchArticles.rejected), (state, action) => {
-        state.error = action.payload
+      .addMatcher(isAnyOf(fetchArticles.rejected), state => {
         state.loading = false
       })
       .addMatcher(isAnyOf(fetchArticles.pending), (state, action) => {

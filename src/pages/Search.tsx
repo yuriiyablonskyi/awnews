@@ -21,7 +21,7 @@ import findByShort from '../utils/functions/findByShort'
 const Search: FC = () => {
   const dispatch = useDispatch<AppDispatch>()
   const [searchParams, setSearchParams] = useSearchParams()
-  const { articles, totalResults, loading, error }: ArticlesState = useSelector(articlesData)
+  const { articles, totalResults, loading }: ArticlesState = useSelector(articlesData)
   const [keyword, setKeyword] = useState<string>(searchParams.get('q') ?? '')
   const [language, setLanguage] = useState<SelectableItem>({ name: '' })
   const [sortBy, setSortBy] = useState<string>(searchParams.get('sortBy') ?? '')
@@ -102,9 +102,6 @@ const Search: FC = () => {
     if (loading) {
       return [...Array(skeletonCount)].map((_, index) => <SkeletonArticle key={index} />)
     }
-    if (error) {
-      return <p className={errorMessageStyles}>Error: {error}</p>
-    }
     if (articles.length) {
       return articles.map((item: ArticleInterface, id: number) => <Article key={id} {...item} />)
     }
@@ -183,7 +180,7 @@ const Search: FC = () => {
       >
         {renderContent()}
       </div>
-      {!!articles.length && !loading && !error && <Pagination totalResults={totalResults} endpoint="everything" />}
+      {!!articles.length && !loading && <Pagination totalResults={totalResults} endpoint="everything" />}
     </Container>
   )
 }
