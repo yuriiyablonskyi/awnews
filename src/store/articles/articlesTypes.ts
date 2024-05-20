@@ -11,7 +11,6 @@ export interface ArticlesState {
   articles: ArticleInterface[]
   totalResults: number
   loading: boolean
-  error: string | null
   filterCalendar: {
     type?: CalendarType
     singleDate?: string
