@@ -3,10 +3,16 @@ import { FC } from 'react'
 import DefaultImg from '../assets/al.png'
 import { ArticleInterface } from '../store/articles/articlesTypes'
 
-const Article: FC<ArticleInterface> = ({ author, title, description, url, urlToImage, publishedAt }) => {
+const Article: FC<ArticleInterface> = ({ author, title, description, url, urlToImage, publishedAt, isTopHeadline }) => {
   const date = dayjs(publishedAt).utc(false).format('DD.MM.YYYY HH:mm:ss')
   return (
-    <a className="flex max-w-xl flex-col justify-between border-b border-b-stone-300 pb-1" href={url} target="_blank">
+    <a
+      className="flex max-w-xl flex-col justify-between border-b border-b-stone-300 pb-1"
+      href={url ? url : '#'}
+      target="_blank"
+    >
+      {/* //забрати */}
+      {isTopHeadline && <p>isTopHeadline</p>}
       <div className="mb-3 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
         <img
           src={urlToImage || DefaultImg}

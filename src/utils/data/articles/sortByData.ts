@@ -1,4 +1,4 @@
-import { SelectableItem } from '../../store/articles/articlesTypes'
+import { SelectableItem } from '../../../store/articles/articlesTypes'
 
 const sortByData: SelectableItem[] = [
   { id: 0, name: 'relevancy' },

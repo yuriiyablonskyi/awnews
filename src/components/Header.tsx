@@ -1,18 +1,16 @@
 import { Dialog, Popover, Transition } from '@headlessui/react'
 import { Bars3Icon, MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { FC, Fragment, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import Logo from '../assets/logo.svg'
 import { clearArticles } from '../store/articles/articlesSlice'
 import Container from './Container'
 import { AppDispatch } from '../store'
+import { articlesData } from '../store/articlesSelectors'
 
 const navigation = {
-  pages: [
-    { name: 'Add News', href: '#' },
-    { name: 'Profile', href: '#' },
-  ],
+  pages: [{ name: 'AddNews', href: 'add-news' }],
 }
 
 const Header: FC = () => {

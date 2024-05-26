@@ -11,8 +11,8 @@ import { fetchArticles } from '../store/articles/articlesActions'
 import { clearArticles } from '../store/articles/articlesSlice'
 import { ArticleInterface, ArticlesState, SelectableItem } from '../store/articles/articlesTypes'
 import { articlesData } from '../store/articlesSelectors'
-import categoriesData from '../utils/data/categoriesData'
-import countriesData from '../utils/data/countriesData'
+import categoriesData from '../utils/data/articles/categoriesData'
+import countriesData from '../utils/data/articles/countriesData'
 import classNames from '../utils/functions/classNames'
 import findByShort from '../utils/functions/findByShort'
 
@@ -88,7 +88,7 @@ const Home: FC = () => {
 
   return (
     <Container>
-      <div className="mb-4 sm:mb-4">
+      <div className="mb-4">
         <h2 className="text-2xl font-bold font-serif tracking-tight sm:text-3xl">Stay update with AWNews</h2>
         <p className="text-base leading-8 font-sans">Select Category and/or Country</p>
       </div>

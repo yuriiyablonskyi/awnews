@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router-dom'
 import App from '../App.tsx'
 import Home from '../pages/Home.tsx'
 import Search from '../pages/Search.tsx'
+import AddNews from '../pages/AddNews.tsx'
 
 interface RouteType {
   path: string
@@ -21,6 +22,10 @@ const routes: RouteType[] = [
       {
         path: 'search',
         element: <Search />,
+      },
+      {
+        path: 'add-news',
+        element: <AddNews />,
       },
     ],
   },

@@ -1,4 +1,4 @@
-import { SelectableItem } from '../../store/articles/articlesTypes'
+import { SelectableItem } from '../../../store/articles/articlesTypes'
 
 const languagesData: SelectableItem[] = [
   { id: 0, short: 'ar', name: 'Arabic' },

@@ -1,10 +1,12 @@
 import { createSlice, isAnyOf } from '@reduxjs/toolkit'
 import { ArticlesState } from './articlesTypes'
 import { fetchArticles } from './articlesActions'
+import { articlesData } from '../../utils/data/articles/articlesData'
 
 const initialState: ArticlesState = {
-  totalResults: 0,
   articles: [],
+  customArticles: articlesData,
+  totalResults: 0,
   loading: false,
   filterCalendar: {},
 }
@@ -22,6 +24,12 @@ const articlesSlice = createSlice({
     setCalendar: (state, action) => {
       state.filterCalendar = action.payload
     },
+    // addNote: (state, action: PayloadAction<Note>) => {
+    //   state.notes.push(action.payload)
+    // },
+    // removeNote: (state, action: PayloadAction<string>) => {
+    //   state.notes = state.notes.filter(note => note.id !== action.payload)
+    // },
   },
   extraReducers: builder => {
     builder

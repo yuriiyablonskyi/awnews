@@ -1,14 +1,17 @@
 export interface ArticleInterface {
+  id?: string
   author: string
   title: string
   description: string
   url: string
   urlToImage?: string
   publishedAt: string
+  isTopHeadline?: boolean
 }
 
 export interface ArticlesState {
   articles: ArticleInterface[]
+  customArticles: ArticleInterface[]
   totalResults: number
   loading: boolean
   filterCalendar: {

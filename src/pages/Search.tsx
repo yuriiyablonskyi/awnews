@@ -13,8 +13,8 @@ import { fetchArticles } from '../store/articles/articlesActions'
 import { clearArticles, setCalendar } from '../store/articles/articlesSlice'
 import { ArticleInterface, ArticlesState, SelectableItem } from '../store/articles/articlesTypes'
 import { articlesData } from '../store/articlesSelectors'
-import languagesData from '../utils/data/languagesData'
-import sortByData from '../utils/data/sortByData'
+import languagesData from '../utils/data/articles/languagesData'
+import sortByData from '../utils/data/articles/sortByData'
 import classNames from '../utils/functions/classNames'
 import findByShort from '../utils/functions/findByShort'
 
@@ -110,12 +110,14 @@ const Search: FC = () => {
 
   return (
     <Container>
-      <h2 className="text-2xl font-bold font-serif tracking-tight sm:text-3xl">
-        Article Search: Explore Content Based on Your Query
-      </h2>
-      <p className="text-base leading-8 font-sans mb-1.5">
-        Search articles effortlessly and refine your query using convenient filters
-      </p>
+      <div className="mb-4">
+        <h2 className="text-2xl font-bold font-serif tracking-tight sm:text-3xl">
+          Article Search: Explore Content Based on Your Query
+        </h2>
+        <p className="text-base leading-8 font-sans mb-1.5">
+          Search articles effortlessly and refine your query using convenient filters
+        </p>
+      </div>
       <div className="flex border-b border-b-stone-300 mb-4">
         <input
           type="text"
