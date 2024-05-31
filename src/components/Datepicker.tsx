@@ -31,7 +31,7 @@ const Datepicker: FC = () => {
     }
   }
 
-  const clearUrlParams = (newCalendarType: CalendarType) => {
+  const clearUrlParams = (newCalendarType: string) => {
     const newSearchParams = new URLSearchParams(searchParams)
     newSearchParams.delete('from')
     newSearchParams.delete('to')
@@ -39,7 +39,7 @@ const Datepicker: FC = () => {
     setSearchParams(newSearchParams)
   }
 
-  const handleDate = (newCalendarType: CalendarType) => {
+  const handleDate = (newCalendarType: string) => {
     clearUrlParams(newCalendarType)
     setShowCalendar(false)
     dispatch(setCalendar({ type: newCalendarType }))

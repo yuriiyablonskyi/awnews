@@ -1,7 +1,13 @@
 import { PhotoIcon } from '@heroicons/react/24/solid'
 import { useForm } from 'react-hook-form'
+import { SetStateBoolean } from '../store/articles/articlesTypes'
+import { FC } from 'react'
 
-const NewNoteForm = ({ onOpen }) => {
+interface NewsFormProps {
+  onOpen: SetStateBoolean
+}
+
+const NewsForm: FC<NewsFormProps> = ({ onOpen }) => {
   const {
     register,
     handleSubmit,
@@ -32,7 +38,7 @@ const NewNoteForm = ({ onOpen }) => {
                 <input
                   type="text"
                   id="title"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   {...register('title', {
                     required: 'Title is required',
                     minLength: { value: 90, message: 'Title must be at least 90 characters long' },
@@ -50,7 +56,7 @@ const NewNoteForm = ({ onOpen }) => {
                 <textarea
                   id="description"
                   rows={3}
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   {...register('description', {
                     required: 'Description is required',
                     minLength: { value: 250, message: 'Description must be at least 250 characters long' },
@@ -58,7 +64,6 @@ const NewNoteForm = ({ onOpen }) => {
                 />
                 {errors.description && <span className="text-red-600">{errors.description.message}</span>}
               </div>
-              <p className="mt-3 text-sm leading-6 text-gray-600">Write a few sentences about yourself.</p>
             </div>
 
             <div className="col-span-full">
@@ -118,4 +123,4 @@ const NewNoteForm = ({ onOpen }) => {
   )
 }
 
-export default NewNoteForm
+export default NewsForm

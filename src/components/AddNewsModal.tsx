@@ -1,15 +1,16 @@
-import { Fragment, useRef } from 'react'
+import { FC, Fragment } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
-import NewNoteForm from './NewNoteForm'
+import NewsForm from './NewsForm'
+import { SetStateBoolean } from '../store/articles/articlesTypes'
 
-const Test = ({ isOpen, onOpen }) => {
-  const cancelButtonRef = useRef(null)
-  console.log(cancelButtonRef)
+interface AddNewsModalProps {
+  isOpen: boolean
+  onOpen: SetStateBoolean
+}
 
+const AddNewsModal: FC<AddNewsModalProps> = ({ isOpen, onOpen }) => {
   return (
     <Transition.Root show={isOpen} as={Fragment}>
-      {/* <Dialog className="relative z-10" initialFocus={cancelButtonRef} onClose={onOpen}> */}
-      {/* ref={cancelButtonRef}  - from button */}
       <Dialog className="relative z-10" onClose={onOpen}>
         <Transition.Child
           as={Fragment}
@@ -34,17 +35,11 @@ const Test = ({ isOpen, onOpen }) => {
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8">
-                <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-                  <div className="sm:flex sm:items-start">
-                    <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                      <Dialog.Title as="h3" className="text-base font-semibold leading-6 text-gray-900">
-                        Create New Article
-                      </Dialog.Title>
-                      <NewNoteForm onOpen={onOpen} />
-                    </div>
-                  </div>
-                </div>
+              <Dialog.Panel className="relative p-4 transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:m-8">
+                <Dialog.Title as="h3" className="text-base font-semibold leading-6 text-gray-900">
+                  Create New Article
+                </Dialog.Title>
+                <NewsForm onOpen={onOpen} />
               </Dialog.Panel>
             </Transition.Child>
           </div>
@@ -54,4 +49,4 @@ const Test = ({ isOpen, onOpen }) => {
   )
 }
 
-export default Test
+export default AddNewsModal

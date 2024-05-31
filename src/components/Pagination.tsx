@@ -7,7 +7,12 @@ import { fetchArticles } from '../store/articles/articlesActions'
 import classNames from '../utils/functions/classNames'
 import { AppDispatch } from '../store'
 
-const Pagination: FC<{ totalResults: number; endpoint: string }> = ({ totalResults, endpoint }) => {
+interface PaginationProps {
+  totalResults: number
+  endpoint: string
+}
+
+const Pagination: FC<PaginationProps> = ({ totalResults, endpoint }) => {
   const dispatch = useDispatch<AppDispatch>()
   const [searchParams, setSearchParams] = useSearchParams()
   const [currentPage, setCurrentPage] = useState<number>(Number(searchParams.get('page')) || 1)

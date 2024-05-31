@@ -19,7 +19,12 @@ import findByShort from '../utils/functions/findByShort'
 const Home: FC = () => {
   const dispatch = useDispatch<AppDispatch>()
   const [searchParams, setSearchParams] = useSearchParams()
-  const { articles, totalResults, loading }: ArticlesState = useSelector(articlesData)
+  // const { articles, totalResults, loading }: ArticlesState = useSelector(articlesData)
+  const feqefew = useSelector(articlesData)
+  const { articles, totalResults, loading } = feqefew
+  console.log(Object.keys(feqefew.articles))
+  console.log({ articles, totalResults, loading })
+
   const [category, setCategory] = useState<string>(searchParams.get('category') ?? '')
   const [country, setCountry] = useState<SelectableItem>({ name: '' })
 
