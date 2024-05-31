@@ -9,12 +9,12 @@ import { setCalendar } from '../store/articles/articlesSlice'
 import { articlesData } from '../store/articlesSelectors'
 import classNames from '../utils/functions/classNames'
 import generateDateRange, { DayInfo } from '../utils/functions/generateDateRange'
+import { SetStateBoolean } from '../store/articles/articlesTypes'
 
 const daysOfWeek: string[] = ['M', 'T', 'W', 'T', 'F', 'S', 'S']
 
-type SetShowCalendar = React.Dispatch<React.SetStateAction<boolean>>
 interface CalendarProps {
-  onShowCalendar: SetShowCalendar
+  onShowCalendar: SetStateBoolean
 }
 
 const Calendar: FC<CalendarProps> = ({ onShowCalendar }) => {
@@ -51,7 +51,7 @@ const Calendar: FC<CalendarProps> = ({ onShowCalendar }) => {
         newSearchParams.set(type, newDateFormat)
         break
       case 'range':
-        if (dayjs(singleDate).isBefore(date) && !dateRange) {
+        if (singleDate && dayjs(singleDate).isBefore(date) && !dateRange) {
           dispatch(setCalendar({ type: 'range', singleDate: newDateFormat, dateRange: singleDate }))
           newSearchParams.set('from', singleDate)
           newSearchParams.set('to', newDateFormat)
@@ -82,7 +82,7 @@ const Calendar: FC<CalendarProps> = ({ onShowCalendar }) => {
       const isBeforeHoveredDate = date.isBefore(hoveredDate)
       const isInDateRange = dateRange && date.isAfter(fromDate) && date.isBefore(toDate)
 
-      return (!dateRange && isAfterSingleDate && isBeforeHoveredDate) || isInDateRange
+      return (!dateRange && isAfterSingleDate && isBeforeHoveredDate) || Boolean(isInDateRange)
     }, [singleDate, dateRange, hoveredDate])
   }
 
