@@ -1,7 +1,7 @@
 import { createSlice, isAnyOf } from '@reduxjs/toolkit'
 import { ArticlesState } from './articlesTypes'
 import { fetchArticles } from './articlesActions'
-import { mockedArticles } from '../../mock/articlesData'
+import { mockedArticles } from '../../mock/mockedArticles'
 
 const initialState: ArticlesState = {
   articles: [],

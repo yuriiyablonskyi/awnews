@@ -26,7 +26,7 @@ const AddNews: FC = () => {
         </div>
         <button
           onClick={() => setOpen(true)}
-          className="mb-4 w-14 ml-auto rounded-md flex justify-center bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          className="mb-4 w-full sm:w-14 ml-auto rounded-md flex justify-center bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
         >
           <PlusIcon className="w-8 h-8" />
         </button>

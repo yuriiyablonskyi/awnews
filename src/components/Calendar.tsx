@@ -72,7 +72,7 @@ const Calendar: FC<CalendarProps> = ({ onShowCalendar }) => {
     }
   }
 
-  const useHighlightedDate = (date: Dayjs): Boolean => {
+  const useHighlightedDate = (date: Dayjs): boolean => {
     return useMemo(() => {
       const fromDate = dayjs(searchParams.get('from'))
       const toDate = dayjs(searchParams.get('to'))
@@ -81,8 +81,9 @@ const Calendar: FC<CalendarProps> = ({ onShowCalendar }) => {
       const isBeforeHoveredDate = date.isBefore(hoveredDate)
       const isInDateRange = dateRange && date.isAfter(fromDate) && date.isBefore(toDate)
 
-      return (!dateRange && isAfterSingleDate && isBeforeHoveredDate) || Boolean(isInDateRange)
-    }, [singleDate, dateRange, hoveredDate])
+      return (!dateRange && isAfterSingleDate && isBeforeHoveredDate) || !!isInDateRange
+      // }, [singleDate, dateRange, hoveredDate])
+    }, [date])
   }
 
   return (

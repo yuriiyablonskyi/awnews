@@ -38,6 +38,9 @@ const AddNewsModal: FC<AddNewsModalProps> = ({ isOpen, onOpen }) => {
                 <Dialog.Title as="h3" className="text-base font-semibold leading-6 text-gray-900">
                   Create New Article
                 </Dialog.Title>
+                <p className="mt-1 text-sm leading-6 text-gray-600">
+                  Fill in the form below to submit your new article. Share your news with our community!
+                </p>
                 <NewsForm onOpen={onOpen} />
               </Dialog.Panel>
             </Transition.Child>

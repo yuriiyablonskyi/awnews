@@ -92,8 +92,8 @@ const Header: FC = () => {
               </button>
 
               <div className="ml-4 flex lg:ml-0">
-                <Link to="/">
-                  <span className="sr-only">Your Company</span>
+                <Link to="/?country=ua">
+                  <span className="sr-only">AWNews logo</span>
                   <img className="max-w-24 h-7" src={Logo} alt="" />
                 </Link>
               </div>

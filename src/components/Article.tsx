@@ -2,18 +2,24 @@ import dayjs from 'dayjs'
 import { FC } from 'react'
 import DefaultImg from '../assets/al.png'
 import { ArticleInterface } from '../store/articles/articlesTypes'
+import { FireIcon } from '@heroicons/react/20/solid'
 
 const Article: FC<ArticleInterface> = ({ author, title, description, url, urlToImage, publishedAt, isTopHeadline }) => {
   const date = dayjs(publishedAt).utc(false).format('DD.MM.YYYY HH:mm:ss')
   return (
     <a
-      className="flex max-w-xl flex-col justify-between border-b border-b-stone-300 pb-1"
+      className="relative flex max-w-xl flex-col justify-between border-b border-b-stone-300 pb-1"
       href={url ? url : '#'}
       target="_blank"
     >
-      {/* //забрати */}
-      {isTopHeadline && <p>isTopHeadline</p>}
-      <div className="mb-3 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
+      {isTopHeadline && (
+        // <div className="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 rounded flex items-center space-x-1">
+        <div className="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 rounded flex items-center">
+          <p className="text-xs whitespace-nowrap mr-1.5">Hot News</p>
+          <FireIcon className="h-6 w-6" />
+        </div>
+      )}
+      <div className="border border-stone-300 mb-3 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
         <img
           src={urlToImage || DefaultImg}
           alt={urlToImage}
