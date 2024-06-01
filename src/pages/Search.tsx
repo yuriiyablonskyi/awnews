@@ -13,10 +13,10 @@ import { fetchArticles } from '../store/articles/articlesActions'
 import { clearArticles, setCalendar } from '../store/articles/articlesSlice'
 import { ArticleInterface, ArticlesState, SelectableItem } from '../store/articles/articlesTypes'
 import { articlesData } from '../store/articlesSelectors'
-import languagesData from '../utils/data/articles/languagesData'
-import sortByData from '../utils/data/articles/sortByData'
-import classNames from '../utils/functions/classNames'
-import findByShort from '../utils/functions/findByShort'
+import languagesData from '../utils/languagesData'
+import sortByData from '../utils/sortByData'
+import classNames from '../utils/classNames'
+import findByShort from '../utils/findByShort'
 
 const Search: FC = () => {
   const dispatch = useDispatch<AppDispatch>()

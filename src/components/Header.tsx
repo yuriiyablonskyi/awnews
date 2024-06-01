@@ -1,17 +1,12 @@
 import { Dialog, Popover, Transition } from '@headlessui/react'
 import { Bars3Icon, MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { FC, Fragment, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import Logo from '../assets/logo.svg'
 import { clearArticles } from '../store/articles/articlesSlice'
 import Container from './Container'
 import { AppDispatch } from '../store'
-import { articlesData } from '../store/articlesSelectors'
-
-const navigation = {
-  pages: [{ name: 'AddNews', href: 'add-news' }],
-}
 
 const Header: FC = () => {
   const dispatch = useDispatch<AppDispatch>()
@@ -57,13 +52,11 @@ const Header: FC = () => {
                 </div>
 
                 <div className="space-y-6 border-t border-gray-200 px-4 py-6">
-                  {navigation.pages.map(page => (
-                    <div key={page.name} className="flow-root">
-                      <Link to={page.href} className="-m-2 block p-2 font-medium text-gray-900">
-                        {page.name}
-                      </Link>
-                    </div>
-                  ))}
+                  <div className="flow-root">
+                    <Link to="add-news" className="-m-2 block p-2 font-medium text-gray-900">
+                      AddNews
+                    </Link>
+                  </div>
                 </div>
 
                 <div className="space-y-6 border-t border-gray-200 px-4 py-6">
@@ -107,14 +100,12 @@ const Header: FC = () => {
 
               <Popover.Group className="hidden lg:ml-8 lg:block lg:self-stretch">
                 <div className="flex h-full space-x-8">
-                  {navigation.pages.map(page => (
-                    <Link
-                      to={page.href}
-                      className="flex items-center text-lg font-medium text-gray-700 hover:text-gray-800"
-                    >
-                      {page.name}
-                    </Link>
-                  ))}
+                  <Link
+                    to="add-news"
+                    className="flex items-center text-lg font-medium text-gray-700 hover:text-gray-800"
+                  >
+                    AddNews
+                  </Link>
                 </div>
               </Popover.Group>
 
@@ -129,7 +120,6 @@ const Header: FC = () => {
                   </a>
                 </div>
 
-                {/* Search */}
                 <div className="flex lg:ml-6">
                   <Link
                     to="/search"

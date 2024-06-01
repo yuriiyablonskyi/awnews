@@ -4,7 +4,7 @@ import ReactPaginate from 'react-paginate'
 import { useDispatch } from 'react-redux'
 import { useSearchParams } from 'react-router-dom'
 import { fetchArticles } from '../store/articles/articlesActions'
-import classNames from '../utils/functions/classNames'
+import classNames from '../utils/classNames'
 import { AppDispatch } from '../store'
 
 interface PaginationProps {

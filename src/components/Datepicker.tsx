@@ -1,15 +1,15 @@
 import { CalendarIcon } from '@heroicons/react/24/outline'
 import { FC, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { CalendarType, SelectableItem } from '../store/articles/articlesTypes'
-import calendarData from '../utils/data/articles/calendarData'
+import { SelectableItem } from '../store/articles/articlesTypes'
+import calendarData from '../utils/calendarData'
 import Calendar from './Calendar'
 import Select from './Select'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch } from '../store'
 import { articlesData } from '../store/articlesSelectors'
 import { setCalendar } from '../store/articles/articlesSlice'
-import classNames from '../utils/functions/classNames'
+import classNames from '../utils/classNames'
 import { fetchArticles } from '../store/articles/articlesActions'
 
 const Datepicker: FC = () => {

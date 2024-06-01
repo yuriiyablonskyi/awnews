@@ -1,11 +1,10 @@
-import { FC, Fragment } from 'react'
+import { Dispatch, FC, Fragment, SetStateAction } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import NewsForm from './NewsForm'
-import { SetStateBoolean } from '../store/articles/articlesTypes'
 
 interface AddNewsModalProps {
   isOpen: boolean
-  onOpen: SetStateBoolean
+  onOpen: Dispatch<SetStateAction<boolean>>
 }
 
 const AddNewsModal: FC<AddNewsModalProps> = ({ isOpen, onOpen }) => {

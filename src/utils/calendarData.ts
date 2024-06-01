@@ -1,4 +1,4 @@
-import { CalendarType, SelectableItem } from '../../../store/articles/articlesTypes'
+import { CalendarType, SelectableItem } from "../store/articles/articlesTypes"
 
 const calendarData: SelectableItem[] = [
   { id: 0, name: CalendarType.FROM },

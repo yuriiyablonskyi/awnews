@@ -1,6 +1,6 @@
-import { ArticleInterface } from '../../../store/articles/articlesTypes'
+import { ArticleInterface } from "../store/articles/articlesTypes";
 
-export const articlesData: ArticleInterface[] = [
+export const mockedArticles: ArticleInterface[] = [
   {
     id: '1',
     author: 'John Doe',
@@ -8,7 +8,7 @@ export const articlesData: ArticleInterface[] = [
     description:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eget venenatis ex. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vehicula elit et justo consequat, at interdum lorem. Aliquam erat volutpat. Duis vulputate sapien id venenatis tincidunt. Integer non nibh vel ligula luctus tincidunt at eget justo. In hac habitasse platea dictumst. Phasellus luctus est ac urna sodales, et fermentum nulla facilisis. Cras vestibulum tempor velit, non vehicula dui cursus non. Praesent tincidunt sollicitudin nisl, nec facilisis lorem varius a. Suspendisse potenti. Mauris vestibulum enim at turpis vestibulum, et consequat dui volutpat. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eget venenatis ex.',
     url: '/',
-    urlToImage: './src/assets/notes/1.webp',
+    urlToImage: './src/assets/mock/1.webp',
     publishedAt: '2024-05-21 19:03:22',
     // category: 'news',
     isTopHeadline: true,
@@ -20,7 +20,7 @@ export const articlesData: ArticleInterface[] = [
     description:
       'Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vehicula elit et justo consequat, at interdum lorem. Aliquam erat volutpat. Duis vulputate sapien id venenatis tincidunt. Integer non nibh vel ligula luctus tincidunt at eget justo. In hac habitasse platea dictumst. Phasellus luctus est ac urna sodales, et fermentum nulla facilisis. Cras vestibulum tempor velit, non vehicula dui cursus non. Praesent tincidunt sollicitudin nisl, nec facilisis lorem varius a. Suspendisse potenti. Mauris vestibulum enim at turpis vestibulum, et consequat dui volutpat. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eget venenatis ex. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eget venenatis ex.',
     url: '/',
-    urlToImage: './src/assets/notes/2.webp',
+    urlToImage: './src/assets/mock/2.webp',
     publishedAt: '2024-05-20 11:13:52',
     // category: 'tech',
     isTopHeadline: false,
@@ -32,7 +32,7 @@ export const articlesData: ArticleInterface[] = [
     description:
       'Mauris non tempor quam, et lacinia sapien. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vehicula elit et justo consequat, at interdum lorem. Aliquam erat volutpat. Duis vulputate sapien id venenatis tincidunt. Integer non nibh vel ligula luctus tincidunt at eget justo. In hac habitasse platea dictumst. Phasellus luctus est ac urna sodales, et fermentum nulla facilisis. Cras vestibulum tempor velit, non vehicula dui cursus non. Praesent tincidunt sollicitudin nisl, nec facilisis lorem varius a. Suspendisse potenti. Mauris vestibulum enim at turpis vestibulum, et consequat dui volutpat. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eget venenatis ex. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eget venenatis ex.',
     url: '/',
-    urlToImage: './src/assets/notes/3.webp',
+    urlToImage: './src/assets/mock/3.webp',
     publishedAt: '2024-05-19 07:42:38',
     // category: 'sports',
     isTopHeadline: false,

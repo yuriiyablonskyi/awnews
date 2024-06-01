@@ -11,10 +11,10 @@ import { fetchArticles } from '../store/articles/articlesActions'
 import { clearArticles } from '../store/articles/articlesSlice'
 import { ArticleInterface, ArticlesState, SelectableItem } from '../store/articles/articlesTypes'
 import { articlesData } from '../store/articlesSelectors'
-import categoriesData from '../utils/data/articles/categoriesData'
-import countriesData from '../utils/data/articles/countriesData'
-import classNames from '../utils/functions/classNames'
-import findByShort from '../utils/functions/findByShort'
+import categoriesData from '../utils/categoriesData'
+import countriesData from '../utils/countriesData'
+import classNames from '../utils/classNames'
+import findByShort from '../utils/findByShort'
 
 const Home: FC = () => {
   const dispatch = useDispatch<AppDispatch>()

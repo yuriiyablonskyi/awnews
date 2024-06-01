@@ -1,11 +1,11 @@
 import { createSlice, isAnyOf } from '@reduxjs/toolkit'
 import { ArticlesState } from './articlesTypes'
 import { fetchArticles } from './articlesActions'
-import { articlesData } from '../../utils/data/articles/articlesData'
+import { mockedArticles } from '../../mock/articlesData'
 
 const initialState: ArticlesState = {
   articles: [],
-  customArticles: articlesData,
+  customArticles: mockedArticles,
   totalResults: 0,
   loading: false,
   filterCalendar: {},

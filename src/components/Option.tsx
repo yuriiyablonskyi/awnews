@@ -2,7 +2,7 @@ import { Listbox } from '@headlessui/react'
 import { CheckIcon } from '@heroicons/react/20/solid'
 import { FC, MouseEventHandler } from 'react'
 import { SelectableItem } from '../store/articles/articlesTypes'
-import classNames from '../utils/functions/classNames'
+import classNames from '../utils/classNames'
 
 interface OptionProps {
   select?: SelectableItem
