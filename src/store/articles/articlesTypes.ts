@@ -3,7 +3,7 @@ export interface ArticleInterface {
   author: string
   title: string
   description: string
-  url: string
+  url?: string
   urlToImage?: string
   publishedAt: string
   isTopHeadline?: boolean
