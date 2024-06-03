@@ -1,8 +1,8 @@
+import { FireIcon } from '@heroicons/react/20/solid'
 import dayjs from 'dayjs'
 import { FC } from 'react'
 import DefaultImg from '../assets/al.png'
 import { ArticleInterface } from '../store/articles/articlesTypes'
-import { FireIcon } from '@heroicons/react/20/solid'
 import DropdownMenu from './DropdownMenu'
 
 const Article: FC<ArticleInterface> = ({ author, title, description, url, urlToImage, publishedAt, isTopHeadline }) => {

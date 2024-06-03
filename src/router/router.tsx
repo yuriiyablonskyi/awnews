@@ -1,8 +1,8 @@
 import { createBrowserRouter } from 'react-router-dom'
 import App from '../App.tsx'
+import AddNews from '../pages/AddNews.tsx'
 import Home from '../pages/Home.tsx'
 import Search from '../pages/Search.tsx'
-import AddNews from '../pages/AddNews.tsx'
 
 interface RouteType {
   path: string

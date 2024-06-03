@@ -1,5 +1,5 @@
-import { Dispatch, FC, Fragment, SetStateAction } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
+import { Dispatch, FC, Fragment, SetStateAction } from 'react'
 import NewsForm from './NewsForm'
 
 interface AddNewsModalProps {

@@ -12,19 +12,14 @@ import { clearArticles } from '../store/articles/articlesSlice'
 import { ArticleInterface, ArticlesState, SelectableItem } from '../store/articles/articlesTypes'
 import { articlesData } from '../store/articlesSelectors'
 import categoriesData from '../utils/categoriesData'
-import countriesData from '../utils/countriesData'
 import classNames from '../utils/classNames'
+import countriesData from '../utils/countriesData'
 import findByShort from '../utils/findByShort'
 
 const Home: FC = () => {
   const dispatch = useDispatch<AppDispatch>()
   const [searchParams, setSearchParams] = useSearchParams()
-  // const { articles, totalResults, loading }: ArticlesState = useSelector(articlesData)
-  const feqefew = useSelector(articlesData)
-  const { articles, totalResults, loading } = feqefew
-  console.log(Object.keys(feqefew.articles))
-  console.log({ articles, totalResults, loading })
-
+  const { articles, totalResults, loading }: ArticlesState = useSelector(articlesData)
   const [category, setCategory] = useState<string>(searchParams.get('category') ?? '')
   const [country, setCountry] = useState<SelectableItem>({ name: '' })
 

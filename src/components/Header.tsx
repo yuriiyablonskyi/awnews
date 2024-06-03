@@ -4,9 +4,9 @@ import { FC, Fragment, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import Logo from '../assets/logo.svg'
+import { AppDispatch } from '../store'
 import { clearArticles } from '../store/articles/articlesSlice'
 import Container from './Container'
-import { AppDispatch } from '../store'
 
 const Header: FC = () => {
   const dispatch = useDispatch<AppDispatch>()

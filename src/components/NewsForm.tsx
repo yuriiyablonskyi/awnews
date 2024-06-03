@@ -1,6 +1,6 @@
 import { PhotoIcon } from '@heroicons/react/24/solid'
-import { useForm } from 'react-hook-form'
 import { Dispatch, FC, SetStateAction } from 'react'
+import { useForm } from 'react-hook-form'
 
 interface NewsFormProps {
   onOpen: Dispatch<SetStateAction<boolean>>
