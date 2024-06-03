@@ -1,7 +1,12 @@
 import { Menu, Transition } from '@headlessui/react'
 import { EllipsisVerticalIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/solid'
+import { FC } from 'react'
+import { useDispatch } from 'react-redux'
+import { removeArticle } from '../store/articles/articlesSlice'
 
-export default function DropdownMenu() {
+const DropdownMenu: FC<{ id: string }> = ({ id }) => {
+  const dispatch = useDispatch()
+
   return (
     <div className="absolute top-0 right-0 text-right">
       <Menu>
@@ -25,7 +30,10 @@ export default function DropdownMenu() {
               </button>
             </Menu.Item>
             <Menu.Item>
-              <button className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-white/10">
+              <button
+                onClick={() => dispatch(removeArticle(id))}
+                className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-white/10"
+              >
                 <TrashIcon className="size-4 fill-white/30" />
                 Delete
                 <kbd className="ml-auto hidden font-sans text-xs text-white/50 group-data-[focus]:inline">⌘D</kbd>
@@ -37,3 +45,5 @@ export default function DropdownMenu() {
     </div>
   )
 }
+
+export default DropdownMenu

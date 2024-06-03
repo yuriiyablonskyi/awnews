@@ -5,7 +5,7 @@ import DefaultImg from '../assets/al.png'
 import { ArticleInterface } from '../store/articles/articlesTypes'
 import DropdownMenu from './DropdownMenu'
 
-const Article: FC<ArticleInterface> = ({ author, title, description, url, urlToImage, publishedAt, isTopHeadline }) => {
+const Article: FC<ArticleInterface> = ({ id, author, title, description, url, urlToImage, publishedAt, isHotNews }) => {
   const date = dayjs(publishedAt).utc(false).format('DD.MM.YYYY HH:mm:ss')
 
   const Wrapper = url ? 'a' : 'div'
@@ -19,13 +19,13 @@ const Article: FC<ArticleInterface> = ({ author, title, description, url, urlToI
 
   return (
     <Wrapper {...wrapperProps}>
-      {isTopHeadline && (
+      {isHotNews && (
         <div className="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 rounded flex items-center">
           <p className="text-xs whitespace-nowrap mr-1.5">Hot News</p>
           <FireIcon className="h-6 w-6" />
         </div>
       )}
-      {!url && <DropdownMenu />}
+      {!url && <DropdownMenu id={String(id)} />}
       <div className="border border-stone-300 mb-3 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
         <img
           src={urlToImage || DefaultImg}

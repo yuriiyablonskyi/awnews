@@ -6,7 +6,7 @@ export interface ArticleInterface {
   url?: string
   urlToImage?: string
   publishedAt: string
-  isTopHeadline?: boolean
+  isHotNews?: boolean
 }
 
 export interface ArticlesState {

@@ -1,20 +1,35 @@
 import { PhotoIcon } from '@heroicons/react/24/solid'
 import { Dispatch, FC, SetStateAction } from 'react'
 import { useForm } from 'react-hook-form'
+import { useDispatch } from 'react-redux'
+import { addArticle } from '../store/articles/articlesSlice'
+import { ArticleInterface } from '../store/articles/articlesTypes'
 
 interface NewsFormProps {
   onOpen: Dispatch<SetStateAction<boolean>>
 }
 
 const NewsForm: FC<NewsFormProps> = ({ onOpen }) => {
+  const dispath = useDispatch()
+
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm()
 
   const onSubmit = data => {
+    dispath(
+      addArticle({
+        id: 'id',
+        author: 'John Doe',
+        title: data.title,
+        description: data.description,
+        // urlToImage
+        publishedAt: '2024.06.05',
+        isHotNews: data.isHotNews,
+      }),
+    )
     console.log(data)
     alert('success')
     onOpen(false)
@@ -87,7 +102,7 @@ const NewsForm: FC<NewsFormProps> = ({ onOpen }) => {
               id="hot-news"
               type="checkbox"
               className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-              {...register('hotNews')}
+              {...register('isHotNews')}
             />
           </div>
           <div className="text-sm leading-6">
