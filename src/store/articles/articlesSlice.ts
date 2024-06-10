@@ -8,6 +8,7 @@ const initialState: ArticlesState = {
   customArticles: mockedArticles,
   totalResults: 0,
   loading: false,
+  currentArticle: {},
   filterCalendar: {},
 }
 
@@ -30,6 +31,9 @@ const articlesSlice = createSlice({
     removeArticle: (state, action: PayloadAction<string>) => {
       state.customArticles = state.customArticles.filter(article => article.id !== action.payload)
     },
+    setCurrentArticle: (state, action: PayloadAction<ArticleInterface>) => {
+      state.currentArticle = action.payload
+    },
   },
   extraReducers: builder => {
     builder
@@ -47,5 +51,5 @@ const articlesSlice = createSlice({
   },
 })
 
-export const { clearArticles, setCalendar, removeArticle, addArticle } = articlesSlice.actions
+export const { clearArticles, setCalendar, removeArticle, addArticle, setCurrentArticle } = articlesSlice.actions
 export default articlesSlice.reducer

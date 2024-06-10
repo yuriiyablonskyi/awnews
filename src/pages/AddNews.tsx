@@ -1,5 +1,5 @@
 import { PlusIcon } from '@heroicons/react/24/outline'
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import AddNewsModal from '../components/AddNewsModal'
 import Article from '../components/Article'
@@ -8,8 +8,9 @@ import { ArticleInterface, ArticlesState } from '../store/articles/articlesTypes
 import { articlesData } from '../store/articlesSelectors'
 
 const AddNews: FC = () => {
-  const { customArticles }: ArticlesState = useSelector(articlesData)
+  const { customArticles, currentArticle }: ArticlesState = useSelector(articlesData)
   const [open, setOpen] = useState(false)
+  useEffect(() => setOpen(!!Object.keys(currentArticle).length), [currentArticle])
 
   return (
     <div>

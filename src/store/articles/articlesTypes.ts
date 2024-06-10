@@ -1,5 +1,5 @@
 import { Dayjs } from 'dayjs'
-import { Dispatch, MouseEventHandler, ReactNode, SetStateAction } from 'react'
+import { Dispatch, MouseEventHandler, SetStateAction } from 'react'
 
 export enum CalendarType {
   FROM = 'from',
@@ -28,6 +28,7 @@ export interface ArticlesState {
   customArticles: ArticleInterface[]
   totalResults: number
   loading: boolean
+  currentArticle: ArticleInterface | {}
   filterCalendar: {
     type?: CalendarType
     singleDate?: string
@@ -35,17 +36,9 @@ export interface ArticlesState {
   }
 }
 
-export interface CalendarProps {
-  onShowCalendar: Dispatch<SetStateAction<boolean>>
-}
-
 export type CalendarPayload =
   | { type: CalendarType.FROM | CalendarType.TO; singleDate: string }
   | { type: CalendarType.RANGE; singleDate: string; dateRange: string }
-
-export interface ContainerProps {
-  children: ReactNode
-}
 
 export interface DayInfo {
   date: Dayjs
@@ -62,10 +55,6 @@ export interface FetchArticlesParams {
 export interface FetchArticlesPayload {
   articles: ArticleInterface[]
   totalResults: number
-}
-
-export interface NewsFormProps {
-  onOpen: Dispatch<SetStateAction<boolean>>
 }
 
 export interface OptionProps {

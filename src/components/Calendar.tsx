@@ -1,6 +1,6 @@
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
 import dayjs, { Dayjs } from 'dayjs'
-import { FC, useMemo, useState } from 'react'
+import { Dispatch, FC, SetStateAction, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useSearchParams } from 'react-router-dom'
 import { AppDispatch } from '../store'
@@ -9,11 +9,11 @@ import { setCalendar } from '../store/articles/articlesSlice'
 import { articlesData } from '../store/articlesSelectors'
 import classNames from '../utils/classNames'
 import generateDateRange from '../utils/generateDateRange'
-import { CalendarProps, DayInfo } from '../store/articles/articlesTypes'
+import { DayInfo } from '../store/articles/articlesTypes'
 
 const daysOfWeek: string[] = ['M', 'T', 'W', 'T', 'F', 'S', 'S']
 
-const Calendar: FC<CalendarProps> = ({ onShowCalendar }) => {
+const Calendar: FC<{ onShowCalendar: Dispatch<SetStateAction<boolean>> }> = ({ onShowCalendar }) => {
   const dispatch = useDispatch<AppDispatch>()
   const {
     filterCalendar: { type, singleDate, dateRange },

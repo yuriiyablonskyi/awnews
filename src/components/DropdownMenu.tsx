@@ -4,7 +4,7 @@ import { FC } from 'react'
 import { useDispatch } from 'react-redux'
 import { removeArticle } from '../store/articles/articlesSlice'
 
-const DropdownMenu: FC<{ id: string }> = ({ id }) => {
+const DropdownMenu: FC<{ id: string }> = ({ id, onClick }) => {
   const dispatch = useDispatch()
 
   return (
@@ -23,7 +23,10 @@ const DropdownMenu: FC<{ id: string }> = ({ id }) => {
         >
           <Menu.Items className="bg-gray-500 origin-top-right rounded-xl border border-white/5 p-1 text-sm/6 text-white [--anchor-gap:var(--spacing-1)] focus:outline-none">
             <Menu.Item>
-              <button className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 hover:bg-white/10">
+              <button
+                onClick={onClick}
+                className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 hover:bg-white/10"
+              >
                 <PencilIcon className="size-4 fill-white/30" />
                 Edit
               </button>

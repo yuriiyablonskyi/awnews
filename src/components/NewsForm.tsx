@@ -1,14 +1,14 @@
 import { PhotoIcon } from '@heroicons/react/24/solid'
-import { FC } from 'react'
+import { Dispatch, FC, SetStateAction } from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
 import { addArticle } from '../store/articles/articlesSlice'
-import { ArticleInterface, NewsFormProps } from '../store/articles/articlesTypes'
+import { ArticleInterface } from '../store/articles/articlesTypes'
 import dayjs from 'dayjs'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-const NewsForm: FC<NewsFormProps> = ({ onOpen }) => {
+const NewsForm: FC<{ onOpen: Dispatch<SetStateAction<boolean>> }> = ({ onOpen }) => {
   const dispatch = useDispatch()
 
   const schema = z.object({

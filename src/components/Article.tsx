@@ -5,11 +5,18 @@ import DefaultImg from '../assets/al.png'
 import { ArticleInterface } from '../store/articles/articlesTypes'
 import DropdownMenu from './DropdownMenu'
 import classNames from '../utils/classNames'
+import { useDispatch } from 'react-redux'
+import { setCurrentArticle } from '../store/articles/articlesSlice'
 
 const Article: FC<ArticleInterface> = ({ id, author, title, description, url, urlToImage, publishedAt, isHotNews }) => {
+  const dispatch = useDispatch()
   const date = dayjs(publishedAt).utc(false).format('DD.MM.YYYY HH:mm:ss')
   const isCustomArticle = author === 'Finnegan Whitmore'
   const handleClick = () => !isCustomArticle && url && window.open(url, '_blank')
+
+  const onDropdownClick = () => {
+    dispatch(setCurrentArticle({ id, author, title, description, url, urlToImage, publishedAt, isHotNews }))
+  }
 
   return (
     <div
@@ -25,7 +32,7 @@ const Article: FC<ArticleInterface> = ({ id, author, title, description, url, ur
           <FireIcon className="h-6 w-6" />
         </div>
       )}
-      {!url && <DropdownMenu id={String(id)} />}
+      {!url && <DropdownMenu id={String(id)} onClick={onDropdownClick} />}
       <div className="border border-stone-300 mb-3 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
         <img
           src={urlToImage || DefaultImg}
