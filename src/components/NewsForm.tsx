@@ -1,37 +1,50 @@
 import { PhotoIcon } from '@heroicons/react/24/solid'
-import { Dispatch, FC, SetStateAction } from 'react'
+import { FC } from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
 import { addArticle } from '../store/articles/articlesSlice'
-import { ArticleInterface } from '../store/articles/articlesTypes'
-
-interface NewsFormProps {
-  onOpen: Dispatch<SetStateAction<boolean>>
-}
+import { ArticleInterface, NewsFormProps } from '../store/articles/articlesTypes'
+import dayjs from 'dayjs'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 const NewsForm: FC<NewsFormProps> = ({ onOpen }) => {
-  const dispath = useDispatch()
+  const dispatch = useDispatch()
+
+  const schema = z.object({
+    title: z
+      .string()
+      .min(40, { message: 'Title must be at least 40 characters long' })
+      .max(100, { message: 'Title must be no more than 100 characters long' })
+      .nonempty({ message: 'Title is required' }),
+    description: z
+      .string()
+      .min(80, { message: 'Description must be at least 80 characters long' })
+      .max(270, { message: 'Description must be no more than 270 characters long' })
+      .nonempty({ message: 'Description is required' }),
+    isHotNews: z.boolean(),
+  })
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm()
+  } = useForm({
+    resolver: zodResolver(schema),
+  })
 
-  const onSubmit = data => {
-    dispath(
+  const onSubmit = (data: ArticleInterface) => {
+    dispatch(
       addArticle({
-        id: 'id',
+        id: Math.random().toString(16).slice(2),
         author: 'John Doe',
         title: data.title,
         description: data.description,
         // urlToImage
-        publishedAt: '2024.06.05',
+        publishedAt: dayjs().toString(),
         isHotNews: data.isHotNews,
       }),
     )
-    console.log(data)
-    alert('success')
     onOpen(false)
   }
 
@@ -47,10 +60,7 @@ const NewsForm: FC<NewsFormProps> = ({ onOpen }) => {
               type="text"
               id="title"
               className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              {...register('title', {
-                required: 'Title is required',
-                minLength: { value: 90, message: 'Title must be at least 90 characters long' },
-              })}
+              {...register('title')}
             />
             {errors.title && <span className="text-red-600">{errors.title.message}</span>}
           </div>
@@ -65,10 +75,7 @@ const NewsForm: FC<NewsFormProps> = ({ onOpen }) => {
               id="description"
               rows={3}
               className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              {...register('description', {
-                required: 'Description is required',
-                minLength: { value: 250, message: 'Description must be at least 250 characters long' },
-              })}
+              {...register('description')}
             />
             {errors.description && <span className="text-red-600">{errors.description.message}</span>}
           </div>

@@ -1,15 +1,8 @@
 import { Listbox, Transition } from '@headlessui/react'
 import { ChevronUpDownIcon } from '@heroicons/react/20/solid'
 import { FC, Fragment } from 'react'
-import { SelectableItem } from '../store/articles/articlesTypes'
+import { SelectProps, SelectableItem } from '../store/articles/articlesTypes'
 import Option from './Option'
-
-interface SelectProps {
-  dataSelect: string | undefined
-  options: SelectableItem[]
-  onSelect: (newCategory: SelectableItem) => void
-  optionName: string
-}
 
 const Select: FC<SelectProps> = ({ dataSelect, options, onSelect, optionName }) => (
   <div className="flex justify-center mb-3 mr-4 sm:mb-7">

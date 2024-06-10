@@ -1,6 +1,6 @@
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
 import dayjs, { Dayjs } from 'dayjs'
-import { Dispatch, FC, SetStateAction, useMemo, useState } from 'react'
+import { FC, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useSearchParams } from 'react-router-dom'
 import { AppDispatch } from '../store'
@@ -8,13 +8,10 @@ import { fetchArticles } from '../store/articles/articlesActions'
 import { setCalendar } from '../store/articles/articlesSlice'
 import { articlesData } from '../store/articlesSelectors'
 import classNames from '../utils/classNames'
-import generateDateRange, { DayInfo } from '../utils/generateDateRange'
+import generateDateRange from '../utils/generateDateRange'
+import { CalendarProps, DayInfo } from '../store/articles/articlesTypes'
 
 const daysOfWeek: string[] = ['M', 'T', 'W', 'T', 'F', 'S', 'S']
-
-interface CalendarProps {
-  onShowCalendar: Dispatch<SetStateAction<boolean>>
-}
 
 const Calendar: FC<CalendarProps> = ({ onShowCalendar }) => {
   const dispatch = useDispatch<AppDispatch>()
@@ -82,7 +79,6 @@ const Calendar: FC<CalendarProps> = ({ onShowCalendar }) => {
       const isInDateRange = dateRange && date.isAfter(fromDate) && date.isBefore(toDate)
 
       return (!dateRange && isAfterSingleDate && isBeforeHoveredDate) || !!isInDateRange
-      // }, [singleDate, dateRange, hoveredDate])
     }, [date])
   }
 

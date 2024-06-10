@@ -1,3 +1,17 @@
+import { Dayjs } from 'dayjs'
+import { Dispatch, MouseEventHandler, ReactNode, SetStateAction } from 'react'
+
+export enum CalendarType {
+  FROM = 'from',
+  TO = 'to',
+  RANGE = 'range',
+}
+
+export interface AddNewsModalProps {
+  isOpen: boolean
+  onOpen: Dispatch<SetStateAction<boolean>>
+}
+
 export interface ArticleInterface {
   id?: string
   author: string
@@ -21,20 +35,65 @@ export interface ArticlesState {
   }
 }
 
+export interface CalendarProps {
+  onShowCalendar: Dispatch<SetStateAction<boolean>>
+}
+
+export type CalendarPayload =
+  | { type: CalendarType.FROM | CalendarType.TO; singleDate: string }
+  | { type: CalendarType.RANGE; singleDate: string; dateRange: string }
+
+export interface ContainerProps {
+  children: ReactNode
+}
+
+export interface DayInfo {
+  date: Dayjs
+  isToday?: boolean
+  isCurrentMonth: boolean
+  isLaterThanToday: boolean
+}
+
+export interface FetchArticlesParams {
+  endpoint: string
+  searchParams: string
+}
+
+export interface FetchArticlesPayload {
+  articles: ArticleInterface[]
+  totalResults: number
+}
+
+export interface NewsFormProps {
+  onOpen: Dispatch<SetStateAction<boolean>>
+}
+
+export interface OptionProps {
+  select?: SelectableItem
+  optionName?: string
+  onChange: MouseEventHandler<HTMLLIElement>
+}
+
+export interface PaginationProps {
+  totalResults: number
+  endpoint: string
+}
+
+export interface RouteType {
+  path: string
+  element: JSX.Element
+  children?: RouteType[]
+}
+
 export interface SelectableItem {
   id?: number
   name: string | CalendarType
   short?: string
 }
 
-export interface SelectableItem {
-  id?: number
-  name: string
-  short?: string
-}
-
-export enum CalendarType {
-  FROM = 'from',
-  TO = 'to',
-  RANGE = 'range',
+export interface SelectProps {
+  dataSelect: string | undefined
+  options: SelectableItem[]
+  onSelect: (newCategory: SelectableItem) => void
+  optionName: string
 }

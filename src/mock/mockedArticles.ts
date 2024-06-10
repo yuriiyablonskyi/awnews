@@ -1,33 +1,32 @@
-import { ArticleInterface } from "../store/articles/articlesTypes";
+import { ArticleInterface } from '../store/articles/articlesTypes'
 
 export const mockedArticles: ArticleInterface[] = [
   {
     id: '1',
-    author: 'John Doe',
+    author: 'Finnegan Whitmore',
     title: 'Breaking News: Major Event Happening Now Across Multiple Locations Worldwide, Affecting Millions of People',
     description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eget venenatis ex. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vehicula elit et justo consequat, at interdum lorem. Aliquam erat volutpat. Duis vulputate sapien id venenatis tincidunt. Integer non nibh vel ligula luctus tincidunt at eget justo. In hac habitasse platea dictumst. Phasellus luctus est ac urna sodales, et fermentum nulla facilisis. Cras vestibulum tempor velit, non vehicula dui cursus non. Praesent tincidunt sollicitudin nisl, nec facilisis lorem varius a. Suspendisse potenti. Mauris vestibulum enim at turpis vestibulum, et consequat dui volutpat. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eget venenatis ex.',
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eget venenatis ex. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eget venenatis ex.',
     urlToImage: './src/assets/mock/1.webp',
     publishedAt: '2024-05-21 19:03:22',
-    // category: 'news',
     isHotNews: true,
   },
   {
     id: '2',
-    author: 'Jane Smith',
+    author: 'Finnegan Whitmore',
     title: 'Tech Trends: The Latest Innovations and Technologies Transforming the World in 2024',
     description:
-      'Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vehicula elit et justo consequat, at interdum lorem. Aliquam erat volutpat. Duis vulputate sapien id venenatis tincidunt. Integer non nibh vel ligula luctus tincidunt at eget justo. In hac habitasse platea dictumst. Phasellus luctus est ac urna sodales, et fermentum nulla facilisis. Cras vestibulum tempor velit, non vehicula dui cursus non. Praesent tincidunt sollicitudin nisl, nec facilisis lorem varius a. Suspendisse potenti. Mauris vestibulum enim at turpis vestibulum, et consequat dui volutpat. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eget venenatis ex. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eget venenatis ex.',
+      'Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vehicula elit et justo consequat, at interdum lorem. Aliquam erat volutpat. Praesent tincidunt sollicitudin nisl, nec facilisis lorem varius a. Pellentesque eget venenatis ex.',
     urlToImage: './src/assets/mock/2.webp',
     publishedAt: '2024-05-20 11:13:52',
     isHotNews: false,
   },
   {
     id: '3',
-    author: 'Alex Johnson',
+    author: 'Finnegan Whitmore',
     title: 'Sports Update: Major Sports Events and Highlights from Around the Globe, Bringing Fans Together',
     description:
-      'Mauris non tempor quam, et lacinia sapien. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vehicula elit et justo consequat, at interdum lorem. Aliquam erat volutpat. Duis vulputate sapien id venenatis tincidunt. Integer non nibh vel ligula luctus tincidunt at eget justo. In hac habitasse platea dictumst. Phasellus luctus est ac urna sodales, et fermentum nulla facilisis. Cras vestibulum tempor velit, non vehicula dui cursus non. Praesent tincidunt sollicitudin nisl, nec facilisis lorem varius a. Suspendisse potenti. Mauris vestibulum enim at turpis vestibulum, et consequat dui volutpat. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eget venenatis ex. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eget venenatis ex.',
+      'Mauris non tempor quam, et lacinia sapien. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vehicula elit et justo consequat, at interdum lorem. Aliquam erat volutpat. Consectetur adipiscing elit. Pellentesque eget venenatis ex.',
     urlToImage: './src/assets/mock/3.webp',
     publishedAt: '2024-05-19 07:42:38',
     isHotNews: false,

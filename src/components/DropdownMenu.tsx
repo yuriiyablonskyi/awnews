@@ -23,20 +23,18 @@ const DropdownMenu: FC<{ id: string }> = ({ id }) => {
         >
           <Menu.Items className="bg-gray-500 origin-top-right rounded-xl border border-white/5 p-1 text-sm/6 text-white [--anchor-gap:var(--spacing-1)] focus:outline-none">
             <Menu.Item>
-              <button className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-white/10">
+              <button className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 hover:bg-white/10">
                 <PencilIcon className="size-4 fill-white/30" />
                 Edit
-                <kbd className="ml-auto hidden font-sans text-xs text-white/50 group-data-[focus]:inline">⌘E</kbd>
               </button>
             </Menu.Item>
             <Menu.Item>
               <button
                 onClick={() => dispatch(removeArticle(id))}
-                className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-white/10"
+                className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 hover:bg-white/10"
               >
                 <TrashIcon className="size-4 fill-white/30" />
                 Delete
-                <kbd className="ml-auto hidden font-sans text-xs text-white/50 group-data-[focus]:inline">⌘D</kbd>
               </button>
             </Menu.Item>
           </Menu.Items>

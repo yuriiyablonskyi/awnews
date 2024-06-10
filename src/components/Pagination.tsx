@@ -6,11 +6,7 @@ import { useSearchParams } from 'react-router-dom'
 import { AppDispatch } from '../store'
 import { fetchArticles } from '../store/articles/articlesActions'
 import classNames from '../utils/classNames'
-
-interface PaginationProps {
-  totalResults: number
-  endpoint: string
-}
+import { PaginationProps } from '../store/articles/articlesTypes'
 
 const Pagination: FC<PaginationProps> = ({ totalResults, endpoint }) => {
   const dispatch = useDispatch<AppDispatch>()

@@ -3,12 +3,7 @@ import App from '../App.tsx'
 import AddNews from '../pages/AddNews.tsx'
 import Home from '../pages/Home.tsx'
 import Search from '../pages/Search.tsx'
-
-interface RouteType {
-  path: string
-  element: JSX.Element
-  children?: RouteType[]
-}
+import { RouteType } from '../store/articles/articlesTypes.ts'
 
 const routes: RouteType[] = [
   {

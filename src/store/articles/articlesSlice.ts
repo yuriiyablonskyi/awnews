@@ -1,16 +1,7 @@
 import { PayloadAction, createSlice, isAnyOf } from '@reduxjs/toolkit'
 import { mockedArticles } from '../../mock/mockedArticles'
 import { fetchArticles } from './articlesActions'
-import { ArticleInterface, ArticlesState, CalendarType } from './articlesTypes'
-
-interface FetchArticlesPayload {
-  articles: ArticleInterface[];
-  totalResults: number;
-}
-
-type CalendarPayload = 
-  | { type: CalendarType.FROM | CalendarType.TO; singleDate: string }
-  | { type: CalendarType.RANGE; singleDate: string; dateRange: string }
+import { ArticleInterface, ArticlesState, CalendarPayload, FetchArticlesPayload } from './articlesTypes'
 
 const initialState: ArticlesState = {
   articles: [],
@@ -29,12 +20,11 @@ const articlesSlice = createSlice({
       state.totalResults = 0
       state.loading = false
       state.filterCalendar = {}
-      
     },
     setCalendar: (state, action: PayloadAction<CalendarPayload>) => {
       state.filterCalendar = action.payload
     },
-   addArticle: (state, action: PayloadAction<ArticleInterface>) => {
+    addArticle: (state, action: PayloadAction<ArticleInterface>) => {
       state.customArticles.push(action.payload)
     },
     removeArticle: (state, action: PayloadAction<string>) => {
@@ -43,10 +33,7 @@ const articlesSlice = createSlice({
   },
   extraReducers: builder => {
     builder
-      .addCase(fetchArticles.fulfilled, (
-        state, 
-        action: PayloadAction<FetchArticlesPayload>
-      ) => {
+      .addCase(fetchArticles.fulfilled, (state, action: PayloadAction<FetchArticlesPayload>) => {
         state.articles = action.payload.articles
         state.totalResults = action.payload.totalResults
         state.loading = false

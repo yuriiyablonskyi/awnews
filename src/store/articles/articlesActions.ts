@@ -1,10 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import handleResponse from '../../utils/handleResponse'
-
-interface FetchArticlesParams {
-  endpoint: string
-  searchParams: string
-}
+import { FetchArticlesParams } from './articlesTypes'
 
 export const fetchArticles = createAsyncThunk(
   'articles/fetchArticles',
