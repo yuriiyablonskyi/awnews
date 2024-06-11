@@ -34,6 +34,16 @@ const articlesSlice = createSlice({
     setCurrentArticle: (state, action: PayloadAction<ArticleInterface>) => {
       state.currentArticle = action.payload
     },
+    changeCurrentArticle: (state, action: PayloadAction<ArticleInterface>) => {
+      const { id, title, description, isHotNews } = action.payload
+      const existingArticle = state.customArticles.find(article => article.id === id)
+
+      if (existingArticle) {
+        existingArticle.title = title
+        existingArticle.description = description
+        existingArticle.isHotNews = isHotNews
+      }
+    },
   },
   extraReducers: builder => {
     builder
@@ -51,5 +61,6 @@ const articlesSlice = createSlice({
   },
 })
 
-export const { clearArticles, setCalendar, removeArticle, addArticle, setCurrentArticle } = articlesSlice.actions
+export const { clearArticles, setCalendar, removeArticle, addArticle, setCurrentArticle, changeCurrentArticle } =
+  articlesSlice.actions
 export default articlesSlice.reducer
