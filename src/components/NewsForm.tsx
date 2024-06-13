@@ -1,18 +1,22 @@
-import { PhotoIcon } from '@heroicons/react/24/solid'
-import { Dispatch, FC, SetStateAction, useEffect } from 'react'
+import { FC, Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
-import { addArticle, changeCurrentArticle, setCurrentArticle } from '../store/articles/articlesSlice'
-import { ArticleInterface } from '../store/articles/articlesTypes'
+import { toast } from 'react-toastify'
 import dayjs from 'dayjs'
 import { z } from 'zod'
+import { PhotoIcon } from '@heroicons/react/24/solid'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { setCurrentArticle, addArticle, changeCurrentArticle } from '../store/articles/articlesSlice'
 import { articlesData } from '../store/articlesSelectors'
+
+const MAX_FILE_SIZE: number = 1024 * 1024 * 10
+const ACCEPTED_IMAGE_TYPES: string[] = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif']
 
 const NewsForm: FC<{ onOpen: Dispatch<SetStateAction<boolean>> }> = ({ onOpen }) => {
   const dispatch = useDispatch()
   const { currentArticle } = useSelector(articlesData)
   const isEditing = !!Object.keys(currentArticle).length
+  const [preview, setPreview] = useState<string | null>(null)
 
   const schema = z.object({
     title: z
@@ -26,6 +30,15 @@ const NewsForm: FC<{ onOpen: Dispatch<SetStateAction<boolean>> }> = ({ onOpen })
       .max(270, { message: 'Description must be no more than 270 characters long' })
       .nonempty({ message: 'Description is required' }),
     isHotNews: z.boolean(),
+    coverPhoto: z
+      .instanceof(File)
+      .refine(file => ACCEPTED_IMAGE_TYPES.includes(file.type), {
+        message: 'Only PNG, JPG, GIF files are allowed',
+      })
+      .refine(file => file.size <= MAX_FILE_SIZE, {
+        message: 'File size must be less than 10MB',
+      })
+      .optional(),
   })
 
   const {
@@ -46,7 +59,27 @@ const NewsForm: FC<{ onOpen: Dispatch<SetStateAction<boolean>> }> = ({ onOpen })
     reset(currentArticle)
   }, [currentArticle, reset])
 
-  const onSubmit = (data: ArticleInterface) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
+      return toast.error('Only PNG, JPG, GIF files are allowed')
+    }
+
+    if (file.size > MAX_FILE_SIZE) {
+      return toast.error('File size must be less than 10MB')
+    }
+
+    const reader = new FileReader()
+    reader.onloadend = () => {
+      setPreview(reader.result)
+      toast.success('Image Successfully Uploaded')
+    }
+    reader.readAsDataURL(file)
+  }
+
+  const onSubmit = data => {
     if (isEditing) {
       dispatch(changeCurrentArticle({ ...currentArticle, ...data }))
     } else {
@@ -112,20 +145,31 @@ const NewsForm: FC<{ onOpen: Dispatch<SetStateAction<boolean>> }> = ({ onOpen })
               Cover photo
             </label>
             <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
-              <div className="text-center">
-                <PhotoIcon className="mx-auto h-12 w-12 text-gray-300" aria-hidden="true" />
-                <div className="mt-4 flex text-sm leading-6 text-gray-600">
-                  <label
-                    htmlFor="file-upload"
-                    className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
-                  >
-                    <span>Upload a file</span>
-                    <input id="file-upload" type="file" className="sr-only" {...register('coverPhoto')} />
-                  </label>
-                  <p className="pl-1">or drag and drop</p>
+              {preview ? (
+                <img src={preview} alt="Preview" className="max-w-3xl object-cover rounded-md" />
+              ) : (
+                <div className="text-center">
+                  <PhotoIcon className="mx-auto h-12 w-12 text-gray-300" aria-hidden="true" />
+                  <div className="mt-4 flex text-sm leading-6 text-gray-600">
+                    <label
+                      htmlFor="file-upload"
+                      className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
+                    >
+                      <span>Upload image</span>
+
+                      <input
+                        accept="image/*"
+                        id="file-upload"
+                        type="file"
+                        className="sr-only"
+                        {...register('coverPhoto', { onChange: handleFileChange })}
+                      />
+                    </label>
+                    <p className="pl-1">or drag and drop</p>
+                  </div>
+                  <p className="text-xs leading-5 text-gray-600">PNG, JPG, GIF up to 10MB</p>
                 </div>
-                <p className="text-xs leading-5 text-gray-600">PNG, JPG, GIF up to 10MB</p>
-              </div>
+              )}
             </div>
           </div>
 
