@@ -15,9 +15,10 @@ const daysOfWeek: string[] = ['M', 'T', 'W', 'T', 'F', 'S', 'S']
 
 const Calendar: FC<{ onShowCalendar: Dispatch<SetStateAction<boolean>> }> = ({ onShowCalendar }) => {
   const dispatch = useDispatch<AppDispatch>()
-  const {
-    filterCalendar: { type, singleDate, dateRange },
-  } = useSelector(articlesData)
+  const { filterCalendar } = useSelector(articlesData)
+  const type = filterCalendar?.type
+  const singleDate = filterCalendar?.singleDate
+  const dateRange = filterCalendar?.dateRange
   const [searchParams, setSearchParams] = useSearchParams()
   const currentDate: Dayjs = dayjs()
   const [today, setToday] = useState<Dayjs>(currentDate)
@@ -83,7 +84,10 @@ const Calendar: FC<{ onShowCalendar: Dispatch<SetStateAction<boolean>> }> = ({ o
   }
 
   return (
-    <div className="absolute z-20 w-72 mt-1 p-3 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+    <div
+      className="absolute z-20 w-72 mt-1 p-3 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5
+     focus:outline-none"
+    >
       <div className="flex items-center">
         <h2 className="flex-auto text-sm font-semibold text-gray-900">{today.format('MMMM YYYY')}</h2>
         <button

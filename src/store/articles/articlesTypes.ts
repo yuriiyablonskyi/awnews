@@ -28,12 +28,12 @@ export interface ArticlesState {
   customArticles: ArticleInterface[]
   totalResults: number
   loading: boolean
-  currentArticle: ArticleInterface | {}
+  currentArticle: ArticleInterface | null
   filterCalendar: {
     type?: CalendarType
     singleDate?: string
     dateRange?: string
-  }
+  }  | null
 }
 
 export type CalendarPayload =

@@ -8,8 +8,8 @@ const initialState: ArticlesState = {
   customArticles: mockedArticles,
   totalResults: 0,
   loading: false,
-  currentArticle: {},
-  filterCalendar: {},
+  currentArticle: null,
+  filterCalendar: null,
 }
 
 const articlesSlice = createSlice({
@@ -20,7 +20,7 @@ const articlesSlice = createSlice({
       state.articles = []
       state.totalResults = 0
       state.loading = false
-      state.filterCalendar = {}
+      state.filterCalendar = null
     },
     setCalendar: (state, action: PayloadAction<CalendarPayload>) => {
       state.filterCalendar = action.payload
@@ -31,17 +31,17 @@ const articlesSlice = createSlice({
     removeArticle: (state, action: PayloadAction<string>) => {
       state.customArticles = state.customArticles.filter(article => article.id !== action.payload)
     },
-    setCurrentArticle: (state, action: PayloadAction<ArticleInterface>) => {
-      state.currentArticle = action.payload
+    setCurrentArticle: (state, action: PayloadAction<ArticleInterface | null> ) => {
+      state.currentArticle = action?.payload 
     },
     changeCurrentArticle: (state, action: PayloadAction<ArticleInterface>) => {
-      const { id, title, description, isHotNews } = action.payload
+      const { id, title, description, isHotNews, urlToImage } = action.payload
       const existingArticle = state.customArticles.find(article => article.id === id)
-
       if (existingArticle) {
         existingArticle.title = title
         existingArticle.description = description
         existingArticle.isHotNews = isHotNews
+        existingArticle.urlToImage = urlToImage
       }
     },
   },

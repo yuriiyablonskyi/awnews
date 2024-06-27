@@ -15,8 +15,8 @@ const Select: FC<SelectProps> = ({ dataSelect, options, onSelect, optionName }) 
             </Listbox.Label>
             <div className="relative mt-2">
               <Listbox.Button
-                className="relative w-full max-w-52 min-w-44 cursor-pointer rounded-md bg-white py-1.5 pl-3 pr-10 text-left
-                text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2
+                className="relative w-full max-w-52 min-w-44 cursor-pointer rounded-md bg-white py-1.5 pl-3 pr-10 
+                text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2
                 focus:ring-neutral-500 sm:text-sm sm:leading-6 capitalize"
               >
                 <span>{dataSelect || `Select ${optionName}`}</span>
@@ -33,8 +33,8 @@ const Select: FC<SelectProps> = ({ dataSelect, options, onSelect, optionName }) 
                 leaveTo="opacity-0"
               >
                 <Listbox.Options
-                  className="absolute z-10 mt-1 max-h-80 max-w-52 min-w-44 overflow-auto rounded-md bg-white py-1 text-base
-                  shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm "
+                  className="absolute z-10 mt-1 max-h-80 max-w-52 min-w-44 overflow-auto rounded-md bg-white py-1 
+                  text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
                 >
                   <Option optionName={optionName} onChange={() => onSelect({ name: '' })} />
                   {options.map((select: SelectableItem) => (

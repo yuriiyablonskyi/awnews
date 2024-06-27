@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify'
 
-export const articlesMiddleware = () => (next: any) => (action: any) => {
+export const articlesMiddleware = () => (next) => (action) => {
   if (action.type.startsWith('articles/fetchArticles')) {
     const actionTypeEnding = action.type.split('/').pop()
 

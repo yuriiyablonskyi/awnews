@@ -36,7 +36,9 @@ const Pagination: FC<PaginationProps> = ({ totalResults, endpoint }) => {
     )
   }
 
-  const commonClasses = `relative inline-flex items-center px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0`
+  const commonClasses =
+    'relative inline-flex items-center px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300' +
+    'hover:bg-gray-50 focus:z-20 focus:outline-offset-0'
   const buttonPrevClass = classNames(commonClasses, 'rounded-l-md', currentPage === 1 && 'cursor-not-allowed')
   const buttonNextClass = classNames(
     commonClasses,
@@ -70,10 +72,12 @@ const Pagination: FC<PaginationProps> = ({ totalResults, endpoint }) => {
             <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
           </button>
         }
-        pageLinkClassName="items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:ring-1 focus:z-20 focus:outline-offset-0 inline-flex"
+        pageLinkClassName="items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300
+         hover:ring-1 focus:z-20 focus:outline-offset-0 inline-flex"
         breakLabel="..."
         forcePage={currentPage - 1}
-        breakClassName="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0"
+        breakClassName="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 
+        ring-inset ring-gray-300 focus:outline-offset-0"
         containerClassName="isolate inline-flex rounded-md shadow-sm order-1 sm:order-2 mb-2 sm:mb-0"
         activeClassName="z-10 bg-stone-400 text-white outline-offset-2 outline-indigo-600"
       />

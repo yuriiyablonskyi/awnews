@@ -45,7 +45,7 @@ const Home: FC = () => {
 
     sendRequest(newSearchParams.toString())
     setSearchParams(newSearchParams)
-  }, [])
+  }, [searchParams, sendRequest, setSearchParams])
 
   const handleCategory = (value: string) => {
     handleSelectChange('category', value)

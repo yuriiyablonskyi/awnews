@@ -58,7 +58,7 @@ const Search: FC = () => {
 
     dispatchUrlParams()
     sendRequest(searchParams.toString())
-  }, [])
+  }, [dispatchUrlParams, searchParams, sendRequest])
 
   const handleLanguage = (value: SelectableItem) => {
     const newSearchParams = handleSelectChange('language', value.short)

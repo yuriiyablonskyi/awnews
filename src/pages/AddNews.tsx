@@ -10,7 +10,7 @@ import { articlesData } from '../store/articlesSelectors'
 const AddNews: FC = () => {
   const { customArticles, currentArticle }: ArticlesState = useSelector(articlesData)
   const [open, setOpen] = useState(false)
-  useEffect(() => setOpen(!!Object.keys(currentArticle).length), [currentArticle])
+  useEffect(() => setOpen(!!currentArticle), [currentArticle])
 
   return (
     <div>
@@ -26,7 +26,8 @@ const AddNews: FC = () => {
         </div>
         <button
           onClick={() => setOpen(true)}
-          className="mx-auto mb-4 w-full sm:max-w-xl lg:ml-auto lg:mr-0 lg:w-14 rounded-md flex justify-center bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
+          className="mx-auto mb-4 w-full sm:max-w-xl lg:ml-auto lg:mr-0 lg:w-14 rounded-md flex justify-center 
+          bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
         >
           <PlusIcon className="w-8 h-8" />
         </button>

@@ -2,11 +2,21 @@ import { Dialog, Transition } from '@headlessui/react'
 import { FC, Fragment } from 'react'
 import NewsForm from './NewsForm'
 import { AddNewsModalProps } from '../store/articles/articlesTypes'
+import { useDispatch } from 'react-redux'
+import { setCurrentArticle } from '../store/articles/articlesSlice'
 
 const AddNewsModal: FC<AddNewsModalProps> = ({ isOpen, onOpen }) => {
+  const dispatch = useDispatch()
+  const handleClose = (isOpen: boolean) => {
+    if (!isOpen) {
+      onOpen(false)
+      dispatch(setCurrentArticle(null))
+    }
+    onOpen(isOpen)
+  }
   return (
     <Transition.Root show={isOpen} as={Fragment}>
-      <Dialog className="relative z-10" onClose={onOpen}>
+      <Dialog className="relative z-10" onClose={handleClose}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -30,7 +40,10 @@ const AddNewsModal: FC<AddNewsModalProps> = ({ isOpen, onOpen }) => {
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <Dialog.Panel className="relative p-4 transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:m-8">
+              <Dialog.Panel
+                className="relative p-4 transform overflow-hidden rounded-lg bg-white text-left shadow-xl
+               transition-all sm:m-8"
+              >
                 <NewsForm onOpen={onOpen} />
               </Dialog.Panel>
             </Transition.Child>

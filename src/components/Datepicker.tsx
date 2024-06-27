@@ -14,9 +14,11 @@ import Select from './Select'
 
 const Datepicker: FC = () => {
   const dispatch = useDispatch<AppDispatch>()
-  const {
-    filterCalendar: { type, singleDate, dateRange },
-  } = useSelector(articlesData)
+  const { filterCalendar } = useSelector(articlesData)
+  const type = filterCalendar?.type
+  const singleDate = filterCalendar?.singleDate
+  const dateRange = filterCalendar?.dateRange
+  // const { type = , singleDate, dateRange } = filterCalendar
   const [searchParams, setSearchParams] = useSearchParams()
   const [showCalendar, setShowCalendar] = useState<boolean>(false)
 
@@ -61,7 +63,9 @@ const Datepicker: FC = () => {
             <button
               className={classNames(
                 type === 'range' ? 'w-56' : 'w-44',
-                'flex items-center h-9 mt-2 cursor-pointer rounded-md bg-white py-1.5 px-3 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-neutral-500 sm:text-sm sm:leading-6',
+                'flex items-center h-9 mt-2 cursor-pointer rounded-md bg-white py-1.5 px-3 text-left text-gray-900' +
+                  'shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-neutral-500' +
+                  ' sm:text-sm sm:leading-6',
               )}
               onClick={() => setShowCalendar(!showCalendar)}
             >

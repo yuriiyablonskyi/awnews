@@ -32,8 +32,11 @@ const Article: FC<ArticleInterface> = ({ id, author, title, description, url, ur
           <FireIcon className="h-6 w-6" />
         </div>
       )}
-      {!url && <DropdownMenu id={String(id)} onClick={onDropdownClick} />}
-      <div className="border border-stone-300 mb-3 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
+      {!url && id && <DropdownMenu id={id} onClick={onDropdownClick} />}
+      <div
+        className="border border-stone-300 mb-3 aspect-h-1 aspect-w-1 w-full
+       overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80"
+      >
         <img
           src={urlToImage || DefaultImg}
           alt={urlToImage}
@@ -42,8 +45,8 @@ const Article: FC<ArticleInterface> = ({ id, author, title, description, url, ur
       </div>
       <div className="flex flex-col justify-between min-h-52">
         <div className="group relative">
-          <h3 className="font-serif font-medium text-3xl leading-6 break-all">{title}</h3>
-          <p className="mt-4 text-lg leading-6 text-gray-600 break-all">{description}</p>
+          <h3 className="font-serif font-medium text-3xl leading-6">{title}</h3>
+          <p className="mt-4 text-lg leading-6 text-gray-600">{description}</p>
         </div>
         <div className="flex items-center justify-between text-xs mt-3 w-full">
           {!isCustomArticle && <p className="text-gray-600">{author}</p>}
