@@ -1,15 +1,19 @@
 import { FC, useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import { useSearchParams } from 'react-router-dom'
 import Article from '../components/Article'
 import Container from '../components/Container'
 import Pagination from '../components/Pagination'
 import Select from '../components/Select'
 import SkeletonArticle from '../components/SkeletonArticle'
-import { AppDispatch } from '../store'
 import { fetchArticles } from '../store/articles/articlesActions'
 import { clearArticles } from '../store/articles/articlesSlice'
-import { ArticleInterface, ArticlesState, SelectableItem } from '../store/articles/articlesTypes'
+import {
+  ArticleInterface,
+  ArticlesState,
+  SelectableItem,
+  useAppDispatch,
+  useAppSelector,
+} from '../store/articles/articlesTypes'
 import { articlesData } from '../store/articlesSelectors'
 import categoriesData from '../utils/categoriesData'
 import classNames from '../utils/classNames'
@@ -17,9 +21,9 @@ import countriesData from '../utils/countriesData'
 import findByShort from '../utils/findByShort'
 
 const Home: FC = () => {
-  const dispatch = useDispatch<AppDispatch>()
+  const dispatch = useAppDispatch()
   const [searchParams, setSearchParams] = useSearchParams()
-  const { articles, totalResults, loading }: ArticlesState = useSelector(articlesData)
+  const { articles, totalResults, loading }: ArticlesState = useAppSelector(articlesData)
   const [category, setCategory] = useState<string>(searchParams.get('category') ?? '')
   const [country, setCountry] = useState<SelectableItem>({ name: '' })
 
@@ -45,17 +49,7 @@ const Home: FC = () => {
 
     sendRequest(newSearchParams.toString())
     setSearchParams(newSearchParams)
-  }, [searchParams, sendRequest, setSearchParams])
-
-  const handleCategory = (value: string) => {
-    handleSelectChange('category', value)
-    setCategory(value)
-  }
-
-  const handleCountry = (value: SelectableItem) => {
-    handleSelectChange('country', value.short)
-    setCountry(value)
-  }
+  }, [])
 
   const handleSelectChange = (key: string, value: string | undefined) => {
     const newSearchParams = new URLSearchParams(searchParams)
@@ -72,6 +66,16 @@ const Home: FC = () => {
       dispatch(clearArticles())
     }
     setSearchParams(newSearchParams)
+  }
+
+  const handleCategory = (value: string) => {
+    handleSelectChange('category', value)
+    setCategory(value)
+  }
+
+  const handleCountry = (value: SelectableItem) => {
+    handleSelectChange('country', value.short)
+    setCountry(value)
   }
 
   const renderContent = () => {
@@ -109,7 +113,7 @@ const Home: FC = () => {
       <div
         className={classNames(
           loading || !!articles.length
-            ? 'grid grid-cols-1 gap-x-8 gap-y-16 lg:mx-0 lg:grid-cols-3 mb-12'
+            ? 'grid grid-cols-1 gap-x-24 gap-y-16 lg:mx-0 lg:grid-cols-3 mb-12'
             : 'text-center',
         )}
       >

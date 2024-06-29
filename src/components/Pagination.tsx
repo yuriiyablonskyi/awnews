@@ -1,30 +1,19 @@
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
 import { FC, useState } from 'react'
 import ReactPaginate from 'react-paginate'
-import { useDispatch } from 'react-redux'
 import { useSearchParams } from 'react-router-dom'
-import { AppDispatch } from '../store'
 import { fetchArticles } from '../store/articles/articlesActions'
+import { PaginationProps, useAppDispatch } from '../store/articles/articlesTypes'
 import classNames from '../utils/classNames'
-import { PaginationProps } from '../store/articles/articlesTypes'
 
 const Pagination: FC<PaginationProps> = ({ totalResults, endpoint }) => {
-  const dispatch = useDispatch<AppDispatch>()
+  const dispatch = useAppDispatch()
   const [searchParams, setSearchParams] = useSearchParams()
   const [currentPage, setCurrentPage] = useState<number>(Number(searchParams.get('page')) || 1)
 
   let endIndex = currentPage * 9
   if (endIndex > totalResults) {
     endIndex = totalResults
-  }
-
-  const handlePageClick = (event: { selected: number }) => {
-    const newPage = event.selected + 1
-    const newSearchParams = new URLSearchParams(searchParams.toString())
-    newSearchParams.set('page', newPage.toString())
-    setCurrentPage(newPage)
-    setSearchParams(newSearchParams)
-    sendRequest(newSearchParams.toString())
   }
 
   const sendRequest = (urlParams: string) => {
@@ -34,6 +23,15 @@ const Pagination: FC<PaginationProps> = ({ totalResults, endpoint }) => {
         searchParams: urlParams,
       }),
     )
+  }
+
+  const handlePageClick = (event: { selected: number }) => {
+    const newPage = event.selected + 1
+    const newSearchParams = new URLSearchParams(searchParams.toString())
+    newSearchParams.set('page', newPage.toString())
+    setCurrentPage(newPage)
+    setSearchParams(newSearchParams)
+    sendRequest(newSearchParams.toString())
   }
 
   const commonClasses =

@@ -1,7 +1,7 @@
 import { FC } from 'react'
 
 const SkeletonArticle: FC = () => (
-  <div role="status" className="max-w-xl animate-pulse">
+  <div role="status" className="max-w-md animate-pulse">
     <div className="flex items-center justify-center h-80 mb-4 bg-gray-300 rounded dark:bg-gray-700"></div>
     <div className="h-5 bg-gray-200 rounded-full dark:bg-gray-700 mb-4"></div>
     <div className="h-5 bg-gray-200 rounded-full dark:bg-gray-700 mb-4"></div>

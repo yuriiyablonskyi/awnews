@@ -1,11 +1,10 @@
 import { CalendarIcon } from '@heroicons/react/24/outline'
 import { FC, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import { useSearchParams } from 'react-router-dom'
 import { AppDispatch } from '../store'
 import { fetchArticles } from '../store/articles/articlesActions'
 import { setCalendar } from '../store/articles/articlesSlice'
-import { SelectableItem } from '../store/articles/articlesTypes'
+import { CalendarType, SelectableItem, useAppDispatch, useAppSelector } from '../store/articles/articlesTypes'
 import { articlesData } from '../store/articlesSelectors'
 import calendarData from '../utils/calendarData'
 import classNames from '../utils/classNames'
@@ -13,12 +12,11 @@ import Calendar from './Calendar'
 import Select from './Select'
 
 const Datepicker: FC = () => {
-  const dispatch = useDispatch<AppDispatch>()
-  const { filterCalendar } = useSelector(articlesData)
+  const dispatch = useAppDispatch<AppDispatch>()
+  const { filterCalendar } = useAppSelector(articlesData)
   const type = filterCalendar?.type
   const singleDate = filterCalendar?.singleDate
   const dateRange = filterCalendar?.dateRange
-  // const { type = , singleDate, dateRange } = filterCalendar
   const [searchParams, setSearchParams] = useSearchParams()
   const [showCalendar, setShowCalendar] = useState<boolean>(false)
 
@@ -41,7 +39,7 @@ const Datepicker: FC = () => {
     setSearchParams(newSearchParams)
   }
 
-  const handleDate = (newCalendarType: string) => {
+  const handleDate = (newCalendarType: string | CalendarType) => {
     clearUrlParams(newCalendarType)
     setShowCalendar(false)
     dispatch(setCalendar({ type: newCalendarType }))

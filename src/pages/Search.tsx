@@ -1,6 +1,5 @@
 import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { FC, useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import { useSearchParams } from 'react-router-dom'
 import Article from '../components/Article'
 import Container from '../components/Container'
@@ -8,10 +7,16 @@ import Datepicker from '../components/Datepicker'
 import Pagination from '../components/Pagination'
 import Select from '../components/Select'
 import SkeletonArticle from '../components/SkeletonArticle'
-import { AppDispatch } from '../store'
 import { fetchArticles } from '../store/articles/articlesActions'
 import { clearArticles, setCalendar } from '../store/articles/articlesSlice'
-import { ArticleInterface, ArticlesState, SelectableItem } from '../store/articles/articlesTypes'
+import {
+  ArticleInterface,
+  ArticlesState,
+  CalendarType,
+  SelectableItem,
+  useAppDispatch,
+  useAppSelector,
+} from '../store/articles/articlesTypes'
 import { articlesData } from '../store/articlesSelectors'
 import classNames from '../utils/classNames'
 import findByShort from '../utils/findByShort'
@@ -19,9 +24,9 @@ import languagesData from '../utils/languagesData'
 import sortByData from '../utils/sortByData'
 
 const Search: FC = () => {
-  const dispatch = useDispatch<AppDispatch>()
+  const dispatch = useAppDispatch()
   const [searchParams, setSearchParams] = useSearchParams()
-  const { articles, totalResults, loading }: ArticlesState = useSelector(articlesData)
+  const { articles, totalResults, loading }: ArticlesState = useAppSelector(articlesData)
   const [keyword, setKeyword] = useState<string>(searchParams.get('q') ?? '')
   const [language, setLanguage] = useState<SelectableItem>({ name: '' })
   const [sortBy, setSortBy] = useState<string>(searchParams.get('sortBy') ?? '')
@@ -31,11 +36,11 @@ const Search: FC = () => {
     const urlParamTo = searchParams.get('to')
 
     if (urlParamFrom && !urlParamTo) {
-      return dispatch(setCalendar({ type: 'from', singleDate: urlParamFrom }))
+      return dispatch(setCalendar({ type: CalendarType.FROM, singleDate: urlParamFrom }))
     } else if (!urlParamFrom && urlParamTo) {
-      return dispatch(setCalendar({ type: 'to', singleDate: urlParamTo }))
+      return dispatch(setCalendar({ type: CalendarType.TO, singleDate: urlParamTo }))
     } else if (urlParamFrom && urlParamTo) {
-      return dispatch(setCalendar({ type: 'range', singleDate: urlParamFrom, dateRange: urlParamTo }))
+      return dispatch(setCalendar({ type: CalendarType.RANGE, singleDate: urlParamFrom, dateRange: urlParamTo }))
     }
   }
 
@@ -58,19 +63,7 @@ const Search: FC = () => {
 
     dispatchUrlParams()
     sendRequest(searchParams.toString())
-  }, [dispatchUrlParams, searchParams, sendRequest])
-
-  const handleLanguage = (value: SelectableItem) => {
-    const newSearchParams = handleSelectChange('language', value.short)
-    setLanguage(value)
-    sendRequest(newSearchParams.toString())
-  }
-
-  const handleSorting = (value: string) => {
-    const newSearchParams = handleSelectChange('sortBy', value)
-    setSortBy(value)
-    sendRequest(newSearchParams.toString())
-  }
+  }, [])
 
   const handleSelectChange = (key: string, value: string | undefined) => {
     const newSearchParams = new URLSearchParams(searchParams)
@@ -86,6 +79,18 @@ const Search: FC = () => {
     }
     setSearchParams(newSearchParams)
     return newSearchParams
+  }
+
+  const handleLanguage = (value: SelectableItem) => {
+    const newSearchParams = handleSelectChange('language', value.short)
+    setLanguage(value)
+    sendRequest(newSearchParams.toString())
+  }
+
+  const handleSorting = (value: string) => {
+    const newSearchParams = handleSelectChange('sortBy', value)
+    setSortBy(value)
+    sendRequest(newSearchParams.toString())
   }
 
   const handleClearFilter = () => {
@@ -176,7 +181,7 @@ const Search: FC = () => {
         className={classNames(
           'mx-auto',
           loading || !!articles.length
-            ? 'grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 lg:mx-0 lg:max-w-none lg:grid-cols-3 mb-12'
+            ? 'grid max-w-2xl grid-cols-1 gap-x-24 gap-y-16 lg:mx-0 lg:max-w-none lg:grid-cols-3 mb-12'
             : 'text-center',
         )}
       >
