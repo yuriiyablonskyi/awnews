@@ -1,8 +1,8 @@
 import { Menu, Transition } from '@headlessui/react'
 import { EllipsisVerticalIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/solid'
 import { FC } from 'react'
-import { useDispatch } from 'react-redux'
 import { removeArticle } from '../store/articles/articlesSlice'
+import { useAppDispatch } from '../store/articles/articlesTypes'
 
 type Props = {
   id: string
@@ -10,7 +10,7 @@ type Props = {
 }
 
 const DropdownMenu: FC<Props> = ({ id, onClick }) => {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
   return (
     <div className="absolute top-0 right-0 text-right">

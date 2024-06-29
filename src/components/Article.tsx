@@ -2,14 +2,13 @@ import { FireIcon } from '@heroicons/react/20/solid'
 import dayjs from 'dayjs'
 import { FC } from 'react'
 import DefaultImg from '../assets/al.png'
-import { ArticleInterface } from '../store/articles/articlesTypes'
+import { ArticleInterface, useAppDispatch } from '../store/articles/articlesTypes'
 import DropdownMenu from './DropdownMenu'
 import classNames from '../utils/classNames'
-import { useDispatch } from 'react-redux'
 import { setCurrentArticle } from '../store/articles/articlesSlice'
 
 const Article: FC<ArticleInterface> = ({ id, author, title, description, url, urlToImage, publishedAt, isHotNews }) => {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const date = dayjs(publishedAt).utc(false).format('DD.MM.YYYY HH:mm:ss')
   const isCustomArticle = author === 'Finnegan Whitmore'
   const handleClick = () => !isCustomArticle && url && window.open(url, '_blank')

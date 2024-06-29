@@ -1,15 +1,14 @@
 import { Dialog, Popover, Transition } from '@headlessui/react'
 import { Bars3Icon, MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { FC, Fragment, useState } from 'react'
-import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import Logo from '../assets/logo.svg'
-import { AppDispatch } from '../store'
 import { clearArticles } from '../store/articles/articlesSlice'
 import Container from './Container'
+import { useAppDispatch } from '../store/articles/articlesTypes'
 
 const Header: FC = () => {
-  const dispatch = useDispatch<AppDispatch>()
+  const dispatch = useAppDispatch()
   const [open, setOpen] = useState(false)
 
   return (

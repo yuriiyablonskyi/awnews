@@ -1,20 +1,16 @@
 import { FC, Dispatch, SetStateAction, useState, ChangeEvent } from 'react'
 import { useForm } from 'react-hook-form'
-import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import dayjs from 'dayjs'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { setCurrentArticle, addArticle, changeCurrentArticle } from '../store/articles/articlesSlice'
 import { articlesData } from '../store/articlesSelectors'
 import { schema } from '../utils/formConstants'
-import { ArticleInterface } from '../store/articles/articlesTypes'
+import { ArticleInterface, useAppDispatch, useAppSelector } from '../store/articles/articlesTypes'
 
 const NewsForm: FC<{ onOpen: Dispatch<SetStateAction<boolean>> }> = ({ onOpen }) => {
-  const dispatch = useDispatch()
-  const wqdqw = useSelector(articlesData)
-  console.log(wqdqw)
-
-  const { currentArticle } = wqdqw
+  const dispatch = useAppDispatch()
+  const { currentArticle } = useAppSelector(articlesData)
   const isEditing = !!currentArticle
   const [preview, setPreview] = useState<string | null>(null)
 
@@ -24,7 +20,7 @@ const NewsForm: FC<{ onOpen: Dispatch<SetStateAction<boolean>> }> = ({ onOpen })
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
-    defaultValues: currentArticle,
+    ...(isEditing && { defaultValues: currentArticle }),
   })
 
   const closeModal = () => {

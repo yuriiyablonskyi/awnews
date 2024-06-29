@@ -1,15 +1,19 @@
 import { FC, useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import { useSearchParams } from 'react-router-dom'
 import Article from '../components/Article'
 import Container from '../components/Container'
 import Pagination from '../components/Pagination'
 import Select from '../components/Select'
 import SkeletonArticle from '../components/SkeletonArticle'
-import { AppDispatch } from '../store'
 import { fetchArticles } from '../store/articles/articlesActions'
 import { clearArticles } from '../store/articles/articlesSlice'
-import { ArticleInterface, ArticlesState, SelectableItem } from '../store/articles/articlesTypes'
+import {
+  ArticleInterface,
+  ArticlesState,
+  SelectableItem,
+  useAppDispatch,
+  useAppSelector,
+} from '../store/articles/articlesTypes'
 import { articlesData } from '../store/articlesSelectors'
 import categoriesData from '../utils/categoriesData'
 import classNames from '../utils/classNames'
@@ -17,9 +21,9 @@ import countriesData from '../utils/countriesData'
 import findByShort from '../utils/findByShort'
 
 const Home: FC = () => {
-  const dispatch = useDispatch<AppDispatch>()
+  const dispatch = useAppDispatch()
   const [searchParams, setSearchParams] = useSearchParams()
-  const { articles, totalResults, loading }: ArticlesState = useSelector(articlesData)
+  const { articles, totalResults, loading }: ArticlesState = useAppSelector(articlesData)
   const [category, setCategory] = useState<string>(searchParams.get('category') ?? '')
   const [country, setCountry] = useState<SelectableItem>({ name: '' })
 
@@ -45,7 +49,8 @@ const Home: FC = () => {
 
     sendRequest(newSearchParams.toString())
     setSearchParams(newSearchParams)
-  }, [searchParams, sendRequest, setSearchParams])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const handleCategory = (value: string) => {
     handleSelectChange('category', value)

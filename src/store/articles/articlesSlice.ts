@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice, isAnyOf } from '@reduxjs/toolkit'
 import { mockedArticles } from '../../mock/mockedArticles'
 import { fetchArticles } from './articlesActions'
-import { ArticleInterface, ArticlesState, CalendarPayload, FetchArticlesPayload } from './articlesTypes'
+import { ArticleInterface, ArticlesState, FetchArticlesPayload, FilterCalendar } from './articlesTypes'
 
 const initialState: ArticlesState = {
   articles: [],
@@ -22,7 +22,7 @@ const articlesSlice = createSlice({
       state.loading = false
       state.filterCalendar = null
     },
-    setCalendar: (state, action: PayloadAction<CalendarPayload>) => {
+    setCalendar: (state, action: PayloadAction<FilterCalendar>) => {
       state.filterCalendar = action.payload
     },
     addArticle: (state, action: PayloadAction<ArticleInterface>) => {

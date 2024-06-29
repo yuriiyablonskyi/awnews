@@ -1,15 +1,13 @@
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
 import { FC, useState } from 'react'
 import ReactPaginate from 'react-paginate'
-import { useDispatch } from 'react-redux'
 import { useSearchParams } from 'react-router-dom'
-import { AppDispatch } from '../store'
 import { fetchArticles } from '../store/articles/articlesActions'
 import classNames from '../utils/classNames'
-import { PaginationProps } from '../store/articles/articlesTypes'
+import { PaginationProps, useAppDispatch } from '../store/articles/articlesTypes'
 
 const Pagination: FC<PaginationProps> = ({ totalResults, endpoint }) => {
-  const dispatch = useDispatch<AppDispatch>()
+  const dispatch = useAppDispatch()
   const [searchParams, setSearchParams] = useSearchParams()
   const [currentPage, setCurrentPage] = useState<number>(Number(searchParams.get('page')) || 1)
 

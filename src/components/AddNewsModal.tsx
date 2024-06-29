@@ -1,12 +1,11 @@
 import { Dialog, Transition } from '@headlessui/react'
 import { FC, Fragment } from 'react'
 import NewsForm from './NewsForm'
-import { AddNewsModalProps } from '../store/articles/articlesTypes'
-import { useDispatch } from 'react-redux'
+import { AddNewsModalProps, useAppDispatch } from '../store/articles/articlesTypes'
 import { setCurrentArticle } from '../store/articles/articlesSlice'
 
 const AddNewsModal: FC<AddNewsModalProps> = ({ isOpen, onOpen }) => {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const handleClose = (isOpen: boolean) => {
     if (!isOpen) {
       onOpen(false)

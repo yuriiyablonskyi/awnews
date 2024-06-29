@@ -1,5 +1,7 @@
 import { Dayjs } from 'dayjs'
 import { Dispatch, MouseEventHandler, SetStateAction } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { AppDispatch, RootState } from '..'
 
 export enum CalendarType {
   FROM = 'from',
@@ -23,22 +25,24 @@ export interface ArticleInterface {
   isHotNews?: boolean
 }
 
+export interface FilterCalendar {
+  type?: CalendarType;
+  singleDate?: string;
+  dateRange?: string;
+}
+
 export interface ArticlesState {
   articles: ArticleInterface[]
   customArticles: ArticleInterface[]
   totalResults: number
   loading: boolean
   currentArticle: ArticleInterface | null
-  filterCalendar: {
-    type?: CalendarType
-    singleDate?: string
-    dateRange?: string
-  }  | null
+  filterCalendar: FilterCalendar | null
 }
 
-export type CalendarPayload =
-  | { type: CalendarType.FROM | CalendarType.TO; singleDate: string }
-  | { type: CalendarType.RANGE; singleDate: string; dateRange: string }
+  export type CalendarPayload =
+    | { type: CalendarType.FROM | CalendarType.TO; singleDate: string }
+    | { type: CalendarType.RANGE; singleDate: string; dateRange: string }
 
 export interface DayInfo {
   date: Dayjs
@@ -86,3 +90,6 @@ export interface SelectProps {
   onSelect: (newCategory: SelectableItem) => void
   optionName: string
 }
+
+export const useAppDispatch = useDispatch.withTypes<AppDispatch>()
+export const useAppSelector = useSelector.withTypes<RootState>()
