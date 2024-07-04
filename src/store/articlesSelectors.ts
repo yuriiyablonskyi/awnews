@@ -1,3 +1,3 @@
-import { RootState } from ".";
+import { ArticlesState } from './articles/articlesTypes'
 
-export const articlesData = (state:RootState) => state.articles
+export const articlesData = (state: ArticlesState) => state.articles

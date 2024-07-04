@@ -1,15 +1,12 @@
-import { PayloadAction, createSlice, isAnyOf } from '@reduxjs/toolkit'
-import { mockedArticles } from '../../mock/mockedArticles'
+import { createSlice, isAnyOf } from '@reduxjs/toolkit'
+import { ArticlesState } from './articlesTypes'
 import { fetchArticles } from './articlesActions'
-import { ArticleInterface, ArticlesState, FetchArticlesPayload, FilterCalendar } from './articlesTypes'
 
 const initialState: ArticlesState = {
-  articles: [],
-  customArticles: mockedArticles,
   totalResults: 0,
+  articles: [],
   loading: false,
-  currentArticle: null,
-  filterCalendar: null,
+  filterCalendar: {},
 }
 
 const articlesSlice = createSlice({
@@ -20,34 +17,15 @@ const articlesSlice = createSlice({
       state.articles = []
       state.totalResults = 0
       state.loading = false
-      state.filterCalendar = null
+      state.filterCalendar = {}
     },
-    setCalendar: (state, action: PayloadAction<FilterCalendar>) => {
+    setCalendar: (state, action) => {
       state.filterCalendar = action.payload
-    },
-    addArticle: (state, action: PayloadAction<ArticleInterface>) => {
-      state.customArticles.push(action.payload)
-    },
-    removeArticle: (state, action: PayloadAction<string>) => {
-      state.customArticles = state.customArticles.filter(article => article.id !== action.payload)
-    },
-    setCurrentArticle: (state, action: PayloadAction<ArticleInterface | null> ) => {
-      state.currentArticle = action?.payload 
-    },
-    changeCurrentArticle: (state, action: PayloadAction<ArticleInterface>) => {
-      const { id, title, description, isHotNews, urlToImage } = action.payload
-      const existingArticle = state.customArticles.find(article => article.id === id)
-      if (existingArticle) {
-        existingArticle.title = title
-        existingArticle.description = description
-        existingArticle.isHotNews = isHotNews
-        existingArticle.urlToImage = urlToImage
-      }
     },
   },
   extraReducers: builder => {
     builder
-      .addCase(fetchArticles.fulfilled, (state, action: PayloadAction<FetchArticlesPayload>) => {
+      .addCase(fetchArticles.fulfilled, (state, action) => {
         state.articles = action.payload.articles
         state.totalResults = action.payload.totalResults
         state.loading = false
@@ -61,6 +39,5 @@ const articlesSlice = createSlice({
   },
 })
 
-export const { clearArticles, setCalendar, removeArticle, addArticle, setCurrentArticle, changeCurrentArticle } =
-  articlesSlice.actions
+export const { clearArticles, setCalendar } = articlesSlice.actions
 export default articlesSlice.reducer

@@ -1,5 +1,11 @@
 import dayjs, { Dayjs } from 'dayjs'
-import { DayInfo } from '../store/articles/articlesTypes'
+
+export interface DayInfo {
+  date: Dayjs
+  isToday?: boolean
+  isCurrentMonth: boolean
+  isLaterThanToday: boolean
+}
 
 const generateDateRange = (month: number = dayjs().month(), year: number = dayjs().year()) => {
   const today: Dayjs = dayjs()

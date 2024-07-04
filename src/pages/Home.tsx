@@ -1,29 +1,25 @@
 import { FC, useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { useSearchParams } from 'react-router-dom'
 import Article from '../components/Article'
 import Container from '../components/Container'
 import Pagination from '../components/Pagination'
 import Select from '../components/Select'
 import SkeletonArticle from '../components/SkeletonArticle'
+import { AppDispatch } from '../store'
 import { fetchArticles } from '../store/articles/articlesActions'
 import { clearArticles } from '../store/articles/articlesSlice'
-import {
-  ArticleInterface,
-  ArticlesState,
-  SelectableItem,
-  useAppDispatch,
-  useAppSelector,
-} from '../store/articles/articlesTypes'
+import { ArticleInterface, ArticlesState, SelectableItem } from '../store/articles/articlesTypes'
 import { articlesData } from '../store/articlesSelectors'
-import categoriesData from '../utils/categoriesData'
-import classNames from '../utils/classNames'
-import countriesData from '../utils/countriesData'
-import findByShort from '../utils/findByShort'
+import categoriesData from '../utils/data/categoriesData'
+import countriesData from '../utils/data/countriesData'
+import classNames from '../utils/functions/classNames'
+import findByShort from '../utils/functions/findByShort'
 
 const Home: FC = () => {
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch<AppDispatch>()
   const [searchParams, setSearchParams] = useSearchParams()
-  const { articles, totalResults, loading }: ArticlesState = useAppSelector(articlesData)
+  const { articles, totalResults, loading }: ArticlesState = useSelector(articlesData)
   const [category, setCategory] = useState<string>(searchParams.get('category') ?? '')
   const [country, setCountry] = useState<SelectableItem>({ name: '' })
 
@@ -51,7 +47,17 @@ const Home: FC = () => {
     setSearchParams(newSearchParams)
   }, [])
 
-  const handleSelectChange = (key: string, value?: string) => {
+  const handleCategory = (value: string) => {
+    handleSelectChange('category', value)
+    setCategory(value)
+  }
+
+  const handleCountry = (value: SelectableItem) => {
+    handleSelectChange('country', value.short)
+    setCountry(value)
+  }
+
+  const handleSelectChange = (key: string, value: string | undefined) => {
     const newSearchParams = new URLSearchParams(searchParams)
     if (value) {
       newSearchParams.set(key, value)
@@ -68,16 +74,6 @@ const Home: FC = () => {
     setSearchParams(newSearchParams)
   }
 
-  const handleCategory = (value: string) => {
-    handleSelectChange('category', value)
-    setCategory(value)
-  }
-
-  const handleCountry = (value: SelectableItem) => {
-    handleSelectChange('country', value.short)
-    setCountry(value)
-  }
-
   const renderContent = () => {
     const errorMessageStyles = 'text-base mt-8 text-center'
     const skeletonCount = !articles.length ? 3 : 9
@@ -92,7 +88,7 @@ const Home: FC = () => {
 
   return (
     <Container>
-      <div className="mb-4">
+      <div className="mb-4 sm:mb-4">
         <h2 className="text-2xl font-bold font-serif tracking-tight sm:text-3xl">Stay update with AWNews</h2>
         <p className="text-base leading-8 font-sans">Select Category and/or Country</p>
       </div>
@@ -112,8 +108,9 @@ const Home: FC = () => {
       </div>
       <div
         className={classNames(
+          'mx-auto',
           loading || !!articles.length
-            ? 'grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-x-8 gap-y-16 mb-12'
+            ? 'grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 lg:mx-0 lg:max-w-none lg:grid-cols-3 mb-12'
             : 'text-center',
         )}
       >
