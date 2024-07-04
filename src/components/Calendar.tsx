@@ -1,27 +1,22 @@
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
 import dayjs, { Dayjs } from 'dayjs'
-import { FC, useMemo, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { Dispatch, FC, SetStateAction, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { AppDispatch } from '../store'
 import { fetchArticles } from '../store/articles/articlesActions'
 import { setCalendar } from '../store/articles/articlesSlice'
+import { CalendarType, DayInfo, useAppDispatch, useAppSelector } from '../store/articles/articlesTypes'
 import { articlesData } from '../store/articlesSelectors'
-import classNames from '../utils/functions/classNames'
-import generateDateRange, { DayInfo } from '../utils/functions/generateDateRange'
+import classNames from '../utils/classNames'
+import generateDateRange from '../utils/generateDateRange'
 
 const daysOfWeek: string[] = ['M', 'T', 'W', 'T', 'F', 'S', 'S']
 
-type SetShowCalendar = React.Dispatch<React.SetStateAction<boolean>>
-interface CalendarProps {
-  onShowCalendar: SetShowCalendar
-}
-
-const Calendar: FC<CalendarProps> = ({ onShowCalendar }) => {
-  const dispatch = useDispatch<AppDispatch>()
-  const {
-    filterCalendar: { type, singleDate, dateRange },
-  } = useSelector(articlesData)
+const Calendar: FC<{ onShowCalendar: Dispatch<SetStateAction<boolean>> }> = ({ onShowCalendar }) => {
+  const dispatch = useAppDispatch()
+  const { filterCalendar } = useAppSelector(articlesData)
+  const type = filterCalendar?.type
+  const singleDate = filterCalendar?.singleDate
+  const dateRange = filterCalendar?.dateRange
   const [searchParams, setSearchParams] = useSearchParams()
   const currentDate: Dayjs = dayjs()
   const [today, setToday] = useState<Dayjs>(currentDate)
@@ -45,16 +40,16 @@ const Calendar: FC<CalendarProps> = ({ onShowCalendar }) => {
     let shouldDispatchRequest = true
 
     switch (type) {
-      case 'from':
-      case 'to':
+      case CalendarType.FROM:
+      case CalendarType.TO:
         dispatch(setCalendar({ type, singleDate: newDateFormat }))
         newSearchParams.set(type, newDateFormat)
         break
-      case 'range':
-        if (dayjs(singleDate).isBefore(date) && !dateRange) {
-          dispatch(setCalendar({ type: 'range', singleDate: newDateFormat, dateRange: singleDate }))
-          newSearchParams.set('from', singleDate)
-          newSearchParams.set('to', newDateFormat)
+      case CalendarType.RANGE:
+        if (singleDate && dayjs(singleDate).isBefore(date) && !dateRange) {
+          dispatch(setCalendar({ type: CalendarType.RANGE, singleDate: newDateFormat, dateRange: singleDate }))
+          newSearchParams.set(CalendarType.FROM, singleDate)
+          newSearchParams.set(CalendarType.TO, newDateFormat)
           setHoveredDate(null)
         } else {
           dispatch(setCalendar({ type, singleDate: newDateFormat }))
@@ -73,21 +68,24 @@ const Calendar: FC<CalendarProps> = ({ onShowCalendar }) => {
     }
   }
 
-  const useHighlightedDate = (date: Dayjs): Boolean => {
-    return useMemo(() => {
-      const fromDate = dayjs(searchParams.get('from'))
-      const toDate = dayjs(searchParams.get('to'))
+  const isHighlighted = (date: Dayjs) => {
+    const fromDate = dayjs(searchParams.get(CalendarType.FROM))
+    const toDate = dayjs(searchParams.get(CalendarType.TO))
+    const isAfterSingleDate = date.isAfter(dayjs(singleDate))
+    const isBeforeHoveredDate = date.isBefore(hoveredDate)
+    const isInDateRange = dateRange && date.isAfter(fromDate) && date.isBefore(toDate)
 
-      const isAfterSingleDate = date.isAfter(dayjs(singleDate))
-      const isBeforeHoveredDate = date.isBefore(hoveredDate)
-      const isInDateRange = dateRange && date.isAfter(fromDate) && date.isBefore(toDate)
-
-      return (!dateRange && isAfterSingleDate && isBeforeHoveredDate) || isInDateRange
-    }, [singleDate, dateRange, hoveredDate])
+    if (dateRange) {
+      return isInDateRange
+    }
+    return isAfterSingleDate && isBeforeHoveredDate
   }
 
   return (
-    <div className="absolute z-20 w-72 mt-1 p-3 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+    <div
+      className="absolute z-20 w-72 mt-1 p-3 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5
+     focus:outline-none"
+    >
       <div className="flex items-center">
         <h2 className="flex-auto text-sm font-semibold text-gray-900">{today.format('MMMM YYYY')}</h2>
         <button
@@ -121,13 +119,13 @@ const Calendar: FC<CalendarProps> = ({ onShowCalendar }) => {
           const dayItem: string = date.toString().slice(5, 16)
           const isSelectDate = singleDate && singleDate === date.format('YYYY-MM-DD')
           const isEndDate = dateRange && dateRange === date.format('YYYY-MM-DD')
-          const isHighlightedDate = useHighlightedDate(date)
+          const isHighlightedDate = isHighlighted(date)
 
           return (
             <div key={dayItem} className="py-1.5">
               <button
                 onClick={() => handleClickDate(date)}
-                onMouseMove={() => type === 'range' && setHoveredDate(date)}
+                onMouseMove={() => type === CalendarType.RANGE && setHoveredDate(date)}
                 type="button"
                 className={classNames(
                   isHighlightedDate && 'bg-gray-200',

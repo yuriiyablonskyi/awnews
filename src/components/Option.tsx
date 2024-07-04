@@ -1,14 +1,8 @@
 import { Listbox } from '@headlessui/react'
 import { CheckIcon } from '@heroicons/react/20/solid'
-import { FC, MouseEventHandler } from 'react'
-import { SelectableItem } from '../store/articles/articlesTypes'
-import classNames from '../utils/functions/classNames'
-
-interface OptionProps {
-  select?: SelectableItem
-  optionName?: string
-  onChange: MouseEventHandler<HTMLLIElement>
-}
+import { FC } from 'react'
+import { OptionProps } from '../store/articles/articlesTypes'
+import classNames from '../utils/classNames'
 
 const Option: FC<OptionProps> = ({ select, optionName, onChange }) => (
   <Listbox.Option
