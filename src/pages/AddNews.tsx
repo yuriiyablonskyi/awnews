@@ -31,7 +31,7 @@ const AddNews: FC = () => {
           <PlusIcon className="w-8 h-8" />
         </button>
         <AddNewsModal isOpen={open} onOpen={setOpen} />
-        <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-24 gap-y-16 lg:mx-0 lg:max-w-none lg:grid-cols-3 mb-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-x-8 gap-y-16 mb-12">
           {customArticles.map((item: ArticleInterface) => (
             <Article key={item.id} {...item} />
           ))}

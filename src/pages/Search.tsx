@@ -32,8 +32,8 @@ const Search: FC = () => {
   const [sortBy, setSortBy] = useState<string>(searchParams.get('sortBy') ?? '')
 
   const dispatchUrlParams = () => {
-    const urlParamFrom = searchParams.get('from')
-    const urlParamTo = searchParams.get('to')
+    const urlParamFrom = searchParams.get(CalendarType.FROM)
+    const urlParamTo = searchParams.get(CalendarType.TO)
 
     if (urlParamFrom && !urlParamTo) {
       return dispatch(setCalendar({ type: CalendarType.FROM, singleDate: urlParamFrom }))
@@ -65,7 +65,7 @@ const Search: FC = () => {
     sendRequest(searchParams.toString())
   }, [])
 
-  const handleSelectChange = (key: string, value: string | undefined) => {
+  const handleSelectChange = (key: string, value?: string) => {
     const newSearchParams = new URLSearchParams(searchParams)
     if (value) {
       newSearchParams.set(key, value)
@@ -181,7 +181,7 @@ const Search: FC = () => {
         className={classNames(
           'mx-auto',
           loading || !!articles.length
-            ? 'grid max-w-2xl grid-cols-1 gap-x-24 gap-y-16 lg:mx-0 lg:max-w-none lg:grid-cols-3 mb-12'
+            ? 'grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-x-8 gap-y-16 mb-12'
             : 'text-center',
         )}
       >

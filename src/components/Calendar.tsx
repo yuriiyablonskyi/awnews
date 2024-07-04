@@ -45,11 +45,11 @@ const Calendar: FC<{ onShowCalendar: Dispatch<SetStateAction<boolean>> }> = ({ o
         dispatch(setCalendar({ type, singleDate: newDateFormat }))
         newSearchParams.set(type, newDateFormat)
         break
-      case 'range':
+      case CalendarType.RANGE:
         if (singleDate && dayjs(singleDate).isBefore(date) && !dateRange) {
           dispatch(setCalendar({ type: CalendarType.RANGE, singleDate: newDateFormat, dateRange: singleDate }))
-          newSearchParams.set('from', singleDate)
-          newSearchParams.set('to', newDateFormat)
+          newSearchParams.set(CalendarType.FROM, singleDate)
+          newSearchParams.set(CalendarType.TO, newDateFormat)
           setHoveredDate(null)
         } else {
           dispatch(setCalendar({ type, singleDate: newDateFormat }))
@@ -69,8 +69,8 @@ const Calendar: FC<{ onShowCalendar: Dispatch<SetStateAction<boolean>> }> = ({ o
   }
 
   const isHighlighted = (date: Dayjs) => {
-    const fromDate = dayjs(searchParams.get('from'))
-    const toDate = dayjs(searchParams.get('to'))
+    const fromDate = dayjs(searchParams.get(CalendarType.FROM))
+    const toDate = dayjs(searchParams.get(CalendarType.TO))
     const isAfterSingleDate = date.isAfter(dayjs(singleDate))
     const isBeforeHoveredDate = date.isBefore(hoveredDate)
     const isInDateRange = dateRange && date.isAfter(fromDate) && date.isBefore(toDate)

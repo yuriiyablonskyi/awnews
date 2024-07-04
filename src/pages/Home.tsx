@@ -51,7 +51,7 @@ const Home: FC = () => {
     setSearchParams(newSearchParams)
   }, [])
 
-  const handleSelectChange = (key: string, value: string | undefined) => {
+  const handleSelectChange = (key: string, value?: string) => {
     const newSearchParams = new URLSearchParams(searchParams)
     if (value) {
       newSearchParams.set(key, value)
@@ -113,7 +113,7 @@ const Home: FC = () => {
       <div
         className={classNames(
           loading || !!articles.length
-            ? 'grid grid-cols-1 gap-x-24 gap-y-16 lg:mx-0 lg:grid-cols-3 mb-12'
+            ? 'grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-x-8 gap-y-16 mb-12'
             : 'text-center',
         )}
       >

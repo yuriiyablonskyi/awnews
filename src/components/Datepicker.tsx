@@ -33,8 +33,8 @@ const Datepicker: FC = () => {
 
   const clearUrlParams = (newCalendarType: string) => {
     const newSearchParams = new URLSearchParams(searchParams)
-    newSearchParams.delete('from')
-    newSearchParams.delete('to')
+    newSearchParams.delete(CalendarType.FROM)
+    newSearchParams.delete(CalendarType.TO)
     !newCalendarType && sendRequest(newSearchParams.toString())
     setSearchParams(newSearchParams)
   }
@@ -54,13 +54,13 @@ const Datepicker: FC = () => {
         onSelect={(newDate: SelectableItem) => handleDate(newDate.name)}
         optionName="date"
       />
-      <div className={classNames(type && 'mr-28 mb-3', type === 'range' && 'mr-16 relative')}>
+      <div className={classNames(type && 'mr-28 mb-3', type === CalendarType.RANGE && 'mr-16 relative')}>
         {type && (
           <>
             <label className="block text-sm font-medium leading-6 text-gray-900 capitalize">Calendar</label>
             <button
               className={classNames(
-                type === 'range' ? 'w-56' : 'w-44',
+                type === CalendarType.RANGE ? 'w-56' : 'w-44',
                 'flex items-center h-9 mt-2 cursor-pointer rounded-md bg-white py-1.5 px-3 text-left text-gray-900' +
                   'shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-neutral-500' +
                   ' sm:text-sm sm:leading-6',
@@ -73,7 +73,7 @@ const Datepicker: FC = () => {
                 value={dateRange ? singleDate + ' - ' + dateRange : singleDate || `Select ${type} date`}
                 readOnly
               />
-              <CalendarIcon className={classNames(type === 'range' && 'ml-2.5', 'w-5 h-5')} />
+              <CalendarIcon className={classNames(type === CalendarType.RANGE && 'ml-2.5', 'w-5 h-5')} />
             </button>
           </>
         )}

@@ -20,7 +20,7 @@ const Article: FC<ArticleInterface> = ({ id, author, title, description, url, ur
   return (
     <div
       className={classNames(
-        'mx-auto relative flex max-w-md flex-col justify-between border-b border-b-stone-300 pb-1',
+        'shadow-lg relative flex flex-col justify-between rounded-md',
         !isCustomArticle && 'cursor-pointer',
       )}
       onClick={handleClick}
@@ -33,7 +33,7 @@ const Article: FC<ArticleInterface> = ({ id, author, title, description, url, ur
       )}
       {!url && id && <DropdownMenu id={id} onClick={onDropdownClick} />}
       <div
-        className="border border-stone-300 mb-3 aspect-h-1 aspect-w-1 w-full
+        className="mb-3 aspect-h-1 aspect-w-1 w-full
        overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80"
       >
         <img
@@ -42,7 +42,7 @@ const Article: FC<ArticleInterface> = ({ id, author, title, description, url, ur
           className="h-full w-full object-cover object-center lg:h-full lg:w-full"
         />
       </div>
-      <div className="flex flex-col justify-between min-h-52">
+      <div className="flex flex-col justify-between p-3 min-h-52 break-word">
         <div className="group relative">
           <h3 className="font-serif font-medium text-3xl leading-6">{title}</h3>
           <p className="mt-4 text-lg leading-6 text-gray-600">{description}</p>

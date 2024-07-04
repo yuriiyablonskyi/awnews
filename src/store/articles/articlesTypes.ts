@@ -26,9 +26,9 @@ export interface ArticleInterface {
 }
 
 export interface FilterCalendar {
-  type?: string | CalendarType;
-  singleDate?: string;
-  dateRange?: string;
+  type?: string | CalendarType
+  singleDate?: string
+  dateRange?: string
 }
 
 export interface ArticlesState {
@@ -39,10 +39,6 @@ export interface ArticlesState {
   currentArticle: ArticleInterface | null
   filterCalendar: FilterCalendar | null
 }
-
-  export type CalendarPayload =
-    | { type: CalendarType.FROM | CalendarType.TO; singleDate: string }
-    | { type: CalendarType.RANGE; singleDate: string; dateRange: string }
 
 export interface DayInfo {
   date: Dayjs
@@ -85,7 +81,7 @@ export interface SelectableItem {
 }
 
 export interface SelectProps {
-  dataSelect: string | undefined
+  dataSelect?: string
   options: SelectableItem[]
   onSelect: (newCategory: SelectableItem) => void
   optionName: string
