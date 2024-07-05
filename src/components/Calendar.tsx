@@ -93,7 +93,6 @@ const Calendar: FC<{ onShowCalendar: Dispatch<SetStateAction<boolean>> }> = ({ o
           className="-my-1.5 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500"
           onClick={() => setToday(today.month(today.month() - 1))}
         >
-          <span className="sr-only">Previous month</span>
           <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
         </button>
         <button
@@ -105,7 +104,6 @@ const Calendar: FC<{ onShowCalendar: Dispatch<SetStateAction<boolean>> }> = ({ o
           onClick={() => setToday(today.month(today.month() + 1))}
           disabled={!currentDate.isAfter(today, 'month')}
         >
-          <span className="sr-only">Next month</span>
           <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
         </button>
       </div>

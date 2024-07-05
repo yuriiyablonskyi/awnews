@@ -1,15 +1,18 @@
 import { Dialog, Popover, Transition } from '@headlessui/react'
-import { Bars3Icon, MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { Bars3Icon, MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/solid'
 import { FC, Fragment, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Logo from '../assets/logo.svg'
 import { clearArticles } from '../store/articles/articlesSlice'
 import { useAppDispatch } from '../store/articles/articlesTypes'
 import Container from './Container'
+import { useAuth0 } from '@auth0/auth0-react'
+import UserMenu from './UserMenu'
 
 const Header: FC = () => {
   const dispatch = useAppDispatch()
   const [open, setOpen] = useState(false)
+  const { loginWithRedirect, user } = useAuth0()
 
   return (
     <div className="bg-white border-b border-b-stone-300 mb-8">
@@ -45,7 +48,6 @@ const Header: FC = () => {
                     onClick={() => setOpen(false)}
                   >
                     <span className="absolute -inset-0.5" />
-                    <span className="sr-only">Close menu</span>
                     <XMarkIcon className="h-6 w-6" aria-hidden="true" />
                   </button>
                 </div>
@@ -86,14 +88,12 @@ const Header: FC = () => {
                 onClick={() => setOpen(true)}
               >
                 <span className="absolute -inset-0.5" />
-                <span className="sr-only">Open menu</span>
                 <Bars3Icon className="h-6 w-6" aria-hidden="true" />
               </button>
 
               <div className="ml-4 flex lg:ml-0">
                 <Link to="/?country=ua">
-                  <span className="sr-only">AWNews logo</span>
-                  <img className="max-w-24 h-7" src={Logo} alt="" />
+                  <img className="max-w-24 h-7" src={Logo} alt="logo" />
                 </Link>
               </div>
 
@@ -109,23 +109,31 @@ const Header: FC = () => {
               </Popover.Group>
 
               <div className="ml-auto flex items-center">
-                <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
-                  <a href="#" className="text-lg font-medium text-gray-700 hover:text-gray-800">
-                    Sign in
-                  </a>
-                  <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
-                  <a href="#" className="text-lg font-medium text-gray-700 hover:text-gray-800">
-                    Create account
-                  </a>
-                </div>
-
+                {!user ? (
+                  <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
+                    <button
+                      className="text-lg font-medium text-gray-700 hover:text-gray-800"
+                      onClick={() => {
+                        console.log('Sign in')
+                        loginWithRedirect()
+                      }}
+                    >
+                      Sign in
+                    </button>
+                    <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
+                    <a href="#" className="text-lg font-medium text-gray-700 hover:text-gray-800">
+                      Create account
+                    </a>
+                  </div>
+                ) : (
+                  <UserMenu />
+                )}
                 <div className="flex lg:ml-6">
                   <Link
                     to="/search"
                     className="p-2 text-gray-400 hover:text-gray-500"
                     onClick={() => dispatch(clearArticles())}
                   >
-                    <span className="sr-only">Search</span>
                     <MagnifyingGlassIcon className="h-6 w-6" aria-hidden="true" />
                   </Link>
                 </div>

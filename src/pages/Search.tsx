@@ -141,7 +141,6 @@ const Search: FC = () => {
             className=" text-gray-400 hover:text-gray-500"
             aria-label="Clear all filters"
           >
-            <span className="sr-only">Clear filter</span>
             <XMarkIcon className="h-6 w-6" aria-hidden="true" />
           </button>
           <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
@@ -155,7 +154,6 @@ const Search: FC = () => {
             aria-label="Start search"
             disabled={!keyword}
           >
-            <span className="sr-only">Search</span>
             <MagnifyingGlassIcon className="h-6 w-6" aria-hidden="true" />
           </button>
         </div>

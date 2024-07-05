@@ -38,6 +38,10 @@ const Home: FC = () => {
 
   useEffect(() => {
     const newSearchParams = new URLSearchParams(searchParams)
+    if (newSearchParams.has('code') || newSearchParams.has('state')) {
+      console.log({ code: searchParams.get('code'), state: searchParams.get('state') })
+    }
+
     if (!newSearchParams.toString()) {
       newSearchParams.set('country', 'ua')
       newSearchParams.set('page', '1')

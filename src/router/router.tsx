@@ -4,6 +4,7 @@ import AddNews from '../pages/AddNews.tsx'
 import Home from '../pages/Home.tsx'
 import Search from '../pages/Search.tsx'
 import { RouteType } from '../store/articles/articlesTypes.ts'
+import UserProfile from '../pages/UserProfile.tsx'
 
 const routes: RouteType[] = [
   {
@@ -21,6 +22,10 @@ const routes: RouteType[] = [
       {
         path: 'add-news',
         element: <AddNews />,
+      },
+      {
+        path: 'profile',
+        element: <UserProfile />,
       },
     ],
   },

@@ -12,7 +12,7 @@ import Calendar from './Calendar'
 import Select from './Select'
 
 const Datepicker: FC = () => {
-  const dispatch = useAppDispatch<AppDispatch>()
+  const dispatch = useAppDispatch()
   const { filterCalendar } = useAppSelector(articlesData)
   const type = filterCalendar?.type
   const singleDate = filterCalendar?.singleDate

@@ -16,7 +16,6 @@ const SkeletonArticle: FC = () => (
         <div className="w-48 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
       </div>
     </div>
-    <span className="sr-only">Loading...</span>
   </div>
 )
 

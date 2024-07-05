@@ -56,7 +56,6 @@ const Pagination: FC<PaginationProps> = ({ totalResults, endpoint }) => {
       <ReactPaginate
         nextLabel={
           <button className={buttonNextClass}>
-            <span className="sr-only">Next</span>
             <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
           </button>
         }
@@ -66,7 +65,6 @@ const Pagination: FC<PaginationProps> = ({ totalResults, endpoint }) => {
         pageCount={Math.ceil(totalResults / 9)}
         previousLabel={
           <button className={buttonPrevClass}>
-            <span className="sr-only">Previous</span>
             <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
           </button>
         }
