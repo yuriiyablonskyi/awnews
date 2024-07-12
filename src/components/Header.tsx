@@ -1,5 +1,5 @@
 import { Dialog, Popover, Transition } from '@headlessui/react'
-import { Bars3Icon, MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/solid'
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/solid'
 import { FC, Fragment, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Logo from '../assets/logo.svg'
@@ -7,12 +7,22 @@ import { clearArticles } from '../store/articles/articlesSlice'
 import { useAppDispatch } from '../store/articles/articlesTypes'
 import Container from './Container'
 import { useAuth0 } from '@auth0/auth0-react'
-import UserMenu from './UserMenu'
+import useDropDownMenu from '../hooks/useDropDownMenu'
+import DropdownMenu from './DropdownMenu'
 
 const Header: FC = () => {
   const dispatch = useAppDispatch()
   const [open, setOpen] = useState(false)
   const { loginWithRedirect, user } = useAuth0()
+  const { userItems } = useDropDownMenu()
+
+  const handleLogin = async () => {
+    await loginWithRedirect({
+      appState: {
+        returnTo: '/?country=ua',
+      },
+    })
+  }
 
   return (
     <div className="bg-white border-b border-b-stone-300 mb-8">
@@ -58,6 +68,15 @@ const Header: FC = () => {
                       AddNews
                     </Link>
                   </div>
+                  <div className="flow-root">
+                    <Link
+                      to="/search"
+                      onClick={() => dispatch(clearArticles())}
+                      className="-m-2 block p-2 font-medium text-gray-900"
+                    >
+                      Search
+                    </Link>
+                  </div>
                 </div>
 
                 <div className="space-y-6 border-t border-gray-200 px-4 py-6">
@@ -80,64 +99,66 @@ const Header: FC = () => {
 
       <header className="relative bg-white">
         <Container>
-          <nav aria-label="Top">
-            <div className="flex h-16 items-center">
-              <button
-                type="button"
-                className="relative rounded-md bg-white p-2 text-gray-400 lg:hidden"
-                onClick={() => setOpen(true)}
+          <nav aria-label="Top" className="flex h-16 items-center">
+            <button
+              type="button"
+              className="relative rounded-md bg-white p-2 text-gray-400 lg:hidden"
+              onClick={() => setOpen(true)}
+            >
+              <span className="absolute -inset-0.5" />
+              <Bars3Icon className="h-6 w-6" aria-hidden="true" />
+            </button>
+
+            <div className="ml-4 flex lg:ml-0">
+              <Link to="/?country=ua" className="hover:opacity-70 transition-opacity duration-100 ease-linear">
+                <img className="max-w-24 h-7" src={Logo} alt="logo" />
+              </Link>
+            </div>
+
+            <Popover.Group className="hidden lg:ml-8 lg:block lg:self-stretch">
+              <Link
+                to="add-news"
+                className="flex h-full space-x-8 items-center text-lg font-medium text-gray-900 hover:opacity-70
+                 transition-opacity duration-100 ease-linear"
               >
-                <span className="absolute -inset-0.5" />
-                <Bars3Icon className="h-6 w-6" aria-hidden="true" />
-              </button>
+                AddNews
+              </Link>
+            </Popover.Group>
 
-              <div className="ml-4 flex lg:ml-0">
-                <Link to="/?country=ua">
-                  <img className="max-w-24 h-7" src={Logo} alt="logo" />
-                </Link>
-              </div>
-
-              <Popover.Group className="hidden lg:ml-8 lg:block lg:self-stretch">
-                <div className="flex h-full space-x-8">
-                  <Link
-                    to="add-news"
-                    className="flex items-center text-lg font-medium text-gray-700 hover:text-gray-800"
+            <Popover.Group className="hidden lg:ml-8 lg:block lg:self-stretch">
+              <Link
+                to="/search"
+                onClick={() => dispatch(clearArticles())}
+                className="flex h-full space-x-8 items-center text-lg font-medium text-gray-900 hover:opacity-70
+                 transition-opacity duration-100 ease-linear"
+              >
+                Search
+              </Link>
+            </Popover.Group>
+            <div className="ml-auto flex items-center">
+              {!user ? (
+                <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
+                  <button
+                    className="text-lg font-medium text-gray-900 hover:text-gray-500"
+                    onClick={() => {
+                      console.log('Sign in')
+                      handleLogin()
+                    }}
                   >
-                    AddNews
-                  </Link>
-                </div>
-              </Popover.Group>
-
-              <div className="ml-auto flex items-center">
-                {!user ? (
-                  <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
-                    <button
-                      className="text-lg font-medium text-gray-700 hover:text-gray-800"
-                      onClick={() => {
-                        console.log('Sign in')
-                        loginWithRedirect()
-                      }}
-                    >
-                      Sign in
-                    </button>
-                    <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
-                    <a href="#" className="text-lg font-medium text-gray-700 hover:text-gray-800">
-                      Create account
-                    </a>
-                  </div>
-                ) : (
-                  <UserMenu />
-                )}
-                <div className="flex lg:ml-6">
-                  <Link
-                    to="/search"
-                    className="p-2 text-gray-400 hover:text-gray-500"
-                    onClick={() => dispatch(clearArticles())}
+                    Sign in
+                  </button>
+                  <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
+                  <a
+                    href="#"
+                    className="text-lg font-medium text-gray-900 hover:opacity-70 transition-opacity duration-100
+                     ease-linear"
                   >
-                    <MagnifyingGlassIcon className="h-6 w-6" aria-hidden="true" />
-                  </Link>
+                    Create account
+                  </a>
                 </div>
-              </div>
+              ) : (
+                <DropdownMenu dropdownData={userItems} />
+              )}
             </div>
           </nav>
         </Container>

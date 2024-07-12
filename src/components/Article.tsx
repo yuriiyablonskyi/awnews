@@ -6,12 +6,14 @@ import { setCurrentArticle } from '../store/articles/articlesSlice'
 import { ArticleInterface, useAppDispatch } from '../store/articles/articlesTypes'
 import classNames from '../utils/classNames'
 import DropdownMenu from './DropdownMenu'
+import useDropDownMenu from '../hooks/useDropDownMenu'
 
 const Article: FC<ArticleInterface> = ({ id, author, title, description, url, urlToImage, publishedAt, isHotNews }) => {
   const dispatch = useAppDispatch()
   const date = dayjs(publishedAt).utc(false).format('DD.MM.YYYY HH:mm:ss')
   const isCustomArticle = author === 'Finnegan Whitmore'
   const handleClick = () => !isCustomArticle && url && window.open(url, '_blank')
+  const { articlesItems } = useDropDownMenu()
 
   const onDropdownClick = () => {
     dispatch(setCurrentArticle({ id, author, title, description, url, urlToImage, publishedAt, isHotNews }))
@@ -31,7 +33,8 @@ const Article: FC<ArticleInterface> = ({ id, author, title, description, url, ur
           <FireIcon className="h-6 w-6" />
         </div>
       )}
-      {!url && id && <DropdownMenu id={id} onClick={onDropdownClick} />}
+      {!url && <DropdownMenu dropdownData={articlesItems} />}
+      {/* {!url && id && <DropdownMenu id={id} onClick={onDropdownClick} />} */}
       <div
         className="mb-3 aspect-h-1 aspect-w-1 w-full
        overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80"
