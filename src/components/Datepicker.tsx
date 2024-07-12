@@ -1,7 +1,6 @@
 import { CalendarIcon } from '@heroicons/react/24/outline'
 import { FC, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { AppDispatch } from '../store'
 import { fetchArticles } from '../store/articles/articlesActions'
 import { setCalendar } from '../store/articles/articlesSlice'
 import { CalendarType, SelectableItem, useAppDispatch, useAppSelector } from '../store/articles/articlesTypes'

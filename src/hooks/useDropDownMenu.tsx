@@ -1,4 +1,4 @@
-import { useAuth0 } from '@auth0/auth0-react'
+import { User, useAuth0 } from '@auth0/auth0-react'
 import {
   EllipsisVerticalIcon,
   ArrowLeftStartOnRectangleIcon,
@@ -6,23 +6,18 @@ import {
   PencilIcon,
   TrashIcon,
 } from '@heroicons/react/24/solid'
-import { useNavigate } from 'react-router-dom'
-import { removeArticle } from '../store/articles/articlesSlice'
-import { useDispatch } from 'react-redux'
+import { NavigateFunction, useNavigate } from 'react-router-dom'
+import { DropDownMenu, DropdownData } from '../store/articles/articlesTypes'
 
-const useDropDownMenu = () => {
-  const { logout, user } = useAuth0()
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
-  const id = '23'
-  const handleSignOut = () => logout({ logoutParams: { returnTo: window.location.origin } })
-  const handleNavigate = () => navigate('/profile')
-  const handleRemoveArticle = () => dispatch(removeArticle(id))
-  const handleEdit = () => console.log('edit')
+const useDropDownMenu = (): DropDownMenu => {
+  const { logout, user } = useAuth0<User>()
+  const navigate: NavigateFunction = useNavigate()
+  const handleSignOut: () => Promise<void> = () => logout({ logoutParams: { returnTo: window.location.origin } })
+  const handleNavigate: () => void = () => navigate('/profile')
 
-  const userItems = {
+  const userItems: DropdownData = {
     wpapperStyle: 'relative inline-block text-left',
-    MenuButtonIcon: { img: user?.picture, style: 'h-10 w-10 rounded-full' },
+    menuButtonIcon: { img: user?.picture, style: 'h-10 w-10 rounded-full' },
     data: [
       {
         name: 'Your Profile',
@@ -37,19 +32,17 @@ const useDropDownMenu = () => {
     ],
   }
 
-  const articlesItems = {
+  const articlesItems: DropdownData = {
     wpapperStyle: 'absolute top-0 right-0 text-right',
-    MenuButtonIcon: { icon: EllipsisVerticalIcon, style: 'size-8 fill-gray-600' },
+    menuButtonIcon: { icon: EllipsisVerticalIcon, style: 'size-8 fill-gray-600' },
     data: [
       {
         name: 'Edit',
         icon: PencilIcon,
-        action: handleEdit,
       },
       {
         name: 'Delete',
         icon: TrashIcon,
-        action: handleRemoveArticle,
       },
     ],
   }

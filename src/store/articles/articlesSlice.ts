@@ -28,11 +28,11 @@ const articlesSlice = createSlice({
     addArticle: (state, action: PayloadAction<ArticleInterface>) => {
       state.customArticles.push(action.payload)
     },
-    removeArticle: (state, action: PayloadAction<string>) => {
+    removeArticle: (state, action: PayloadAction<string | undefined>) => {
       state.customArticles = state.customArticles.filter(article => article.id !== action.payload)
     },
-    setCurrentArticle: (state, action: PayloadAction<ArticleInterface | null> ) => {
-      state.currentArticle = action?.payload 
+    setCurrentArticle: (state, action: PayloadAction<ArticleInterface | null>) => {
+      state.currentArticle = action?.payload
     },
     changeCurrentArticle: (state, action: PayloadAction<ArticleInterface>) => {
       const { id, title, description, isHotNews, urlToImage } = action.payload

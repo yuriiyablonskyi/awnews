@@ -87,5 +87,29 @@ export interface SelectProps {
   optionName: string
 }
 
+export interface DropdownData {
+  wpapperStyle: string
+  menuButtonIcon: {
+    icon?: React.ElementType
+    img?: string
+    style: string
+  }
+  data: Array<{
+    name: string
+    icon: React.ElementType
+    action?: () => void
+  }>
+}
+
+export interface DropdownMenuProps {
+  dropdownData: DropdownData
+  actions?: { [key: string]: () => void }
+}
+
+export interface DropDownMenu {
+  userItems: DropdownData
+  articlesItems: DropdownData
+}
+
 export const useAppDispatch = useDispatch.withTypes<AppDispatch>()
 export const useAppSelector = useSelector.withTypes<RootState>()

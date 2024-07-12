@@ -2,7 +2,7 @@ import { FireIcon } from '@heroicons/react/20/solid'
 import dayjs from 'dayjs'
 import { FC } from 'react'
 import DefaultImg from '../assets/al.png'
-import { setCurrentArticle } from '../store/articles/articlesSlice'
+import { removeArticle, setCurrentArticle } from '../store/articles/articlesSlice'
 import { ArticleInterface, useAppDispatch } from '../store/articles/articlesTypes'
 import classNames from '../utils/classNames'
 import DropdownMenu from './DropdownMenu'
@@ -15,8 +15,13 @@ const Article: FC<ArticleInterface> = ({ id, author, title, description, url, ur
   const handleClick = () => !isCustomArticle && url && window.open(url, '_blank')
   const { articlesItems } = useDropDownMenu()
 
-  const onDropdownClick = () => {
+  const handleEdit = () =>
     dispatch(setCurrentArticle({ id, author, title, description, url, urlToImage, publishedAt, isHotNews }))
+  const handleDelete = () => dispatch(removeArticle(id))
+
+  const articlesActions = {
+    Edit: handleEdit,
+    Delete: handleDelete,
   }
 
   return (
@@ -33,8 +38,7 @@ const Article: FC<ArticleInterface> = ({ id, author, title, description, url, ur
           <FireIcon className="h-6 w-6" />
         </div>
       )}
-      {!url && <DropdownMenu dropdownData={articlesItems} />}
-      {/* {!url && id && <DropdownMenu id={id} onClick={onDropdownClick} />} */}
+      {!url && <DropdownMenu dropdownData={articlesItems} actions={articlesActions} />}
       <div
         className="mb-3 aspect-h-1 aspect-w-1 w-full
        overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80"
