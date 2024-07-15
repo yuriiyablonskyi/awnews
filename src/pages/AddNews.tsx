@@ -5,11 +5,18 @@ import Article from '../components/Article'
 import Container from '../components/Container'
 import { ArticleInterface, useAppSelector } from '../store/articles/articlesTypes'
 import { articlesData } from '../store/articlesSelectors'
+import { useAuth0 } from '@auth0/auth0-react'
+import AccessDenied from '../components/AccessDenied'
 
 const AddNews: FC = () => {
   const { customArticles, currentArticle } = useAppSelector(articlesData)
   const [open, setOpen] = useState(false)
+  const { isAuthenticated } = useAuth0()
   useEffect(() => setOpen(!!currentArticle), [currentArticle])
+
+  if (!isAuthenticated) {
+    return <AccessDenied />
+  }
 
   return (
     <div>

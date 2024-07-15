@@ -1,10 +1,11 @@
 import { createBrowserRouter } from 'react-router-dom'
 import App from '../App.tsx'
+import ProtectedRoute from '../components/ProtectedRoute.tsx'
 import AddNews from '../pages/AddNews.tsx'
 import Home from '../pages/Home.tsx'
 import Search from '../pages/Search.tsx'
-import { RouteType } from '../store/articles/articlesTypes.ts'
 import UserProfile from '../pages/UserProfile.tsx'
+import { RouteType } from '../store/articles/articlesTypes.ts'
 
 const routes: RouteType[] = [
   {
@@ -21,11 +22,19 @@ const routes: RouteType[] = [
       },
       {
         path: 'add-news',
-        element: <AddNews />,
+        element: (
+          <ProtectedRoute>
+            <AddNews />
+          </ProtectedRoute>
+        ),
       },
       {
         path: 'profile',
-        element: <UserProfile />,
+        element: (
+          <ProtectedRoute>
+            <UserProfile />
+          </ProtectedRoute>
+        ),
       },
     ],
   },

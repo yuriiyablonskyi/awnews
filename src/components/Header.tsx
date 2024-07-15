@@ -17,11 +17,7 @@ const Header: FC = () => {
   const { userItems } = useDropDownMenu()
 
   const handleLogin = async () => {
-    await loginWithRedirect({
-      appState: {
-        returnTo: '/?country=ua',
-      },
-    })
+    await loginWithRedirect()
   }
 
   return (
