@@ -8,15 +8,15 @@ import classNames from '../utils/classNames'
 import DropdownMenu from './DropdownMenu'
 import useDropDownMenu from '../hooks/useDropDownMenu'
 
-const Article: FC<ArticleInterface> = ({ id, author, title, description, url, urlToImage, publishedAt, isHotNews }) => {
+const Article: FC<ArticleInterface> = article => {
+  const { id, author, isCustomArticle, title, description, url, urlToImage, publishedAt, isHotNews }: ArticleInterface =
+    article
   const dispatch = useAppDispatch()
   const date = dayjs(publishedAt).utc(false).format('DD.MM.YYYY HH:mm:ss')
-  const isCustomArticle = author === 'Finnegan Whitmore'
   const handleClick = () => !isCustomArticle && url && window.open(url, '_blank')
   const { articlesItems } = useDropDownMenu()
 
-  const handleEdit = () =>
-    dispatch(setCurrentArticle({ id, author, title, description, url, urlToImage, publishedAt, isHotNews }))
+  const handleEdit = () => dispatch(setCurrentArticle(article))
   const handleDelete = () => dispatch(removeArticle(id))
 
   const articlesActions = {
@@ -55,8 +55,8 @@ const Article: FC<ArticleInterface> = ({ id, author, title, description, url, ur
           <p className="mt-4 text-lg leading-6 text-gray-600">{description}</p>
         </div>
         <div className="flex items-center justify-between text-xs mt-3 w-full">
-          {!isCustomArticle && <p className="text-gray-600">{author}</p>}
-          <time dateTime={date} className="text-gray-500">
+          {author && <p className="text-gray-600">{author}</p>}
+          <time dateTime={date} className={classNames('text-gray-500', !author && 'ml-auto')}>
             {date}
           </time>
         </div>

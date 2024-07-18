@@ -13,12 +13,14 @@ import DropdownMenu from './DropdownMenu'
 const Header: FC = () => {
   const dispatch = useAppDispatch()
   const [open, setOpen] = useState(false)
-  const { loginWithRedirect, user } = useAuth0()
+  const { loginWithRedirect, isAuthenticated, logout } = useAuth0()
   const { userItems } = useDropDownMenu()
 
   const handleLogin = async () => {
     await loginWithRedirect()
   }
+
+  const handleSignOut: () => Promise<void> = () => logout({ logoutParams: { returnTo: window.location.origin } })
 
   return (
     <div className="bg-white border-b border-b-stone-300 mb-8">
@@ -76,16 +78,19 @@ const Header: FC = () => {
                 </div>
 
                 <div className="space-y-6 border-t border-gray-200 px-4 py-6">
-                  <div className="flow-root">
-                    <a href="#" className="-m-2 block p-2 font-medium text-gray-900">
-                      Sign in
-                    </a>
-                  </div>
-                  <div className="flow-root">
-                    <a href="#" className="-m-2 block p-2 font-medium text-gray-900">
-                      Create account
-                    </a>
-                  </div>
+                  {isAuthenticated ? (
+                    <div className="flow-root">
+                      <button onClick={handleSignOut} className="-m-2 block p-2 font-medium text-gray-900">
+                        Sign out
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flow-root">
+                      <button onClick={handleLogin} className="-m-2 block p-2 font-medium text-gray-900">
+                        Sign In / Sign Up
+                      </button>
+                    </div>
+                  )}
                 </div>
               </Dialog.Panel>
             </Transition.Child>
@@ -111,15 +116,17 @@ const Header: FC = () => {
               </Link>
             </div>
 
-            <Popover.Group className="hidden lg:ml-8 lg:block lg:self-stretch">
-              <Link
-                to="add-news"
-                className="flex h-full space-x-8 items-center text-lg font-medium text-gray-900 hover:opacity-70
+            {isAuthenticated && (
+              <Popover.Group className="hidden lg:ml-8 lg:block lg:self-stretch">
+                <Link
+                  to="add-news"
+                  className="flex h-full space-x-8 items-center text-lg font-medium text-gray-900 hover:opacity-70
                  transition-opacity duration-100 ease-linear"
-              >
-                AddNews
-              </Link>
-            </Popover.Group>
+                >
+                  AddNews
+                </Link>
+              </Popover.Group>
+            )}
 
             <Popover.Group className="hidden lg:ml-8 lg:block lg:self-stretch">
               <Link
@@ -132,26 +139,13 @@ const Header: FC = () => {
               </Link>
             </Popover.Group>
             <div className="ml-auto flex items-center">
-              {!user ? (
-                <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
-                  <button
-                    className="text-lg font-medium text-gray-900 hover:text-gray-500"
-                    onClick={() => {
-                      console.log('Sign in')
-                      handleLogin()
-                    }}
-                  >
-                    Sign in
-                  </button>
-                  <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
-                  <a
-                    href="#"
-                    className="text-lg font-medium text-gray-900 hover:opacity-70 transition-opacity duration-100
-                     ease-linear"
-                  >
-                    Create account
-                  </a>
-                </div>
+              {!isAuthenticated ? (
+                <button
+                  className="hidden lg:inline-block text-lg font-medium text-gray-900 hover:text-gray-500"
+                  onClick={handleLogin}
+                >
+                  Sign In / Sign Up
+                </button>
               ) : (
                 <DropdownMenu dropdownData={userItems} />
               )}

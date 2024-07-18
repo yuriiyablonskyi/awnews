@@ -16,7 +16,8 @@ export interface AddNewsModalProps {
 
 export interface ArticleInterface {
   id?: string
-  author: string
+  author?: string
+  isCustomArticle?: boolean
   title: string
   description: string
   url?: string
