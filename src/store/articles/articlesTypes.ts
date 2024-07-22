@@ -1,5 +1,5 @@
 import { Dayjs } from 'dayjs'
-import { Dispatch, SetStateAction } from 'react'
+import { Dispatch, ElementType, SetStateAction } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '..'
 
@@ -88,18 +88,22 @@ export interface SelectProps {
   optionName: string
 }
 
+export interface DropdownItem {
+  name: string
+  icon: ElementType
+  action?: () => void
+}
+
+export interface MenuButtonIcon {
+  icon?: ElementType
+  img?: string
+  style: string
+}
+
 export interface DropdownData {
   wpapperStyle: string
-  menuButtonIcon: {
-    icon?: React.ElementType
-    img?: string
-    style: string
-  }
-  data: Array<{
-    name: string
-    icon: React.ElementType
-    action?: () => void
-  }>
+  menuButtonIcon: MenuButtonIcon
+  data: Array<DropdownItem>
 }
 
 export interface DropdownMenuProps {

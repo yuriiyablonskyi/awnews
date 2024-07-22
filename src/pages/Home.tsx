@@ -38,6 +38,26 @@ const Home: FC = () => {
     )
   }
 
+  // useEffect(() => {
+  //   const updateSearchParams = () => {
+  //     const newSearchParams = new URLSearchParams(searchParams)
+  //     if (!newSearchParams.get('country') && !newSearchParams.get('category')) {
+  //       newSearchParams.set('country', 'ua')
+  //       newSearchParams.set('page', '1')
+  //       setCountry({ name: 'Ukraine', short: 'ua' })
+  //     } else if (searchParams.get('country')) {
+  //       const newCountry = findByShort(searchParams.get('country') ?? '', countriesData)
+  //       newCountry && setCountry(newCountry)
+  //     }
+  //     return newSearchParams
+  //   }
+  //   const newSearchParams = updateSearchParams()
+  //   if (searchParams.toString() !== newSearchParams.toString()) {
+  //     sendRequest(newSearchParams.toString())
+  //     setSearchParams(newSearchParams)
+  //   }
+  // }, [searchParams])
+
   useEffect(() => {
     const newSearchParams = new URLSearchParams(searchParams)
     if (!newSearchParams.get('country') && !newSearchParams.get('category')) {
