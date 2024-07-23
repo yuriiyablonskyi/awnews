@@ -47,7 +47,7 @@ const NewsForm: FC<{ onOpen: Dispatch<SetStateAction<boolean>> }> = ({ onOpen })
   }
 
   const handleImgChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const url: string = e.target.value
+    const url = e.target.value
     setPreview(url)
     toast.success('Image added successfully')
   }

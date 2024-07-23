@@ -1,7 +1,7 @@
-import { FC } from 'react'
-import Container from '../components/Container'
 import { useAuth0 } from '@auth0/auth0-react'
+import { FC } from 'react'
 import AccessDenied from '../components/AccessDenied'
+import Container from '../components/Container'
 
 const UserProfile: FC = () => {
   const { isAuthenticated, user } = useAuth0()

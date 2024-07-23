@@ -2,17 +2,17 @@ import { FireIcon } from '@heroicons/react/20/solid'
 import dayjs from 'dayjs'
 import { FC } from 'react'
 import DefaultImg from '../assets/al.png'
+import useDropDownMenu from '../hooks/useDropDownMenu'
 import { removeArticle, setCurrentArticle } from '../store/articles/articlesSlice'
 import { ArticleInterface, useAppDispatch } from '../store/articles/articlesTypes'
 import classNames from '../utils/classNames'
 import DropdownMenu from './DropdownMenu'
-import useDropDownMenu from '../hooks/useDropDownMenu'
 
 const Article: FC<ArticleInterface> = article => {
   const { id, author, isCustomArticle, title, description, url, urlToImage, publishedAt, isHotNews }: ArticleInterface =
     article
   const dispatch = useAppDispatch()
-  const date = dayjs(publishedAt).utc(false).format('DD.MM.YYYY HH:mm:ss')
+  const date = dayjs(publishedAt).utc(true).format('DD.MM.YYYY HH:mm:ss')
   const handleClick = () => !isCustomArticle && url && window.open(url, '_blank')
   const { articlesItems } = useDropDownMenu()
 

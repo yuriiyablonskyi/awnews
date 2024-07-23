@@ -1,10 +1,10 @@
 import { User, useAuth0 } from '@auth0/auth0-react'
 import {
-  EllipsisVerticalIcon,
   ArrowLeftStartOnRectangleIcon,
-  UserIcon,
+  EllipsisVerticalIcon,
   PencilIcon,
   TrashIcon,
+  UserIcon,
 } from '@heroicons/react/24/solid'
 import { NavigateFunction, useNavigate } from 'react-router-dom'
 import { DropDownMenu, DropdownData } from '../store/articles/articlesTypes'

@@ -9,7 +9,7 @@ import { articlesData } from '../store/articlesSelectors'
 import classNames from '../utils/classNames'
 import generateDateRange from '../utils/generateDateRange'
 
-const daysOfWeek: string[] = ['M', 'T', 'W', 'T', 'F', 'S', 'S']
+const daysOfWeek = ['M', 'T', 'W', 'T', 'F', 'S', 'S']
 
 const Calendar: FC<{ onShowCalendar: Dispatch<SetStateAction<boolean>> }> = ({ onShowCalendar }) => {
   const dispatch = useAppDispatch()
@@ -114,7 +114,7 @@ const Calendar: FC<{ onShowCalendar: Dispatch<SetStateAction<boolean>> }> = ({ o
       </div>
       <div className="mt-1 grid grid-cols-7 text-sm">
         {datesArray.map(({ date, isToday, isCurrentMonth, isLaterThanToday }: DayInfo) => {
-          const dayItem: string = date.toString().slice(5, 16)
+          const dayItem = date.toString().slice(5, 16)
           const isSelectDate = singleDate && singleDate === date.format('YYYY-MM-DD')
           const isEndDate = dateRange && dateRange === date.format('YYYY-MM-DD')
           const isHighlightedDate = isHighlighted(date)

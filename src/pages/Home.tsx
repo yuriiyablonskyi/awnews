@@ -38,27 +38,7 @@ const Home: FC = () => {
     )
   }
 
-  // useEffect(() => {
-  //   const updateSearchParams = () => {
-  //     const newSearchParams = new URLSearchParams(searchParams)
-  //     if (!newSearchParams.get('country') && !newSearchParams.get('category')) {
-  //       newSearchParams.set('country', 'ua')
-  //       newSearchParams.set('page', '1')
-  //       setCountry({ name: 'Ukraine', short: 'ua' })
-  //     } else if (searchParams.get('country')) {
-  //       const newCountry = findByShort(searchParams.get('country') ?? '', countriesData)
-  //       newCountry && setCountry(newCountry)
-  //     }
-  //     return newSearchParams
-  //   }
-  //   const newSearchParams = updateSearchParams()
-  //   if (searchParams.toString() !== newSearchParams.toString()) {
-  //     sendRequest(newSearchParams.toString())
-  //     setSearchParams(newSearchParams)
-  //   }
-  // }, [searchParams])
-
-  useEffect(() => {
+  const updateSearchParams = () => {
     const newSearchParams = new URLSearchParams(searchParams)
     if (!newSearchParams.get('country') && !newSearchParams.get('category')) {
       newSearchParams.set('country', 'ua')
@@ -68,9 +48,19 @@ const Home: FC = () => {
       const newCountry = findByShort(searchParams.get('country') ?? '', countriesData)
       newCountry && setCountry(newCountry)
     }
-
+    if (!searchParams.get('category')) {
+      setCategory('')
+    }
     sendRequest(newSearchParams.toString())
     setSearchParams(newSearchParams)
+  }
+
+  useEffect(() => {
+    updateSearchParams()
+  }, [searchParams])
+
+  useEffect(() => {
+    updateSearchParams()
   }, [])
 
   const handleSelectChange = (key: string, value?: string) => {

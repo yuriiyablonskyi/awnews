@@ -1,13 +1,13 @@
+import { useAuth0 } from '@auth0/auth0-react'
 import { Dialog, Popover, Transition } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/solid'
 import { FC, Fragment, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Logo from '../assets/logo.svg'
+import useDropDownMenu from '../hooks/useDropDownMenu'
 import { clearArticles } from '../store/articles/articlesSlice'
 import { useAppDispatch } from '../store/articles/articlesTypes'
 import Container from './Container'
-import { useAuth0 } from '@auth0/auth0-react'
-import useDropDownMenu from '../hooks/useDropDownMenu'
 import DropdownMenu from './DropdownMenu'
 
 const Header: FC = () => {

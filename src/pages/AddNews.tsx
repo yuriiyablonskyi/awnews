@@ -1,12 +1,12 @@
+import { useAuth0 } from '@auth0/auth0-react'
 import { PlusIcon } from '@heroicons/react/24/outline'
 import { FC, useEffect, useState } from 'react'
+import AccessDenied from '../components/AccessDenied'
 import AddNewsModal from '../components/AddNewsModal'
 import Article from '../components/Article'
 import Container from '../components/Container'
 import { ArticleInterface, useAppSelector } from '../store/articles/articlesTypes'
 import { articlesData } from '../store/articlesSelectors'
-import { useAuth0 } from '@auth0/auth0-react'
-import AccessDenied from '../components/AccessDenied'
 
 const AddNews: FC = () => {
   const { customArticles, currentArticle } = useAppSelector(articlesData)

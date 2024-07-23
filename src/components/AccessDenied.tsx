@@ -1,6 +1,6 @@
 import { FC } from 'react'
-import Container from './Container'
 import { Link } from 'react-router-dom'
+import Container from './Container'
 
 const AccessDenied: FC = () => {
   return (
