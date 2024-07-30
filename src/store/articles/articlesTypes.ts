@@ -1,5 +1,5 @@
 import { Dayjs } from 'dayjs'
-import { Dispatch, SetStateAction } from 'react'
+import { Dispatch, ElementType, SetStateAction } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '..'
 
@@ -16,7 +16,8 @@ export interface AddNewsModalProps {
 
 export interface ArticleInterface {
   id?: string
-  author: string
+  author?: string
+  isCustomArticle?: boolean
   title: string
   description: string
   url?: string
@@ -85,6 +86,34 @@ export interface SelectProps {
   options: SelectableItem[]
   onSelect: (newCategory: SelectableItem) => void
   optionName: string
+}
+
+export interface DropdownItem {
+  name: string
+  icon: ElementType
+  action?: () => void
+}
+
+export interface MenuButtonIcon {
+  icon?: ElementType
+  img?: string
+  style: string
+}
+
+export interface DropdownData {
+  wpapperStyle: string
+  menuButtonIcon: MenuButtonIcon
+  data: Array<DropdownItem>
+}
+
+export interface DropdownMenuProps {
+  dropdownData: DropdownData
+  actions?: { [key: string]: () => void }
+}
+
+export interface DropDownMenu {
+  userItems: DropdownData
+  articlesItems: DropdownData
 }
 
 export const useAppDispatch = useDispatch.withTypes<AppDispatch>()

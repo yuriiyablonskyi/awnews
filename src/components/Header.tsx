@@ -1,15 +1,26 @@
+import { useAuth0 } from '@auth0/auth0-react'
 import { Dialog, Popover, Transition } from '@headlessui/react'
-import { Bars3Icon, MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/solid'
 import { FC, Fragment, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Logo from '../assets/logo.svg'
+import useDropDownMenu from '../hooks/useDropDownMenu'
 import { clearArticles } from '../store/articles/articlesSlice'
 import { useAppDispatch } from '../store/articles/articlesTypes'
 import Container from './Container'
+import DropdownMenu from './DropdownMenu'
 
 const Header: FC = () => {
   const dispatch = useAppDispatch()
   const [open, setOpen] = useState(false)
+  const { loginWithRedirect, isAuthenticated, logout } = useAuth0()
+  const { userItems } = useDropDownMenu()
+
+  const handleLogin = async () => {
+    await loginWithRedirect()
+  }
+
+  const handleSignOut: () => Promise<void> = () => logout({ logoutParams: { returnTo: window.location.origin } })
 
   return (
     <div className="bg-white border-b border-b-stone-300 mb-8">
@@ -45,7 +56,6 @@ const Header: FC = () => {
                     onClick={() => setOpen(false)}
                   >
                     <span className="absolute -inset-0.5" />
-                    <span className="sr-only">Close menu</span>
                     <XMarkIcon className="h-6 w-6" aria-hidden="true" />
                   </button>
                 </div>
@@ -56,19 +66,31 @@ const Header: FC = () => {
                       AddNews
                     </Link>
                   </div>
+                  <div className="flow-root">
+                    <Link
+                      to="/search"
+                      onClick={() => dispatch(clearArticles())}
+                      className="-m-2 block p-2 font-medium text-gray-900"
+                    >
+                      Search
+                    </Link>
+                  </div>
                 </div>
 
                 <div className="space-y-6 border-t border-gray-200 px-4 py-6">
-                  <div className="flow-root">
-                    <a href="#" className="-m-2 block p-2 font-medium text-gray-900">
-                      Sign in
-                    </a>
-                  </div>
-                  <div className="flow-root">
-                    <a href="#" className="-m-2 block p-2 font-medium text-gray-900">
-                      Create account
-                    </a>
-                  </div>
+                  {isAuthenticated ? (
+                    <div className="flow-root">
+                      <button onClick={handleSignOut} className="-m-2 block p-2 font-medium text-gray-900">
+                        Sign out
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flow-root">
+                      <button onClick={handleLogin} className="-m-2 block p-2 font-medium text-gray-900">
+                        Sign In / Sign Up
+                      </button>
+                    </div>
+                  )}
                 </div>
               </Dialog.Panel>
             </Transition.Child>
@@ -78,58 +100,55 @@ const Header: FC = () => {
 
       <header className="relative bg-white">
         <Container>
-          <nav aria-label="Top">
-            <div className="flex h-16 items-center">
-              <button
-                type="button"
-                className="relative rounded-md bg-white p-2 text-gray-400 lg:hidden"
-                onClick={() => setOpen(true)}
-              >
-                <span className="absolute -inset-0.5" />
-                <span className="sr-only">Open menu</span>
-                <Bars3Icon className="h-6 w-6" aria-hidden="true" />
-              </button>
+          <nav aria-label="Top" className="flex h-16 items-center">
+            <button
+              type="button"
+              className="relative rounded-md bg-white p-2 text-gray-400 lg:hidden"
+              onClick={() => setOpen(true)}
+            >
+              <span className="absolute -inset-0.5" />
+              <Bars3Icon className="h-6 w-6" aria-hidden="true" />
+            </button>
 
-              <div className="ml-4 flex lg:ml-0">
-                <Link to="/?country=ua">
-                  <span className="sr-only">AWNews logo</span>
-                  <img className="max-w-24 h-7" src={Logo} alt="" />
-                </Link>
-              </div>
+            <div className="ml-4 flex lg:ml-0">
+              <Link to="/?country=ua" className="hover:opacity-70 transition-opacity duration-100 ease-linear">
+                <img className="max-w-24 h-7" src={Logo} alt="logo" />
+              </Link>
+            </div>
 
+            {isAuthenticated && (
               <Popover.Group className="hidden lg:ml-8 lg:block lg:self-stretch">
-                <div className="flex h-full space-x-8">
-                  <Link
-                    to="add-news"
-                    className="flex items-center text-lg font-medium text-gray-700 hover:text-gray-800"
-                  >
-                    AddNews
-                  </Link>
-                </div>
+                <Link
+                  to="add-news"
+                  className="flex h-full space-x-8 items-center text-lg font-medium text-gray-900 hover:opacity-70
+                 transition-opacity duration-100 ease-linear"
+                >
+                  AddNews
+                </Link>
               </Popover.Group>
+            )}
 
-              <div className="ml-auto flex items-center">
-                <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
-                  <a href="#" className="text-lg font-medium text-gray-700 hover:text-gray-800">
-                    Sign in
-                  </a>
-                  <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
-                  <a href="#" className="text-lg font-medium text-gray-700 hover:text-gray-800">
-                    Create account
-                  </a>
-                </div>
-
-                <div className="flex lg:ml-6">
-                  <Link
-                    to="/search"
-                    className="p-2 text-gray-400 hover:text-gray-500"
-                    onClick={() => dispatch(clearArticles())}
-                  >
-                    <span className="sr-only">Search</span>
-                    <MagnifyingGlassIcon className="h-6 w-6" aria-hidden="true" />
-                  </Link>
-                </div>
-              </div>
+            <Popover.Group className="hidden lg:ml-8 lg:block lg:self-stretch">
+              <Link
+                to="/search"
+                onClick={() => dispatch(clearArticles())}
+                className="flex h-full space-x-8 items-center text-lg font-medium text-gray-900 hover:opacity-70
+                 transition-opacity duration-100 ease-linear"
+              >
+                Search
+              </Link>
+            </Popover.Group>
+            <div className="ml-auto flex items-center">
+              {!isAuthenticated ? (
+                <button
+                  className="hidden lg:inline-block text-lg font-medium text-gray-900 hover:text-gray-500"
+                  onClick={handleLogin}
+                >
+                  Sign In / Sign Up
+                </button>
+              ) : (
+                <DropdownMenu dropdownData={userItems} />
+              )}
             </div>
           </nav>
         </Container>

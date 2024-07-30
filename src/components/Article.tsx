@@ -2,19 +2,26 @@ import { FireIcon } from '@heroicons/react/20/solid'
 import dayjs from 'dayjs'
 import { FC } from 'react'
 import DefaultImg from '../assets/al.png'
-import { setCurrentArticle } from '../store/articles/articlesSlice'
+import useDropDownMenu from '../hooks/useDropDownMenu'
+import { removeArticle, setCurrentArticle } from '../store/articles/articlesSlice'
 import { ArticleInterface, useAppDispatch } from '../store/articles/articlesTypes'
 import classNames from '../utils/classNames'
 import DropdownMenu from './DropdownMenu'
 
-const Article: FC<ArticleInterface> = ({ id, author, title, description, url, urlToImage, publishedAt, isHotNews }) => {
+const Article: FC<ArticleInterface> = article => {
+  const { id, author, isCustomArticle, title, description, url, urlToImage, publishedAt, isHotNews }: ArticleInterface =
+    article
   const dispatch = useAppDispatch()
-  const date = dayjs(publishedAt).utc(false).format('DD.MM.YYYY HH:mm:ss')
-  const isCustomArticle = author === 'Finnegan Whitmore'
+  const date = dayjs(publishedAt).utc(true).format('DD.MM.YYYY HH:mm:ss')
   const handleClick = () => !isCustomArticle && url && window.open(url, '_blank')
+  const { articlesItems } = useDropDownMenu()
 
-  const onDropdownClick = () => {
-    dispatch(setCurrentArticle({ id, author, title, description, url, urlToImage, publishedAt, isHotNews }))
+  const handleEdit = () => dispatch(setCurrentArticle(article))
+  const handleDelete = () => dispatch(removeArticle(id))
+
+  const articlesActions = {
+    Edit: handleEdit,
+    Delete: handleDelete,
   }
 
   return (
@@ -31,7 +38,7 @@ const Article: FC<ArticleInterface> = ({ id, author, title, description, url, ur
           <FireIcon className="h-6 w-6" />
         </div>
       )}
-      {!url && id && <DropdownMenu id={id} onClick={onDropdownClick} />}
+      {!url && <DropdownMenu dropdownData={articlesItems} actions={articlesActions} />}
       <div
         className="mb-3 aspect-h-1 aspect-w-1 w-full
        overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80"
@@ -48,8 +55,8 @@ const Article: FC<ArticleInterface> = ({ id, author, title, description, url, ur
           <p className="mt-4 text-lg leading-6 text-gray-600">{description}</p>
         </div>
         <div className="flex items-center justify-between text-xs mt-3 w-full">
-          {!isCustomArticle && <p className="text-gray-600">{author}</p>}
-          <time dateTime={date} className="text-gray-500">
+          {author && <p className="text-gray-600">{author}</p>}
+          <time dateTime={date} className={classNames('text-gray-500', !author && 'ml-auto')}>
             {date}
           </time>
         </div>

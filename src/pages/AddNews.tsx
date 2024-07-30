@@ -1,5 +1,7 @@
+import { useAuth0 } from '@auth0/auth0-react'
 import { PlusIcon } from '@heroicons/react/24/outline'
 import { FC, useEffect, useState } from 'react'
+import AccessDenied from '../components/AccessDenied'
 import AddNewsModal from '../components/AddNewsModal'
 import Article from '../components/Article'
 import Container from '../components/Container'
@@ -9,7 +11,12 @@ import { articlesData } from '../store/articlesSelectors'
 const AddNews: FC = () => {
   const { customArticles, currentArticle } = useAppSelector(articlesData)
   const [open, setOpen] = useState(false)
+  const { isAuthenticated } = useAuth0()
   useEffect(() => setOpen(!!currentArticle), [currentArticle])
+
+  if (!isAuthenticated) {
+    return <AccessDenied />
+  }
 
   return (
     <div>

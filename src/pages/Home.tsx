@@ -19,10 +19,12 @@ import categoriesData from '../utils/categoriesData'
 import classNames from '../utils/classNames'
 import countriesData from '../utils/countriesData'
 import findByShort from '../utils/findByShort'
+import { useAuth0 } from '@auth0/auth0-react'
 
 const Home: FC = () => {
   const dispatch = useAppDispatch()
   const [searchParams, setSearchParams] = useSearchParams()
+  const { isLoading } = useAuth0()
   const { articles, totalResults, loading }: ArticlesState = useAppSelector(articlesData)
   const [category, setCategory] = useState<string>(searchParams.get('category') ?? '')
   const [country, setCountry] = useState<SelectableItem>({ name: '' })
@@ -36,9 +38,9 @@ const Home: FC = () => {
     )
   }
 
-  useEffect(() => {
+  const updateSearchParams = () => {
     const newSearchParams = new URLSearchParams(searchParams)
-    if (!newSearchParams.toString()) {
+    if (!newSearchParams.get('country') && !newSearchParams.get('category')) {
       newSearchParams.set('country', 'ua')
       newSearchParams.set('page', '1')
       setCountry({ name: 'Ukraine', short: 'ua' })
@@ -46,9 +48,19 @@ const Home: FC = () => {
       const newCountry = findByShort(searchParams.get('country') ?? '', countriesData)
       newCountry && setCountry(newCountry)
     }
-
+    if (!searchParams.get('category')) {
+      setCategory('')
+    }
     sendRequest(newSearchParams.toString())
     setSearchParams(newSearchParams)
+  }
+
+  useEffect(() => {
+    updateSearchParams()
+  }, [searchParams])
+
+  useEffect(() => {
+    updateSearchParams()
   }, [])
 
   const handleSelectChange = (key: string, value?: string) => {
@@ -88,6 +100,14 @@ const Home: FC = () => {
       return articles.map((item: ArticleInterface, id: number) => <Article key={id} {...item} />)
     }
     return <p className={errorMessageStyles}>Select one or two options. At least one filter must be selected.</p>
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="border-gray-300 h-20 w-20 animate-spin rounded-full border-8 border-t-blue-600" />
+      </div>
+    )
   }
 
   return (

@@ -18,6 +18,7 @@ import {
   useAppSelector,
 } from '../store/articles/articlesTypes'
 import { articlesData } from '../store/articlesSelectors'
+import addTimeZoneToDates from '../utils/addTimeZoneToDates'
 import classNames from '../utils/classNames'
 import findByShort from '../utils/findByShort'
 import languagesData from '../utils/languagesData'
@@ -30,11 +31,10 @@ const Search: FC = () => {
   const [keyword, setKeyword] = useState<string>(searchParams.get('q') ?? '')
   const [language, setLanguage] = useState<SelectableItem>({ name: '' })
   const [sortBy, setSortBy] = useState<string>(searchParams.get('sortBy') ?? '')
+  const urlParamFrom = searchParams.get(CalendarType.FROM)
+  const urlParamTo = searchParams.get(CalendarType.TO)
 
   const dispatchUrlParams = () => {
-    const urlParamFrom = searchParams.get(CalendarType.FROM)
-    const urlParamTo = searchParams.get(CalendarType.TO)
-
     if (urlParamFrom && !urlParamTo) {
       return dispatch(setCalendar({ type: CalendarType.FROM, singleDate: urlParamFrom }))
     } else if (!urlParamFrom && urlParamTo) {
@@ -44,12 +44,13 @@ const Search: FC = () => {
     }
   }
 
-  const sendRequest = (urlParams: string) => {
+  const sendRequest = (urlParams: URLSearchParams) => {
     if (keyword) {
+      const updatedParams = addTimeZoneToDates(urlParams)
       dispatch(
         fetchArticles({
           endpoint: 'everything',
-          searchParams: urlParams,
+          searchParams: updatedParams,
         }),
       )
     }
@@ -62,7 +63,7 @@ const Search: FC = () => {
     }
 
     dispatchUrlParams()
-    sendRequest(searchParams.toString())
+    sendRequest(searchParams)
   }, [])
 
   const handleSelectChange = (key: string, value?: string) => {
@@ -84,13 +85,13 @@ const Search: FC = () => {
   const handleLanguage = (value: SelectableItem) => {
     const newSearchParams = handleSelectChange('language', value.short)
     setLanguage(value)
-    sendRequest(newSearchParams.toString())
+    sendRequest(newSearchParams)
   }
 
   const handleSorting = (value: string) => {
     const newSearchParams = handleSelectChange('sortBy', value)
     setSortBy(value)
-    sendRequest(newSearchParams.toString())
+    sendRequest(newSearchParams)
   }
 
   const handleClearFilter = () => {
@@ -131,7 +132,7 @@ const Search: FC = () => {
             setKeyword(e.target.value)
             handleSelectChange('q', e.target.value)
           }}
-          onKeyDown={e => e.key === 'Enter' && sendRequest(searchParams.toString())}
+          onKeyDown={e => e.key === 'Enter' && sendRequest(searchParams)}
           className="w-full py-4 outline-none"
           placeholder="Searching by keyword..."
         />
@@ -141,12 +142,11 @@ const Search: FC = () => {
             className=" text-gray-400 hover:text-gray-500"
             aria-label="Clear all filters"
           >
-            <span className="sr-only">Clear filter</span>
             <XMarkIcon className="h-6 w-6" aria-hidden="true" />
           </button>
           <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
           <button
-            onClick={() => sendRequest(searchParams.toString())}
+            onClick={() => sendRequest(searchParams)}
             className={classNames(
               'text-gray-400',
               keyword && 'hover:text-gray-500 cursor-pointer',
@@ -155,7 +155,6 @@ const Search: FC = () => {
             aria-label="Start search"
             disabled={!keyword}
           >
-            <span className="sr-only">Search</span>
             <MagnifyingGlassIcon className="h-6 w-6" aria-hidden="true" />
           </button>
         </div>

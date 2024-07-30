@@ -35,7 +35,6 @@ const NewsForm: FC<{ onOpen: Dispatch<SetStateAction<boolean>> }> = ({ onOpen })
       dispatch(
         addArticle({
           id: Math.random().toString(16).slice(2),
-          author: 'Finnegan Whitmore',
           title: data.title,
           description: data.description,
           urlToImage: data.urlToImage,
@@ -48,7 +47,7 @@ const NewsForm: FC<{ onOpen: Dispatch<SetStateAction<boolean>> }> = ({ onOpen })
   }
 
   const handleImgChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const url: string = e.target.value
+    const url = e.target.value
     setPreview(url)
     toast.success('Image added successfully')
   }

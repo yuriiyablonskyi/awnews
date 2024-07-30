@@ -3,7 +3,7 @@ import { ArticleInterface } from '../store/articles/articlesTypes'
 export const mockedArticles: ArticleInterface[] = [
   {
     id: '1',
-    author: 'Finnegan Whitmore',
+    isCustomArticle: true,
     title: 'Breaking News: Major Event Happening Now Across Multiple Locations Worldwide, Affecting Millions of People',
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eget venenatis ex. Vestibulum primis in" +
@@ -15,7 +15,7 @@ export const mockedArticles: ArticleInterface[] = [
   },
   {
     id: '2',
-    author: 'Finnegan Whitmore',
+    isCustomArticle: true,
     title: 'Tech Trends: The Latest Innovations and Technologies Transforming the World in 2024',
     description:
       "Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec elit et " +
@@ -27,7 +27,7 @@ export const mockedArticles: ArticleInterface[] = [
   },
   {
     id: '3',
-    author: 'Finnegan Whitmore',
+    isCustomArticle: true,
     title: 'Sports Update: Major Sports Events and Highlights from Around the Globe, Bringing Fans Together',
     description:
       "Mauris non tempor quam, et lacinia sapien. Vestibulum ante ipsum primis in faucibus orci luctus et " +
