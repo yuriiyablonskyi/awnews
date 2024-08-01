@@ -111,7 +111,7 @@ const Header: FC = () => {
             </button>
 
             <div className="ml-4 flex lg:ml-0">
-              <Link to="/?country=ua" className="hover:opacity-70 transition-opacity duration-100 ease-linear">
+              <Link to="/?country=us" className="hover:opacity-70 transition-opacity duration-100 ease-linear">
                 <img className="max-w-24 h-7" src={Logo} alt="logo" />
               </Link>
             </div>

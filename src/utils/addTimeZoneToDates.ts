@@ -6,7 +6,7 @@ dayjs.extend(timezone)
 const userTimeZone = dayjs.tz.guess()
 
 const addTimeZoneToDates = (urlParams: URLSearchParams): string => {
-  ;[CalendarType.FROM, CalendarType.TO].forEach(type => {
+  [CalendarType.FROM, CalendarType.TO].forEach(type => {
     const date = urlParams.get(type)
     if (date) {
       urlParams.set(type, dayjs(date).tz(userTimeZone).toISOString())

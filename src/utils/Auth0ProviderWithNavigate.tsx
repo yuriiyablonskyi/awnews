@@ -2,7 +2,7 @@ import { Auth0Provider } from '@auth0/auth0-react'
 
 export const Auth0ProviderWithNavigate = ({ children }: any) => {
   const onRedirectCallback = (appState: any) => {
-    window.location.assign(appState?.returnTo || `${window.location.pathname}?country=ua`)
+    window.location.assign(appState?.returnTo || `${window.location.pathname}?country=us`)
   }
 
   return (

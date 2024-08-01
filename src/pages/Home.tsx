@@ -41,9 +41,9 @@ const Home: FC = () => {
   const updateSearchParams = () => {
     const newSearchParams = new URLSearchParams(searchParams)
     if (!newSearchParams.get('country') && !newSearchParams.get('category')) {
-      newSearchParams.set('country', 'ua')
+      newSearchParams.set('country', 'us')
       newSearchParams.set('page', '1')
-      setCountry({ name: 'Ukraine', short: 'ua' })
+      setCountry({ name: 'Ukraine', short: 'us' })
     } else if (searchParams.get('country')) {
       const newCountry = findByShort(searchParams.get('country') ?? '', countriesData)
       newCountry && setCountry(newCountry)

@@ -5,6 +5,12 @@ import Container from '../components/Container'
 
 const UserProfile: FC = () => {
   const { isAuthenticated, user } = useAuth0()
+  const userInfo = [
+    { label: 'Full name', value: user?.name ?? '━' },
+    { label: 'Is email verified', value: user?.email_verified ? 'Verified' : 'Not Verified' },
+    { label: 'Email address', value: user?.email ?? '━' },
+    { label: 'Nickname', value: user?.nickname ?? '━' },
+  ]
 
   if (!isAuthenticated) {
     return <AccessDenied />
@@ -19,32 +25,12 @@ const UserProfile: FC = () => {
         </div>
         <div className="mt-6 ">
           <dl className="divide-y divide-gray-300">
-            <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-              <dt className="text-sm font-medium leading-6 text-gray-900">Full name</dt>
-              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{user?.name}</dd>
-            </div>
-            <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-              <dt className="text-sm font-medium leading-6 text-gray-900">Is email verified</dt>
-              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                {user?.email_verified || '━'}
-              </dd>
-            </div>
-            <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-              <dt className="text-sm font-medium leading-6 text-gray-900">Email address</dt>
-              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{user?.email}</dd>
-            </div>
-            <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-              <dt className="text-sm font-medium leading-6 text-gray-900">Nickname</dt>
-              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{user?.nickname}</dd>
-            </div>
-            <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-              <dt className="text-sm font-medium leading-6 text-gray-900">sub</dt>
-              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{user?.sub}</dd>
-            </div>
-            <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-              <dt className="text-sm font-medium leading-6 text-gray-900">Updated at</dt>
-              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{user?.updated_at}</dd>
-            </div>
+            {userInfo.map((item, index) => (
+              <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0" key={index}>
+                <dt className="text-sm font-medium leading-6 text-gray-900">{item.label}</dt>
+                <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{item.value}</dd>
+              </div>
+            ))}
           </dl>
         </div>
       </>
