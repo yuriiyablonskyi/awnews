@@ -1,10 +1,10 @@
-/** @type {import('tailwindcss').Config} */
+/**@type {import('tailwindcss').Config} */
 export default {
-  content: [
-    "./src/**/*.tsx",
-  ],
+  content: ['./src/**/*.tsx'],
   theme: {
-    extend: {},
+    fontFamily: {
+      sans: ['Mulish'],
+      serif: ['Poltawski Nowy'],
+    },
   },
-  plugins: [],
 }

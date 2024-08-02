@@ -1,7 +1,15 @@
 import { configureStore } from '@reduxjs/toolkit'
-import newsReducer from './news/newsSlice'
-export default configureStore({
+import articlesReducer from './articles/articlesSlice'
+import { articlesMiddleware } from './articlesMiddleware'
+
+const store = configureStore({
   reducer: {
-    news: newsReducer
-  }
+    articles: articlesReducer,
+  },
+  middleware: getDefaultMiddleware => getDefaultMiddleware().concat(articlesMiddleware),
 })
+
+export type AppDispatch = typeof store.dispatch
+export type RootState = ReturnType<typeof store.getState>
+
+export default store

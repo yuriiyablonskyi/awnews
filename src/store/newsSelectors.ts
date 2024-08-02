@@ -1,1 +1,0 @@
-export const newsData = state => state.news.news
