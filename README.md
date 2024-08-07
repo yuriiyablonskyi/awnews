@@ -7,6 +7,9 @@ AWNews is a web application that displays top news stories, allowing users to so
 - [Technologies](#️-technologies)
 - [Features](#-features)
 - [Getting Started](#-getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+- [Usage](#-usage)
 - [Demo Video](#-demo-video)
 - [Known Limitations](#️-known-limitations)
 - [Data Source](#-data-source)
@@ -26,6 +29,9 @@ This project utilizes the following technologies:
 - **🔔 React Toastify**: Provides customizable toast notifications.
 - **🛡️ Zod**: Facilitates schema validation for form inputs.
 - **🎨 Tailwind CSS**: Utility-first CSS framework for rapid UI development.
+- **🚀 TypeScript**: Ensures type safety throughout the application.
+- **🧹 ESLint**: Maintains code quality and consistency.
+- **🎨 Prettier**: Automatically formats code for better readability.
 
 ## 🌟 Features
 
@@ -43,8 +49,18 @@ This project utilizes the following technologies:
 - **📄 Pagination**: View more articles with pagination implemented by React Paginate.
 - **🔗 SPA Navigation**: Seamless navigation using React Router DOM with URL parameter synchronization.
 - **🎨 Tailwind CSS**: Custom components and responsive design.
+- **🧹 Code Quality**: Maintained using ESLint and Prettier.
 
 ## 🚀 Getting Started
+
+### Prerequisites
+
+Ensure you have the following installed:
+
+- [Node.js](https://nodejs.org/en/download/) (version 14.x or higher)
+- [npm](https://www.npmjs.com/get-npm) (version 6.x or higher)
+
+### Installation
 
 Follow these steps to run the application locally:
 
@@ -78,9 +94,19 @@ Follow these steps to run the application locally:
 
 If you encounter any issues, make sure you have Node.js and npm installed. Check the versions required in `package.json`.
 
+## 🧭 Usage
+
+Once the application is running, you can explore the following features:
+
+- View Top News: Navigate to the homepage to view top news stories.
+- Search Articles: Use the search feature to find articles by keywords, filter by language, date, and sort results.
+- User Authentication: Register and log in to access profile management and create custom articles.
+- Manage Articles: Create, edit, and delete your custom articles.
+- Notifications: Receive real-time feedback on your actions.
+
 ## 🎥 Demo Video
 
-Watch a 2-minute demo of the application [YouTube](https://youtu.be/HRyAzqeLgs8?si=xwQ4wq6h20jbTnv6).
+Watch a 2-minute demo of the application [YouTube](https://youtu.be/LjwrsIKnspA).
 
 ## ⚠️ Known Limitations
 
