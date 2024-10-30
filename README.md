@@ -6,9 +6,7 @@ AWNews is a web application that displays top news stories, allowing users to so
 
 - [Technologies](#️-technologies)
 - [Features](#-features)
-- [Getting Started](#-getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
+- [Setup](#-setup)
 - [Usage](#-usage)
 - [Demo Video](#-demo-video)
 - [Known Limitations](#️-known-limitations)
@@ -18,20 +16,21 @@ AWNews is a web application that displays top news stories, allowing users to so
 
 ## 🛠️ Technologies
 
-This project utilizes the following technologies:
+This project utilizes:
 
-- **🔑 Auth0**: Handles authentication and user management.
-- **📦 Redux Toolkit**: Simplifies state management in React applications.
-- **📅 Day.js**: Provides date formatting and custom calendar features.
-- **📝 React Hook Form**: Manages form handling and validation with ease.
-- **🔄 React Paginate**: Implements pagination in React applications.
-- **🌐 React Router DOM**: Manages routing in single-page applications (SPA).
-- **🔔 React Toastify**: Provides customizable toast notifications.
-- **🛡️ Zod**: Facilitates schema validation for form inputs.
-- **🎨 Tailwind CSS**: Utility-first CSS framework for rapid UI development.
-- **🚀 TypeScript**: Ensures type safety throughout the application.
-- **🧹 ESLint**: Maintains code quality and consistency.
-- **🎨 Prettier**: Automatically formats code for better readability.
+- Auth0
+- redux 
+- Redux Toolkit
+- Day.js
+- React Hook Form
+- React Paginate
+- React Router DOM
+- React Toastify
+- Zod
+- Tailwind CSS
+- TypeScript
+- ESLint
+- Prettier
 
 ## 🌟 Features
 
@@ -51,48 +50,32 @@ This project utilizes the following technologies:
 - **🎨 Tailwind CSS**: Custom components and responsive design.
 - **🧹 Code Quality**: Maintained using ESLint and Prettier.
 
-## 🚀 Getting Started
-
-### Prerequisites
-
-Ensure you have the following installed:
-
-- [Node.js](https://nodejs.org/en/download/) (version 14.x or higher)
-- [npm](https://www.npmjs.com/get-npm) (version 6.x or higher)
-
-### Installation
-
-Follow these steps to run the application locally:
+## 🚀 Setup
 
 1. **📥 Clone the repository**:
 
    ```sh
    git clone https://github.com/yuriiyablonskyi/awnews
+   cd nft-landing
    ```
 
-2. **📂 Navigate to the project directory**:
-
-   ```sh
-   cd awnews
-   ```
-
-3. **📦 Install dependencies**:
+1. **📦 Install dependencies**:
 
    ```sh
    npm install
    ```
 
-4. **▶️ Start the project**:
+1. **▶️ Start the project**:
 
    ```sh
    npm run dev
    ```
 
-5. **🌐 Open the application** in your preferred browser.
+1. **🌐 Open the application** in your preferred browser.
 
 ### Troubleshooting
 
-If you encounter any issues, make sure you have Node.js and npm installed. Check the versions required in `package.json`.
+Ensure Node.js (version 14 or above) and npm are installed. Check `package.json` for specific version requirements.
 
 ## 🧭 Usage
 
@@ -127,9 +110,8 @@ Navigation across the site is seamless due to React Router DOM, with URL paramet
 
 ## 📬 Contact
 
-- **📧 Email**: yuriiyablonskyi.i@gmail.com
-- **🐱 GitHub**: [GitHub](https://github.com/yuriiyablonskyi/awnews)
-- **🔗 LinkedIn**: [LinkedIn](https://www.linkedin.com/in/yurii-yablonskyi)
+- **📧 Email**: john.i@gmail.com
+- **🔗 LinkedIn**: [LinkedIn](https://www.linkedin.com/in/john)
 
 ---
 
