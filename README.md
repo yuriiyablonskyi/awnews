@@ -13,7 +13,7 @@ AWNews demonstrates a modern single-page web application with optimized state ma
 - [Setup](#-setup)
 - [Demo Video](#-demo--video)
 - [Known Limitations](#-known-limitations)
-- [Data Source](#-data--source)
+- [Data Source](#-data-source)
 - [Contact](#-contact)
 
 ## 🛠️ Technologies
