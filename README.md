@@ -65,6 +65,8 @@ This project utilizes the following technologies:
    npm run dev
    ```
 
+1. Access the application in your browser
+
 ### Prerequisites
 
 - Node.js (v14+)
