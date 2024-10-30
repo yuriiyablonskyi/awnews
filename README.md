@@ -17,6 +17,9 @@ AWNews demonstrates a modern SPA with optimized state management, robust validat
 - [Contact](#contact)
 
 ## 🛠️ Technologies
+
+This project utilizes the following technologies:
+
 - **Frontend**: React, TypeScript, Tailwind CSS
 - **State Management**: Redux Toolkit, React Router DOM, Auth0
 - **Forms & Validation**: React Hook Form, Zod
