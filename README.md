@@ -1,10 +1,10 @@
 # 🌟 AWNews
 
-**AWNews** is a responsive, single-page web application (SPA) for browsing and filtering news by country, category, language, and date, with full user authentication, profile management, and custom CRUD operations for user-generated articles.
+**AWNews** is a responsive, SPA for browsing and filtering news by country, category, language, and date, with full user authentication, profile management, and custom CRUD operations for user-generated articles.
 
 ## Project Highlights
 
-AWNews demonstrates a modern SPA with optimized state management, robust validation, and a fully responsive UI. Key technical highlights include Auth0-based authentication, personalized article CRUD capabilities, and advanced filtering and sorting for news data.
+AWNews demonstrates a modern single-page web application with optimized state management, robust validation, and a fully responsive UI. Key technical highlights include Auth0-based authentication, personalized article CRUD capabilities, and advanced filtering and sorting for news data.
 
 ## Table of Contents
 
