@@ -53,13 +53,13 @@ This project utilizes the following technologies:
    cd awnews
    ```
 
-2. **Install dependencies**:
+1. **Install dependencies**:
 
    ```sh
    npm install
    ```
 
-3. **Start the project**:
+1. **Start the project**:
 
    ```sh
    npm run dev
