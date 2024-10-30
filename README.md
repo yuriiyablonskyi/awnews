@@ -48,15 +48,15 @@ This project utilizes the following technologies:
 
 1. **Clone the repository**:
 
-   ```sh
-   git clone https://github.com/yuriiyablonskyi/awnews
-   ```
+  ```sh
+  git clone https://github.com/yuriiyablonskyi/awnews
+  ```
 
 1. **Navigate to the project directory**:
 
   ```sh
-   cd awnews
-   ```
+  cd awnews
+  ```
 
 1. **Install dependencies**:
 
