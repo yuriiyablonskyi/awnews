@@ -68,7 +68,7 @@ AWNews demonstrates a modern SPA with optimized state management, robust validat
 - npm (see `package.json` for specific versions)
 
 ## 🎥 Demo Video
-
+ 
 [Watch on YouTube](https://youtu.be/LjwrsIKnspA)
 
 ## ℹ️ Known Limitations
