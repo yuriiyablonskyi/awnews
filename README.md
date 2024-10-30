@@ -50,6 +50,11 @@ This project utilizes the following technologies:
 
    ```sh
    git clone https://github.com/yuriiyablonskyi/awnews
+   ```
+
+1. **Navigate to the project directory**:
+
+  ```sh
    cd awnews
    ```
 
