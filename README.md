@@ -72,8 +72,7 @@ AWNews demonstrates a modern SPA with optimized state management, robust validat
 [Watch on YouTube](https://youtu.be/LjwrsIKnspA)
 
 
- **ℹ️ℹ️ Information**
-## ℹ Known Limitations
+## 📝 Known Limitations
 
 - Free API limits requests to localhost.
 - Restrictions on older articles and pagination with the free API version.
