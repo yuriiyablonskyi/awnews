@@ -93,8 +93,8 @@ Data sourced from [News API](https://newsapi.org).
 
 ## 📬 Contact
 
-- **Email**: john.i@gmail.com
-- **LinkedIn**: [LinkedIn Profile](https://www.linkedin.com/in/john)
+- **📧 Email**: yuriiyablonskyi.i@gmail.com
+- **🔗 LinkedIn**: [LinkedIn Profile](https://www.linkedin.com/in/yuriiyablonskyi)
 
 ---
 
