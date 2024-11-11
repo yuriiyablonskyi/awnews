@@ -19,17 +19,21 @@ This project utilizes the following technologies:
 ## 🌟 Features & Usage
 
 - **News Display & Filtering**:
+
   - Browse top news by country and category.
   - Advanced search with filters for keyword, language, and date, plus sorting by relevance, publication date, or popularity.
 
 - **User Authentication & Profile Management**:
+
   - Auth0-powered registration/login for personalized experience and profile management.
 
 - **User-Generated Content**:
+
   - Create, edit, and delete custom articles with notifications for each action.
   - Image previews and validation on article submission.
 
 - **SPA Navigation**:
+
   - Smooth routing with URL parameter synchronization and paginated article browsing.
 
 - **Responsive Design**: Styled entirely with Tailwind CSS for a mobile-friendly UI.
@@ -68,9 +72,8 @@ This project utilizes the following technologies:
 - npm (see `package.json` for specific versions)
 
 ## 🎥 Demo Video
- 
-[Watch on YouTube](https://youtu.be/LjwrsIKnspA)
 
+[Watch on YouTube](https://youtu.be/AEsk459P4aQ)
 
 ## 📝 Known Limitations
 
@@ -88,4 +91,4 @@ Data sourced from [News API](https://newsapi.org).
 
 ---
 
-_This project demonstrates modern frontend development skills, emphasizing responsive design, state management, and robust user interaction._ 
+_This project demonstrates modern frontend development skills, emphasizing responsive design, state management, and robust user interaction._
